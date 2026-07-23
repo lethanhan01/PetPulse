@@ -133,8 +133,12 @@ type Ctx = {
   pets: Pet[]; addPet: (p: Pet) => void; updatePet: (id: string, patch: Partial<Pet>) => void; removePet: (id: string) => void;
 };
 
-const AppCtx = createContext<Ctx>(null as any);
-export const useApp = () => useContext(AppCtx);
+const AppCtx = createContext<Ctx | null>(null);
+export const useApp = () => {
+  const context = useContext(AppCtx);
+  if (!context) throw new Error("useApp must be used within AppProvider");
+  return context;
+};
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<"light" | "dark">("light");

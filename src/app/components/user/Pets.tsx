@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useApp, Pet } from "../../lib/store";
 import { Card, Btn, Badge, Field, Select, Modal, PageTitle, HEAD, MONO } from "../kit";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { Plus, PawPrint, ChevronRight, Pencil, Trash2, ShieldCheck } from "lucide-react";
+import { Plus, ChevronRight, Pencil, Trash2, ShieldCheck } from "lucide-react";
 
 const EMOJI: Record<string, string> = { "Chó": "🐕", "Mèo": "🐈", "Thỏ": "🐰", "Chim": "🐦", "Cá": "🐟", "Khác": "🐾" };
 
@@ -12,16 +12,16 @@ export function AddPetModal({ open, onClose, edit }: { open: boolean; onClose: (
     name: edit?.name || "", species: edit?.species || "Chó", breed: edit?.breed || "",
     gender: edit?.gender || "Đực", age: edit?.age || "", weight: edit?.weight || "",
   });
-  const set = (k: string, v: string) => setF(p => ({ ...p, [k]: v }));
+  const set = <K extends keyof typeof f>(key: K, value: (typeof f)[K]) => setF(previous => ({ ...previous, [key]: value }));
   const save = (e: React.FormEvent) => {
     e.preventDefault();
     if (edit) {
-      updatePet(edit.id, { ...f, gender: f.gender as any, emoji: EMOJI[f.species] });
+      updatePet(edit.id, { ...f, gender: f.gender as Pet["gender"], emoji: EMOJI[f.species] });
     } else {
       const id = "PET-2026-" + Math.floor(Math.random() * 900000 + 100000);
       addPet({
         id, name: f.name, species: f.species, emoji: EMOJI[f.species], breed: f.breed,
-        gender: f.gender as any, age: f.age, weight: f.weight, color: "#1D8B88",
+        gender: f.gender as Pet["gender"], age: f.age, weight: f.weight, color: "#1D8B88",
         microchip: String(Math.floor(Math.random() * 1e15)), owner: "Nguyễn Văn An",
         chips: ["Microchipped"], health: [{ id: "h1", date: new Date().toISOString().slice(0, 10), weight: parseFloat(f.weight) || 0, condition: "Tốt", nutrition: "Cân bằng", score: 85 }],
         events: [], consults: [],
@@ -37,7 +37,7 @@ export function AddPetModal({ open, onClose, edit }: { open: boolean; onClose: (
           <Select label="Loài" value={f.species} onChange={e => set("species", e.target.value)}>
             {Object.keys(EMOJI).map(s => <option key={s}>{s}</option>)}
           </Select>
-          <Select label="Giới tính" value={f.gender} onChange={e => set("gender", e.target.value)}>
+          <Select label="Giới tính" value={f.gender} onChange={e => set("gender", e.target.value as Pet["gender"])}>
             <option>Đực</option><option>Cái</option>
           </Select>
         </div>

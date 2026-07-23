@@ -243,7 +243,7 @@ function HealthFormModal({ open, onClose, onSave }: { open: boolean; onClose: ()
     e.preventDefault();
     const w = parseFloat(f.weight) || 0;
     const score = f.condition === "Tốt" ? 92 : f.condition === "Bình thường" ? 80 : 65;
-    onSave({ id: "h" + Date.now(), date: new Date().toISOString().slice(0, 10), weight: w, condition: f.condition as any, nutrition: f.nutrition, illness: f.illness || undefined, score });
+    onSave({ id: "h" + Date.now(), date: new Date().toISOString().slice(0, 10), weight: w, condition: f.condition as HealthEntry["condition"], nutrition: f.nutrition, illness: f.illness || undefined, score });
     setF({ weight: "", condition: "Tốt", nutrition: "Cân bằng", illness: "" });
     onClose();
   };
@@ -266,7 +266,7 @@ function EventFormModal({ open, onClose, onSave }: { open: boolean; onClose: () 
   const [f, setF] = useState({ title: "", date: "", time: "", repeat: "Không lặp", type: "Khám" });
   const save = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ id: "e" + Date.now(), title: f.title, date: f.date, time: f.time, repeat: f.repeat as any, type: f.type as any, done: false });
+    onSave({ id: "e" + Date.now(), title: f.title, date: f.date, time: f.time, repeat: f.repeat as CareEvent["repeat"], type: f.type as CareEvent["type"], done: false });
     setF({ title: "", date: "", time: "", repeat: "Không lặp", type: "Khám" });
     onClose();
   };

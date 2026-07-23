@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useApp } from "../../lib/store";
 import { Card, Btn, Field, Badge, PageTitle, HEAD } from "../kit";
-import { Pencil, Lock, PawPrint, Crown, Plus, ChevronRight } from "lucide-react";
+import { Pencil, Lock, Crown, Plus, ChevronRight } from "lucide-react";
 
 export function Profile() {
   const { pets, navigate, setSelectedPet, plan, role } = useApp();
