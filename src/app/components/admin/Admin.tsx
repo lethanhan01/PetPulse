@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useApp, ADMIN_USERS, ADMIN_PETS, ADMIN_SUBS, COMMUNITY, REVENUE, AI_USAGE } from "../../lib/store";
+import { useState, type ReactNode } from "react";
+import { ADMIN_USERS, ADMIN_PETS, ADMIN_SUBS, COMMUNITY, REVENUE, AI_USAGE } from "../../lib/store";
 import { Card, Btn, Badge, Field, Modal, PageTitle, TrendChart, BarChart, HEAD, MONO } from "../kit";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import {
@@ -39,13 +39,13 @@ export function AdminDashboard() {
             ))}</div>
           </div>
           <div className="h-56">
-            <BarChart height={224} data={REVENUE.map((r: any) => ({ label: r.m, value: r.v }))} />
+            <BarChart height={224} data={REVENUE.map((r) => ({ label: r.m, value: r.v }))} />
           </div>
         </Card>
         <Card className="p-5" hover={false}>
           <h3 className="font-bold text-foreground flex items-center gap-2 mb-4" style={HEAD}><TrendingUp size={17} className="text-primary" /> AI Usage (lượt/tháng)</h3>
           <div className="h-56">
-            <TrendChart height={224} showArea showXLabels data={AI_USAGE.map((r: any) => ({ label: r.m, value: r.v }))} />
+            <TrendChart height={224} showArea showXLabels data={AI_USAGE.map((r) => ({ label: r.m, value: r.v }))} />
           </div>
         </Card>
       </div>
@@ -54,7 +54,7 @@ export function AdminDashboard() {
 }
 
 // ── Table helpers ──
-function TableShell({ title, sub, children, action }: any) {
+function TableShell({ title, sub, children, action }: { title: string; sub: string; children: ReactNode; action?: ReactNode }) {
   return (
     <div>
       <PageTitle title={title} subtitle={sub} action={action} />

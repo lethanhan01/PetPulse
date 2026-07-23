@@ -1,5 +1,5 @@
 import { useApp } from "../../lib/store";
-import { Btn, Logo, Card, HEAD, MONO } from "../kit";
+import { Btn, Logo, Card, HEAD } from "../kit";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Sun, Moon, Activity, Sparkles, Calendar, Users, ShieldCheck, Heart, ArrowRight, Stethoscope, Bell, PawPrint, CheckCircle2, Crown, X } from "lucide-react";
 

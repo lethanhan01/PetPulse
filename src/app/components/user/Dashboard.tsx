@@ -1,7 +1,7 @@
 import { useApp } from "../../lib/store";
-import { Card, Btn, Badge, TrendChart, HEAD, MONO } from "../kit";
+import { Card, Btn, TrendChart, HEAD } from "../kit";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { PawPrint, Syringe, Calendar, AlertTriangle, Activity, ArrowRight, Sparkles, Bell, CheckCircle2 } from "lucide-react";
+import { PawPrint, Syringe, Calendar, AlertTriangle, Activity, ArrowRight, Sparkles, Bell } from "lucide-react";
 
 export function Dashboard() {
   const { pets, navigate, setSelectedPet } = useApp();

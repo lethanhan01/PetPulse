@@ -1,0 +1,17 @@
+{
+  "name": "PetPulse",
+  "short_name": "PetPulse",
+  "description": "Chăm sóc thú cưng thông minh.",
+  "lang": "vi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#EEF8FF",
+  "theme_color": "#1D8B88",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

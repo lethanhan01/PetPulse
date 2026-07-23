@@ -3,7 +3,7 @@ import { useApp, View } from "../lib/store";
 import { Logo, HEAD } from "./kit";
 import {
   Sun, Moon, Bell, Search, Menu, X, LogOut, LayoutDashboard, Users, PawPrint,
-  Sparkles, Crown, User as UserIcon, CreditCard, Stethoscope, BarChart3, Shield, MessageSquare, ChevronDown,
+  Sparkles, Crown, User as UserIcon, CreditCard, Stethoscope, BarChart3, Shield, MessageSquare,
 } from "lucide-react";
 
 const USER_NAV: { id: View; label: string; icon: ReactNode }[] = [
