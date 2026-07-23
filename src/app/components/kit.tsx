@@ -1,0 +1,211 @@
+import { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes } from "react";
+import { Loader2 } from "lucide-react";
+
+export const HEAD = { fontFamily: "'Nunito', sans-serif" };
+export const MONO = { fontFamily: "'DM Mono', monospace" };
+
+// ── Logo ──
+export function Logo({ size = 28 }: { size?: number }) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <div className="rounded-xl bg-primary flex items-center justify-center shadow-sm shadow-primary/30"
+        style={{ width: size, height: size }}>
+        <span style={{ fontSize: size * 0.5 }}>🐾</span>
+      </div>
+      <span className="font-bold text-primary" style={{ ...HEAD, fontSize: size * 0.6 }}>PawPulse</span>
+    </div>
+  );
+}
+
+// ── Button ──
+type BtnVariant = "primary" | "secondary" | "outline" | "ghost" | "danger";
+type BtnSize = "sm" | "md" | "lg";
+interface BtnProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: BtnVariant; size?: BtnSize; icon?: ReactNode; iconRight?: boolean; loading?: boolean; block?: boolean;
+}
+export function Btn({ variant = "primary", size = "md", icon, iconRight, loading, block, children, className = "", disabled, ...rest }: BtnProps) {
+  const sizes: Record<BtnSize, string> = {
+    sm: "text-sm px-3 py-1.5 gap-1.5", md: "text-sm px-4 py-2.5 gap-2", lg: "text-base px-6 py-3 gap-2",
+  };
+  const variants: Record<BtnVariant, string> = {
+    primary: "bg-primary text-primary-foreground hover:opacity-90 shadow-sm shadow-primary/25",
+    secondary: "bg-secondary text-secondary-foreground hover:opacity-80",
+    outline: "border border-border text-foreground hover:bg-secondary",
+    ghost: "text-foreground hover:bg-secondary",
+    danger: "bg-destructive text-destructive-foreground hover:opacity-90",
+  };
+  return (
+    <button disabled={disabled || loading}
+      className={`inline-flex items-center justify-center rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background ${sizes[size]} ${variants[variant]} ${block ? "w-full" : ""} ${className}`}
+      {...rest}>
+      {loading && <Loader2 size={15} className="animate-spin" />}
+      {icon && !iconRight && !loading && icon}
+      {children}
+      {icon && iconRight && icon}
+    </button>
+  );
+}
+
+// ── Badge ──
+type BadgeV = "success" | "warning" | "danger" | "info" | "primary" | "neutral";
+export function Badge({ v = "primary", children }: { v?: BadgeV; children: ReactNode }) {
+  const map: Record<BadgeV, string> = {
+    success: "bg-green-50 text-green-700 border-green-200 dark:bg-green-950/40 dark:text-green-300 dark:border-green-800",
+    warning: "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950/40 dark:text-yellow-300 dark:border-yellow-800",
+    danger: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800",
+    info: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800",
+    primary: "bg-primary/10 text-primary border-primary/25",
+    neutral: "bg-muted text-muted-foreground border-border",
+  };
+  return <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold ${map[v]}`}>{children}</span>;
+}
+
+// ── Card ──
+export function Card({ children, className = "", hover = true }: { children: ReactNode; className?: string; hover?: boolean }) {
+  return <div className={`rounded-2xl border border-border bg-card shadow-sm ${hover ? "hover:shadow-lg hover:shadow-primary/8 transition-shadow" : ""} ${className}`}>{children}</div>;
+}
+
+// ── TrendChart (self-contained SVG, avoids recharts key warnings) ──
+export function TrendChart({
+  data, min, max, showXLabels = false, showArea = false, height = 128,
+}: {
+  data: { label: string; value: number }[];
+  min?: number; max?: number; showXLabels?: boolean; showArea?: boolean; height?: number;
+}) {
+  const W = 300;
+  const padL = 8, padR = 8, padT = 12;
+  const padB = showXLabels ? 22 : 12;
+  const chartH = height - padT - padB;
+  const chartW = W - padL - padR;
+  const values = data.map(d => d.value);
+  const lo = min ?? Math.min(...values);
+  const hi = max ?? Math.max(...values);
+  const span = hi - lo || 1;
+  const n = data.length;
+  const x = (i: number) => padL + (n <= 1 ? chartW / 2 : (i / (n - 1)) * chartW);
+  const y = (v: number) => padT + chartH - ((v - lo) / span) * chartH;
+  const pts = data.map((d, i) => `${x(i)},${y(d.value)}`);
+  const linePath = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p}`).join(" ");
+  const areaPath = n > 0
+    ? `M${x(0)},${padT + chartH} L${pts.join(" L")} L${x(n - 1)},${padT + chartH} Z`
+    : "";
+  const gid = `tc-${Math.round(lo)}-${Math.round(hi)}-${n}`;
+  return (
+    <svg viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" className="w-full h-full" role="img" aria-label="Biểu đồ xu hướng">
+      {showArea && (
+        <>
+          <defs>
+            <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#2FE0DC" stopOpacity={0.4} />
+              <stop offset="100%" stopColor="#2FE0DC" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <path d={areaPath} fill={`url(#${gid})`} />
+        </>
+      )}
+      <path d={linePath} fill="none" stroke="#1D8B88" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+      {data.map((d, i) => (
+        <circle key={`pt-${i}`} cx={x(i)} cy={y(d.value)} r={3} fill="#2FE0DC" stroke="#1D8B88" strokeWidth={1.5} />
+      ))}
+      {showXLabels && data.map((d, i) => (
+        <text key={`lbl-${i}`} x={x(i)} y={height - 6} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
+          {d.label.includes("-") ? d.label.slice(5) : d.label}
+        </text>
+      ))}
+    </svg>
+  );
+}
+
+// ── BarChart (self-contained SVG) ──
+export function BarChart({ data, height = 224, showXLabels = true }: {
+  data: { label: string; value: number }[]; height?: number; showXLabels?: boolean;
+}) {
+  const W = 320;
+  const padL = 8, padR = 8, padT = 12;
+  const padB = showXLabels ? 22 : 12;
+  const chartH = height - padT - padB;
+  const chartW = W - padL - padR;
+  const hi = Math.max(...data.map(d => d.value), 1);
+  const n = data.length;
+  const gap = 6;
+  const bw = (chartW - gap * (n - 1)) / n;
+  return (
+    <svg viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" className="w-full h-full" role="img" aria-label="Biểu đồ cột">
+      {data.map((d, i) => {
+        const h = (d.value / hi) * chartH;
+        const bx = padL + i * (bw + gap);
+        const by = padT + chartH - h;
+        return <rect key={`bar-${i}`} x={bx} y={by} width={bw} height={h} rx={4} fill="#1D8B88" />;
+      })}
+      {showXLabels && data.map((d, i) => (
+        <text key={`blbl-${i}`} x={padL + i * (bw + gap) + bw / 2} y={height - 6} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
+          {d.label}
+        </text>
+      ))}
+    </svg>
+  );
+}
+
+// ── Field ──
+interface FieldProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string; error?: string; hint?: string;
+}
+export function Field({ label, error, hint, className = "", ...rest }: FieldProps) {
+  return (
+    <div className="w-full">
+      {label && <label className="block text-sm font-medium text-foreground mb-1.5">{label}</label>}
+      <input
+        className={`w-full px-3 py-2.5 rounded-xl border bg-background text-foreground text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring transition-all ${error ? "border-destructive" : "border-border"} ${className}`}
+        {...rest} />
+      {error && <p className="text-xs text-destructive mt-1">{error}</p>}
+      {hint && !error && <p className="text-xs text-muted-foreground mt-1">{hint}</p>}
+    </div>
+  );
+}
+
+export function Textarea({ label, className = "", ...rest }: { label?: string } & React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <div className="w-full">
+      {label && <label className="block text-sm font-medium text-foreground mb-1.5">{label}</label>}
+      <textarea className={`w-full px-3 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring transition-all ${className}`} {...rest} />
+    </div>
+  );
+}
+
+export function Select({ label, children, className = "", ...rest }: { label?: string } & React.SelectHTMLAttributes<HTMLSelectElement>) {
+  return (
+    <div className="w-full">
+      {label && <label className="block text-sm font-medium text-foreground mb-1.5">{label}</label>}
+      <select className={`w-full px-3 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all ${className}`} {...rest}>{children}</select>
+    </div>
+  );
+}
+
+// ── Section title ──
+export function PageTitle({ title, subtitle, action }: { title: string; subtitle?: string; action?: ReactNode }) {
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+      <div>
+        <h1 className="font-extrabold text-3xl text-foreground" style={HEAD}>{title}</h1>
+        {subtitle && <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>}
+      </div>
+      {action}
+    </div>
+  );
+}
+
+// ── Modal ──
+export function Modal({ open, onClose, title, children, wide }: { open: boolean; onClose: () => void; title: string; children: ReactNode; wide?: boolean }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>
+      <div className={`bg-card rounded-2xl border border-border shadow-2xl w-full ${wide ? "max-w-2xl" : "max-w-md"} max-h-[90vh] overflow-y-auto`} onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-5 border-b border-border sticky top-0 bg-card z-10">
+          <h3 className="font-bold text-lg text-foreground" style={HEAD}>{title}</h3>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground">✕</button>
+        </div>
+        <div className="p-5">{children}</div>
+      </div>
+    </div>
+  );
+}
