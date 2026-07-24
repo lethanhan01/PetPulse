@@ -78,6 +78,7 @@ export function TrendChart({
   const chartH = height - padT - padB;
   const chartW = W - padL - padR;
   const n = data.length;
+  const [hv, setHv] = useState(-1);
 
   if (n === 0) return (
     <div className="h-full flex items-center justify-center text-xs text-muted-foreground">Chưa có dữ liệu</div>
@@ -95,7 +96,6 @@ export function TrendChart({
     ? `M${x(0)},${padT + chartH} L${pts.join(" L")} L${x(n - 1)},${padT + chartH} Z`
     : "";
   const gid = `tc-${Math.round(lo)}-${Math.round(hi)}-${n}`;
-  const [hv, setHv] = useState(-1);
   const ttIdx = hv;
   return (
     <div className="relative w-full h-full">

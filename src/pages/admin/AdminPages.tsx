@@ -1,5 +1,5 @@
 import { useState, useMemo, type ReactNode } from "react";
-import { MOCK_AI_USAGE, MOCK_REVENUE, MOCK_SUBSCRIPTIONS } from "@/mocks";
+import { MOCK_AI_USAGE, MOCK_SUBSCRIPTIONS } from "@/mocks";
 import { useCommunity } from "@/stores/community.store";
 import { getAdminPets, getAdminStats, getAdminUsers } from "@/services/user.service";
 import { Card, Btn, Badge, Field, Modal, PageTitle, TrendChart, BarChart, HEAD, MONO } from "@/components/common/kit";

@@ -129,7 +129,7 @@ export function PetDetail() {
           </div>
           <div className="relative pl-8">
             <div className="absolute left-[15px] top-2 bottom-2 w-0.5 bg-border" />
-            {pet.health.map((h, i) => {
+            {pet.health.map((h) => {
               const lv = scoreLevel(h.score);
               return (
                 <div key={h.id} className="relative pb-6 last:pb-0">
