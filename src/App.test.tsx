@@ -1,5 +1,5 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 
 afterEach(() => {
@@ -27,5 +27,14 @@ describe("App", () => {
     render(<App />);
 
     expect(screen.getByText(/không tìm thấy trang/i)).toBeInTheDocument();
+  });
+
+  it("does not treat the scroll result as an effect cleanup function", () => {
+    const scrollTo = vi.spyOn(window, "scrollTo").mockImplementation(() => ({ invalid: true }));
+    const { unmount } = render(<App />);
+
+    expect(() => unmount()).not.toThrow();
+
+    scrollTo.mockRestore();
   });
 });

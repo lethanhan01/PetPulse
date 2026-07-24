@@ -19,7 +19,9 @@ import { AdminDashboard, AdminModeration, AdminPets, AdminSubs, AdminUsers } fro
 
 function ScrollToTop() {
   const { pathname, search } = useLocation();
-  useEffect(() => window.scrollTo({ top: 0 }), [pathname, search]);
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [pathname, search]);
   return null;
 }
 
