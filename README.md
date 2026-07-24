@@ -16,6 +16,13 @@ npm run dev
 
 Vite mặc định chạy tại [http://localhost:5173](http://localhost:5173). Chạy `npm install` chỉ khi chủ động cập nhật dependency; dùng `npm ci` cho môi trường sạch và CI.
 
+## Tài khoản demo
+
+| Vai trò | Email | Mật khẩu |
+| --- | --- | --- |
+| Admin | `admin@pawpulse.vn` | `paw123` |
+| User | `an@example.com` | `paw123` |
+
 ## Quality gate
 
 ```bash
