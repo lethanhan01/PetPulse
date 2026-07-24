@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useApp } from "../../lib/store";
-import { Card, Btn, Field, PageTitle, HEAD, MONO } from "../kit";
+import { useNavigate } from "react-router";
+import { useApp } from "@/stores/app.store";
+import { Card, Btn, Field, PageTitle, HEAD, MONO } from "@/components/common/kit";
 import { Check, Crown, ArrowLeft, CreditCard, Lock, ShieldCheck, Sparkles, CheckCircle2 } from "lucide-react";
 
 const PLANS = [
@@ -13,7 +14,8 @@ const PLANS = [
 ];
 
 export function Subscription() {
-  const { plan, navigate } = useApp();
+  const { plan } = useApp();
+  const navigate = useNavigate();
   return (
     <div>
       <PageTitle title="Nâng cấp gói dịch vụ" subtitle="Mở khóa toàn bộ sức mạnh của PawPulse" />
@@ -33,7 +35,7 @@ export function Subscription() {
             {plan === p.name
               ? <Btn block variant="outline" disabled>Gói hiện tại của bạn</Btn>
               : p.accent
-                ? <Btn block size="lg" icon={<Crown size={16} />} onClick={() => navigate("checkout")}>Nâng cấp Premium</Btn>
+                ? <Btn block size="lg" icon={<Crown size={16} />} onClick={() => navigate("/checkout")}>Nâng cấp Premium</Btn>
                 : <Btn block variant="outline" disabled>Miễn phí</Btn>}
           </Card>
         ))}
@@ -43,7 +45,8 @@ export function Subscription() {
 }
 
 export function Checkout() {
-  const { navigate, setPlan } = useApp();
+  const { setPlan } = useApp();
+  const navigate = useNavigate();
   const [done, setDone] = useState(false);
   const pay = (e: React.FormEvent) => { e.preventDefault(); setDone(true); setPlan("Premium"); };
 
@@ -52,13 +55,13 @@ export function Checkout() {
       <div className="w-16 h-16 rounded-3xl bg-green-100 dark:bg-green-900/40 text-green-600 flex items-center justify-center mx-auto mb-5"><CheckCircle2 size={32} /></div>
       <h1 className="font-extrabold text-2xl text-foreground mb-2" style={HEAD}>Thanh toán thành công! 🎉</h1>
       <p className="text-sm text-muted-foreground mb-6">Tài khoản của bạn đã được nâng cấp lên <b className="text-primary">Premium</b>. Mọi tính năng đã được mở khóa.</p>
-      <Btn size="lg" icon={<Sparkles size={16} />} onClick={() => navigate("dashboard")}>Về Dashboard</Btn>
+      <Btn size="lg" icon={<Sparkles size={16} />} onClick={() => navigate("/dashboard")}>Về Dashboard</Btn>
     </div>
   );
 
   return (
     <div className="max-w-lg mx-auto">
-      <button onClick={() => navigate("subscription")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-4"><ArrowLeft size={15} /> Quay lại</button>
+      <button onClick={() => navigate("/subscription")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-4"><ArrowLeft size={15} /> Quay lại</button>
       <PageTitle title="Thanh toán" />
       <Card className="p-6" hover={false}>
         <div className="flex items-center justify-between p-4 rounded-xl bg-secondary mb-6">

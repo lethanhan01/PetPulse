@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useApp, AIConsult } from "../../lib/store";
-import { Card, Btn, Badge, Select, Textarea, PageTitle, HEAD } from "../kit";
+import { useApp } from "@/stores/app.store";
+import type { AIConsult } from "@/types/app.types";
+import { Card, Btn, Badge, Select, Textarea, PageTitle, HEAD } from "@/components/common/kit";
 import { Sparkles, AlertTriangle, Stethoscope, HeartPulse, Save, Loader2, Bot } from "lucide-react";
 
 const SYMPTOM_TAGS = ["Biếng ăn", "Nôn mửa", "Tiêu chảy", "Ho khan", "Sốt", "Ngứa/gãi nhiều", "Mệt mỏi", "Chảy nước mắt"];

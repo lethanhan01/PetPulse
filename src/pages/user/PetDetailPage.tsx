@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { useApp, HealthEntry, CareEvent } from "../../lib/store";
-import { Card, Btn, Badge, Field, Select, Modal, TrendChart, HEAD, MONO } from "../kit";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { useNavigate, useParams } from "react-router";
+import { useApp } from "@/stores/app.store";
+import type { CareEvent, HealthEntry } from "@/types/app.types";
+import { Card, Btn, Badge, Field, Select, Modal, TrendChart, HEAD, MONO } from "@/components/common/kit";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import {
   ArrowLeft, Activity, Calendar, Sparkles, Settings, Plus, Weight, Syringe,
   Stethoscope, Pill, Bell, ShieldCheck, TrendingUp, CheckCircle2, Clock,
@@ -18,13 +20,15 @@ const TABS = [
 const scoreLevel = (s: number) => s >= 90 ? { l: "Xuất sắc", v: "success" as const } : s >= 75 ? { l: "Tốt", v: "info" as const } : s >= 60 ? { l: "Khá", v: "warning" as const } : { l: "Cần chú ý", v: "danger" as const };
 
 export function PetDetail() {
-  const { pets, selectedPet, navigate, updatePet } = useApp();
-  const pet = pets.find(p => p.id === selectedPet) || pets[0];
+  const { pets, updatePet } = useApp();
+  const navigate = useNavigate();
+  const { petId } = useParams();
+  const pet = pets.find(p => p.id === petId);
   const [tab, setTab] = useState("overview");
   const [healthModal, setHealthModal] = useState(false);
   const [eventModal, setEventModal] = useState(false);
 
-  if (!pet) return null;
+  if (!pet) return <div className="py-16 text-center"><p className="text-5xl font-extrabold text-primary">404</p><h1 className="mt-4 text-2xl font-bold text-foreground">Không tìm thấy thú cưng</h1></div>;
   const latest = pet.health[0];
   const level = scoreLevel(latest.score);
 
@@ -34,7 +38,7 @@ export function PetDetail() {
 
   return (
     <div className="space-y-6">
-      <button onClick={() => navigate("pets")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft size={15} /> Danh sách thú cưng</button>
+      <button onClick={() => navigate("/pets")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft size={15} /> Danh sách thú cưng</button>
 
       {/* Passport header */}
       <Card className="overflow-hidden" hover={false}>
@@ -181,7 +185,7 @@ export function PetDetail() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-lg text-foreground" style={HEAD}>Lịch sử tư vấn AI</h3>
-            <Btn size="sm" icon={<Sparkles size={15} />} onClick={() => navigate("ai")}>Tư vấn mới</Btn>
+            <Btn size="sm" icon={<Sparkles size={15} />} onClick={() => navigate("/ai-checker")}>Tư vấn mới</Btn>
           </div>
           {pet.consults.length === 0 && <Card className="p-8 text-center text-sm text-muted-foreground" hover={false}>Chưa có lịch sử tư vấn. Dùng AI Symptom Checker để kiểm tra sức khỏe.</Card>}
           {pet.consults.map(c => (

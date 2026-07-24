@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useApp } from "../../lib/store";
-import { Card, Btn, Field, Badge, PageTitle, HEAD } from "../kit";
+import { useApp } from "@/stores/app.store";
+import { useNavigate } from "react-router";
+import { Card, Btn, Field, Badge, PageTitle, HEAD } from "@/components/common/kit";
 import { Pencil, Lock, Crown, Plus, ChevronRight } from "lucide-react";
 
 export function Profile() {
-  const { pets, navigate, setSelectedPet, plan, role } = useApp();
+  const { pets, plan, role } = useApp();
+  const navigate = useNavigate();
   const isAdmin = role === "admin";
   const [tab, setTab] = useState<"info" | "security" | "pets">("info");
   const tabs = isAdmin
@@ -67,10 +69,10 @@ export function Profile() {
                 <Card key={p.id} className="p-4 flex items-center gap-3">
                   <div className="w-11 h-11 rounded-xl bg-secondary flex items-center justify-center text-xl">{p.emoji}</div>
                   <div className="flex-1"><p className="font-semibold text-foreground text-sm">{p.name}</p><p className="text-xs text-muted-foreground">{p.breed} · {p.age}</p></div>
-                  <button onClick={() => { setSelectedPet(p.id); navigate("petDetail"); }} className="p-2 rounded-lg hover:bg-secondary text-muted-foreground"><ChevronRight size={18} /></button>
+                  <button onClick={() => navigate(`/pets/${p.id}`)} className="p-2 rounded-lg hover:bg-secondary text-muted-foreground"><ChevronRight size={18} /></button>
                 </Card>
               ))}
-              <Btn variant="outline" block icon={<Plus size={16} />} onClick={() => navigate("pets")}>Quản lý thú cưng</Btn>
+              <Btn variant="outline" block icon={<Plus size={16} />} onClick={() => navigate("/pets")}>Quản lý thú cưng</Btn>
             </div>
           )}
         </div>

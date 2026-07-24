@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { COMMUNITY } from "../../lib/store";
-import { Card, Btn, HEAD, Textarea } from "../kit";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { COMMUNITY } from "@/services/user.service";
+import { Card, Btn, HEAD, Textarea } from "@/components/common/kit";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import { Pagination } from "@/components/Pagination/Pagination";
+import { usePagination } from "@/hooks/usePagination";
 import { Heart, MessageCircle, Share2, Send, ImagePlus, PawPrint } from "lucide-react";
 
 function Post({ post }: { post: typeof COMMUNITY[number] }) {
@@ -52,6 +54,7 @@ function Post({ post }: { post: typeof COMMUNITY[number] }) {
 
 export function Community() {
   const [draft, setDraft] = useState("");
+  const { items: posts, currentPage, totalPages, setPage } = usePagination(COMMUNITY);
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
@@ -70,7 +73,8 @@ export function Community() {
           </div>
         </div>
       </Card>
-      {COMMUNITY.map(p => <Post key={p.id} post={p} />)}
+      {posts.map(p => <Post key={p.id} post={p} />)}
+      <Pagination page={currentPage} totalPages={totalPages} setPage={setPage} />
     </div>
   );
 }

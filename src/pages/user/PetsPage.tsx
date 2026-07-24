@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { useApp, Pet } from "../../lib/store";
-import { Card, Btn, Badge, Field, Select, Modal, PageTitle, HEAD, MONO } from "../kit";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { useNavigate } from "react-router";
+import { useApp } from "@/stores/app.store";
+import type { Pet } from "@/types/app.types";
+import { Card, Btn, Badge, Field, Select, Modal, PageTitle, HEAD, MONO } from "@/components/common/kit";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Plus, ChevronRight, Pencil, Trash2, ShieldCheck } from "lucide-react";
 
 const EMOJI: Record<string, string> = { "Chó": "🐕", "Mèo": "🐈", "Thỏ": "🐰", "Chim": "🐦", "Cá": "🐟", "Khác": "🐾" };
@@ -56,7 +58,8 @@ export function AddPetModal({ open, onClose, edit }: { open: boolean; onClose: (
 }
 
 export function Pets() {
-  const { pets, navigate, setSelectedPet, removePet } = useApp();
+  const { pets, removePet } = useApp();
+  const navigate = useNavigate();
   const [add, setAdd] = useState(false);
   const [edit, setEdit] = useState<Pet | undefined>();
   const [del, setDel] = useState<Pet | undefined>();
@@ -94,7 +97,7 @@ export function Pets() {
                   </div>
                   <p className="text-xs text-muted-foreground mb-2">{p.breed} · {p.age} · {p.gender}</p>
                   <code className="inline-block text-[11px] text-primary bg-secondary px-2 py-0.5 rounded-full mb-3" style={MONO}>{p.id}</code>
-                  <Btn variant="outline" block size="sm" icon={<ChevronRight size={15} />} iconRight onClick={() => { setSelectedPet(p.id); navigate("petDetail"); }}>Xem hồ sơ</Btn>
+                  <Btn variant="outline" block size="sm" icon={<ChevronRight size={15} />} iconRight onClick={() => navigate(`/pets/${p.id}`)}>Xem hồ sơ</Btn>
                 </div>
               </Card>
             );

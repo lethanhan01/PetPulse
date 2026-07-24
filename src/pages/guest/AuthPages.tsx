@@ -1,50 +1,14 @@
 import { useState } from "react";
-import { useApp } from "../../lib/store";
-import { Btn, Logo, Field, HEAD } from "../kit";
-import { Eye, EyeOff, ArrowLeft, Sun, Moon, CheckCircle2, Shield, User as UserIcon } from "lucide-react";
-
-function AuthShell({ children }: { children: React.ReactNode }) {
-  const { theme, toggleTheme, navigate } = useApp();
-  const isDark = theme === "dark";
-  return (
-    <div className="min-h-screen grid lg:grid-cols-2">
-      {/* Left visual */}
-      <div className="hidden lg:flex flex-col justify-between p-12 relative overflow-hidden"
-        style={{ background: isDark
-          ? "radial-gradient(ellipse at 30% 40%, rgba(47,224,220,0.15), transparent 60%), #0A1E1E"
-          : "linear-gradient(135deg,#1D8B88 0%,#2FE0DC 60%,#78E3FD 100%)" }}>
-        <button onClick={() => navigate("landing")} className="flex items-center gap-2 text-white/90 hover:text-white text-sm w-fit">
-          <ArrowLeft size={16} /> Về trang chủ
-        </button>
-        <div>
-          <span className="text-5xl">🐾</span>
-          <h2 className="font-extrabold text-4xl text-white mt-4 mb-3" style={HEAD}>Chào mừng đến PawPulse</h2>
-          <p className="text-white/85 text-lg max-w-md">Hộ chiếu sức khỏe điện tử & chăm sóc thú cưng thông minh cho người trẻ yêu pet.</p>
-        </div>
-        <div className="space-y-2">
-          {["Health timeline & Health Score", "AI Symptom Checker", "Cộng đồng thú cưng"].map(t => (
-            <div key={t} className="flex items-center gap-2 text-white/90 text-sm"><CheckCircle2 size={16} /> {t}</div>
-          ))}
-        </div>
-      </div>
-      {/* Right form */}
-      <div className="flex flex-col p-6 sm:p-12">
-        <div className="flex items-center justify-between mb-8">
-          <div className="lg:hidden"><Logo /></div>
-          <button onClick={toggleTheme} className="ml-auto p-2 rounded-full border border-border hover:bg-secondary transition-colors" aria-label="Toggle theme">
-            {isDark ? <Sun size={16} className="text-accent" /> : <Moon size={16} className="text-primary" />}
-          </button>
-        </div>
-        <div className="flex-1 flex items-center justify-center">
-          <div className="w-full max-w-sm">{children}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { useNavigate } from "react-router";
+import { useApp } from "@/stores/app.store";
+import { authenticateMock } from "@/services/auth.service";
+import { Btn, Field, HEAD } from "@/components/common/kit";
+import { AuthLayout } from "@/layouts/AuthLayout";
+import { Eye, EyeOff, ArrowLeft, CheckCircle2, Shield, User as UserIcon } from "lucide-react";
 
 export function Login() {
-  const { navigate, login } = useApp();
+  const { login } = useApp();
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("an@example.com");
   const [pass, setPass] = useState("paw123");
@@ -52,11 +16,12 @@ export function Login() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pass !== "paw123") { setError("Email hoặc mật khẩu không đúng."); return; }
-    login(email.includes("admin") ? "admin" : "user");
+    const role = authenticateMock(email, pass);
+    if (!role) { setError("Email hoặc mật khẩu không đúng."); return; }
+    login(role); navigate(role === "admin" ? "/admin" : "/dashboard");
   };
   return (
-    <AuthShell>
+    <AuthLayout>
       <h1 className="font-extrabold text-3xl text-foreground mb-1" style={HEAD}>Đăng nhập</h1>
       <p className="text-sm text-muted-foreground mb-6">Nhập email & mật khẩu để tiếp tục.</p>
       <form onSubmit={submit} className="space-y-4">
@@ -74,27 +39,28 @@ export function Login() {
         </div>
         <div className="flex items-center justify-between text-sm">
           <label className="flex items-center gap-2 text-muted-foreground cursor-pointer"><input type="checkbox" className="accent-[#1D8B88]" /> Ghi nhớ</label>
-          <button type="button" onClick={() => navigate("forgot")} className="text-primary hover:underline">Quên mật khẩu?</button>
+          <button type="button" onClick={() => navigate("/forgot-password")} className="text-primary hover:underline">Quên mật khẩu?</button>
         </div>
         <Btn block size="lg" type="submit">Đăng nhập</Btn>
       </form>
       <div className="grid grid-cols-2 gap-3 mt-4">
-        <Btn variant="outline" size="sm" icon={<UserIcon size={15} />} onClick={() => login("user")}>Demo User</Btn>
-        <Btn variant="outline" size="sm" icon={<Shield size={15} />} onClick={() => login("admin")}>Demo Admin</Btn>
+        <Btn variant="outline" size="sm" icon={<UserIcon size={15} />} onClick={() => { login("user"); navigate("/dashboard"); }}>Demo User</Btn>
+        <Btn variant="outline" size="sm" icon={<Shield size={15} />} onClick={() => { login("admin"); navigate("/admin"); }}>Demo Admin</Btn>
       </div>
-      <p className="text-sm text-muted-foreground text-center mt-6">Chưa có tài khoản? <button onClick={() => navigate("register")} className="text-primary font-medium hover:underline">Đăng ký</button></p>
-    </AuthShell>
+      <p className="text-sm text-muted-foreground text-center mt-6">Chưa có tài khoản? <button onClick={() => navigate("/register")} className="text-primary font-medium hover:underline">Đăng ký</button></p>
+    </AuthLayout>
   );
 }
 
 export function Register() {
-  const { navigate, login } = useApp();
+  const { login } = useApp();
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   return (
-    <AuthShell>
+    <AuthLayout>
       <h1 className="font-extrabold text-3xl text-foreground mb-1" style={HEAD}>Tạo tài khoản</h1>
       <p className="text-sm text-muted-foreground mb-6">Đăng ký miễn phí — mặc định gói <b className="text-primary">Freemium</b>.</p>
-      <form onSubmit={e => { e.preventDefault(); login("user"); }} className="space-y-4">
+      <form onSubmit={e => { e.preventDefault(); login("user"); navigate("/dashboard"); }} className="space-y-4">
         <Field label="Họ và tên" placeholder="Nguyễn Văn An" required />
         <Field label="Email" type="email" placeholder="you@example.com" required />
         <div>
@@ -112,17 +78,17 @@ export function Register() {
         </label>
         <Btn block size="lg" type="submit">Đăng ký</Btn>
       </form>
-      <p className="text-sm text-muted-foreground text-center mt-6">Đã có tài khoản? <button onClick={() => navigate("login")} className="text-primary font-medium hover:underline">Đăng nhập</button></p>
-    </AuthShell>
+      <p className="text-sm text-muted-foreground text-center mt-6">Đã có tài khoản? <button onClick={() => navigate("/login")} className="text-primary font-medium hover:underline">Đăng nhập</button></p>
+    </AuthLayout>
   );
 }
 
 export function Forgot() {
-  const { navigate } = useApp();
+  const navigate = useNavigate();
   const [sent, setSent] = useState(false);
   return (
-    <AuthShell>
-      <button onClick={() => navigate("login")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6"><ArrowLeft size={15} /> Quay lại</button>
+    <AuthLayout>
+      <button onClick={() => navigate("/login")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6"><ArrowLeft size={15} /> Quay lại</button>
       {!sent ? (
         <>
           <h1 className="font-extrabold text-3xl text-foreground mb-1" style={HEAD}>Quên mật khẩu?</h1>
@@ -142,9 +108,9 @@ export function Forgot() {
               <div key={i} className="w-10 h-12 rounded-xl border border-border bg-background flex items-center justify-center font-bold text-lg text-foreground">{n}</div>
             ))}
           </div>
-          <Btn block size="lg" onClick={() => navigate("login")}>Xác nhận & Đăng nhập</Btn>
+          <Btn block size="lg" onClick={() => navigate("/login")}>Xác nhận & Đăng nhập</Btn>
         </div>
       )}
-    </AuthShell>
+    </AuthLayout>
   );
 }

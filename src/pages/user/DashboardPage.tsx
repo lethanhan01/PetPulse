@@ -1,10 +1,12 @@
-import { useApp } from "../../lib/store";
-import { Card, Btn, TrendChart, HEAD } from "../kit";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { useApp } from "@/stores/app.store";
+import { useNavigate } from "react-router";
+import { Card, Btn, TrendChart, HEAD } from "@/components/common/kit";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { PawPrint, Syringe, Calendar, AlertTriangle, Activity, ArrowRight, Sparkles, Bell } from "lucide-react";
 
 export function Dashboard() {
-  const { pets, navigate, setSelectedPet } = useApp();
+  const { pets } = useApp();
+  const navigate = useNavigate();
   const stats = [
     { icon: <PawPrint size={17} />, l: "Thú cưng", v: String(pets.length), sub: "Đang quản lý", ic: "text-primary bg-primary/10" },
     { icon: <Syringe size={17} />, l: "Tiêm phòng", v: "12", sub: "Cập nhật đầy đủ", ic: "text-green-600 bg-green-100 dark:bg-green-900/30" },
@@ -20,8 +22,8 @@ export function Dashboard() {
           <h1 className="font-extrabold text-3xl mb-2" style={HEAD}>Nguyễn Văn An</h1>
           <p className="text-white/90 mb-5">Các bé của bạn hôm nay đều khỏe mạnh. Đừng quên lịch uống thuốc của Mochi nhé!</p>
           <div className="flex flex-wrap gap-3">
-            <Btn className="!bg-white !text-[#1D8B88] hover:!bg-white/90 !shadow-none" icon={<Sparkles size={16} />} onClick={() => navigate("ai")}>Hỏi AI về sức khỏe</Btn>
-            <Btn variant="outline" className="border-white/40 text-white hover:bg-white/10" icon={<PawPrint size={16} />} onClick={() => navigate("pets")}>Xem thú cưng</Btn>
+            <Btn className="!bg-white !text-[#1D8B88] hover:!bg-white/90 !shadow-none" icon={<Sparkles size={16} />} onClick={() => navigate("/ai-checker")}>Hỏi AI về sức khỏe</Btn>
+            <Btn variant="outline" className="border-white/40 text-white hover:bg-white/10" icon={<PawPrint size={16} />} onClick={() => navigate("/pets")}>Xem thú cưng</Btn>
           </div>
         </div>
         <PawPrint size={180} className="absolute -right-6 -bottom-8 text-white/10" />
@@ -44,14 +46,14 @@ export function Dashboard() {
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-bold text-xl text-foreground" style={HEAD}>Thú cưng của bạn</h2>
-            <button onClick={() => navigate("pets")} className="text-sm text-primary hover:underline flex items-center gap-1">Xem tất cả <ArrowRight size={14} /></button>
+            <button onClick={() => navigate("/pets")} className="text-sm text-primary hover:underline flex items-center gap-1">Xem tất cả <ArrowRight size={14} /></button>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {pets.map(p => {
               const latest = p.health[0];
               return (
                 <Card key={p.id} className="overflow-hidden cursor-pointer" >
-                  <button className="w-full text-left" onClick={() => { setSelectedPet(p.id); navigate("petDetail"); }}>
+                  <button className="w-full text-left" onClick={() => navigate(`/pets/${p.id}`)}>
                     <div className="h-24 relative">
                       {p.image ? <ImageWithFallback src={p.image} alt={p.name} className="w-full h-full object-cover" />
                         : <div className="w-full h-full flex items-center justify-center text-4xl" style={{ background: "linear-gradient(135deg,#1D8B88,#2FE0DC)" }}>{p.emoji}</div>}

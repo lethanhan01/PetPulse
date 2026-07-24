@@ -1,6 +1,7 @@
-import { useApp } from "../../lib/store";
-import { Btn, Logo, Card, HEAD } from "../kit";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { useApp } from "@/stores/app.store";
+import { useNavigate } from "react-router";
+import { Btn, Logo, Card, HEAD } from "@/components/common/kit";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Sun, Moon, Activity, Sparkles, Calendar, Users, ShieldCheck, Heart, ArrowRight, Stethoscope, Bell, PawPrint, CheckCircle2, Crown, X } from "lucide-react";
 
 const PLANS = [
@@ -31,7 +32,8 @@ const NAV_LINKS = [
 ];
 
 export function Landing() {
-  const { navigate, theme, toggleTheme } = useApp();
+  const { theme, toggleTheme } = useApp();
+  const navigate = useNavigate();
   const isDark = theme === "dark";
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   return (
@@ -48,8 +50,8 @@ export function Landing() {
           <button onClick={toggleTheme} className="p-2 rounded-full border border-border hover:bg-secondary transition-colors" aria-label="Toggle theme">
             {isDark ? <Sun size={16} className="text-accent" /> : <Moon size={16} className="text-primary" />}
           </button>
-          <Btn variant="ghost" size="sm" onClick={() => navigate("login")}>Đăng nhập</Btn>
-          <Btn size="sm" onClick={() => navigate("register")}>Đăng ký</Btn>
+          <Btn variant="ghost" size="sm" onClick={() => navigate("/login")}>Đăng nhập</Btn>
+          <Btn size="sm" onClick={() => navigate("/register")}>Đăng ký</Btn>
         </div>
       </header>
 
@@ -70,7 +72,7 @@ export function Landing() {
               PawPulse giúp bạn quản lý hồ sơ, theo dõi health timeline, đặt lịch chăm sóc và tư vấn sức khỏe bằng AI — tất cả trong một nơi.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Btn size="lg" icon={<ArrowRight size={18} />} iconRight onClick={() => navigate("login")}>Đăng nhập</Btn>
+              <Btn size="lg" icon={<ArrowRight size={18} />} iconRight onClick={() => navigate("/login")}>Đăng nhập</Btn>
             </div>
             <div className="flex items-center gap-6 mt-8">
               {[{ v: "10K+", l: "Thú cưng" }, { v: "8K+", l: "Người dùng" }, { v: "98%", l: "Hài lòng" }].map(s => (
@@ -185,8 +187,8 @@ export function Landing() {
                 {p.missing.map(f => <li key={f} className="flex items-start gap-2 text-sm text-muted-foreground/60"><X size={16} className="mt-0.5 flex-shrink-0 opacity-40" /> {f}</li>)}
               </ul>
               {p.accent
-                ? <Btn block size="lg" icon={<Crown size={16} />} onClick={() => navigate("register")}>Dùng thử Premium</Btn>
-                : <Btn block variant="outline" onClick={() => navigate("register")}>Bắt đầu miễn phí</Btn>}
+                ? <Btn block size="lg" icon={<Crown size={16} />} onClick={() => navigate("/register")}>Dùng thử Premium</Btn>
+                : <Btn block variant="outline" onClick={() => navigate("/register")}>Bắt đầu miễn phí</Btn>}
             </Card>
           ))}
         </div>
@@ -227,7 +229,7 @@ export function Landing() {
         <div className="rounded-3xl p-10 sm:p-16 text-center relative overflow-hidden" style={{ background: "linear-gradient(135deg,#1D8B88 0%,#2FE0DC 55%,#78E3FD 100%)" }}>
           <h2 className="font-extrabold text-3xl sm:text-4xl text-white mb-4" style={HEAD}>Sẵn sàng chăm sóc bé yêu tốt hơn?</h2>
           <p className="text-white/90 mb-8 max-w-xl mx-auto">Tạo tài khoản Freemium miễn phí ngay hôm nay. Nâng cấp Premium bất cứ lúc nào.</p>
-          <Btn size="lg" className="!bg-white !text-[#0D2828] hover:!bg-white/90 shadow-lg shadow-black/10" onClick={() => navigate("register")}>Tạo tài khoản miễn phí</Btn>
+          <Btn size="lg" className="!bg-white !text-[#0D2828] hover:!bg-white/90 shadow-lg shadow-black/10" onClick={() => navigate("/register")}>Tạo tài khoản miễn phí</Btn>
         </div>
       </section>
 
