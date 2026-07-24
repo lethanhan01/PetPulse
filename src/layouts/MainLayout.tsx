@@ -3,9 +3,9 @@ import { NavLink, Outlet, useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
 import { Logo, HEAD } from "@/components/common/kit";
 import { Navbar } from "@/components/Navbar/Navbar";
-import { MOCK_NOTIFICATIONS } from "@/mocks";
+import { MOCK_NOTIFICATIONS, MOCK_ADMIN_NOTIFICATIONS } from "@/mocks";
 import { getAccountInitials } from "@/services/user.service";
-import { Sun, Moon, Bell, Search, Menu, X, LogOut, LayoutDashboard, Users, PawPrint, Sparkles, Crown, User as UserIcon, CreditCard, Stethoscope, BarChart3, Shield, MessageSquare } from "lucide-react";
+import { Sun, Moon, Bell, Menu, X, LogOut, LayoutDashboard, Users, PawPrint, Sparkles, Crown, User as UserIcon, CreditCard, Stethoscope, BarChart3, Shield, MessageSquare } from "lucide-react";
 
 type NavItem = { to: string; label: string; icon: ReactNode; end?: boolean };
 const USER_NAV: NavItem[] = [
@@ -24,15 +24,17 @@ const ADMIN_NAV: NavItem[] = [
   { to: "/admin/moderation", label: "Kiểm duyệt", icon: <Shield size={17} /> },
   { to: "/admin/profile", label: "Hồ sơ Admin", icon: <UserIcon size={17} /> },
 ];
-const notificationIcon = { event: <Bell size={14} />, health: <Stethoscope size={14} />, vaccine: <PawPrint size={14} /> };
+const notificationIcon: Record<string, ReactNode> = { event: <Bell size={14} />, health: <Stethoscope size={14} />, vaccine: <PawPrint size={14} />, moderation: <Shield size={14} /> };
 
 export function MainLayout() {
   const { role, theme, toggleTheme, logout, plan, activeAccount } = useApp();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [notiOpen, setNotiOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const nav = role === "admin" ? ADMIN_NAV : USER_NAV;
   const isDark = theme === "dark";
+  const notifs = role === "admin" ? MOCK_ADMIN_NOTIFICATIONS : MOCK_NOTIFICATIONS;
   const logOut = () => { logout(); navigate("/"); };
 
   return <div className="min-h-screen bg-background text-foreground">
@@ -41,17 +43,25 @@ export function MainLayout() {
       <Logo size={26} />
       {role === "admin" && <span className="hidden sm:block text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary ml-1">ADMIN</span>}
       <div className="ml-auto flex items-center gap-2">
-        <div className="hidden md:flex items-center relative"><Search size={15} className="absolute left-3 text-muted-foreground" /><input placeholder="Tìm kiếm..." className="w-52 pl-9 pr-3 py-2 rounded-full border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-ring" /></div>
         <button onClick={toggleTheme} className="p-2 rounded-full border border-border hover:bg-secondary" aria-label="Theme">{isDark ? <Sun size={16} className="text-accent" /> : <Moon size={16} className="text-primary" />}</button>
-        <div className="relative"><button onClick={() => setNotiOpen(!notiOpen)} className="p-2 rounded-full border border-border hover:bg-secondary relative" aria-label="Notifications"><Bell size={16} />{MOCK_NOTIFICATIONS.some(notification => !notification.read) && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-destructive" />}</button>
-          {notiOpen && <><div className="fixed inset-0 z-40" onClick={() => setNotiOpen(false)} /><div className="absolute right-0 mt-2 w-80 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden"><div className="p-3 border-b border-border font-semibold text-sm" style={HEAD}>Thông báo</div>{MOCK_NOTIFICATIONS.map(n => <div key={n.id} className="flex gap-3 p-3 hover:bg-secondary/50 border-b border-border last:border-0"><div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">{notificationIcon[n.kind]}</div><div><p className="text-sm text-foreground leading-tight">{n.title}</p><p className="text-xs text-muted-foreground mt-0.5">{n.subtitle}</p></div></div>)}</div></>}
+        <div className="relative"><button onClick={() => setNotiOpen(!notiOpen)} className="p-2 rounded-full border border-border hover:bg-secondary relative" aria-label="Notifications"><Bell size={16} />{notifs.some(n => !n.read) && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-destructive" />}</button>
+          {notiOpen && <><div className="fixed inset-0 z-40" onClick={() => setNotiOpen(false)} /><div className="absolute right-0 mt-2 w-80 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden"><div className="p-3 border-b border-border font-semibold text-sm" style={HEAD}>Thông báo</div>{notifs.map(n => <div key={n.id} className="flex gap-3 p-3 hover:bg-secondary/50 border-b border-border last:border-0"><div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">{notificationIcon[n.kind]}</div><div><p className="text-sm text-foreground leading-tight">{n.title}</p><p className="text-xs text-muted-foreground mt-0.5">{n.subtitle}</p></div></div>)}</div></>}
         </div>
-        <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary" title={activeAccount?.name}>{getAccountInitials(activeAccount)}</div>
+        <div className="relative">
+          <button onClick={() => setProfileOpen(!profileOpen)} className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary overflow-hidden hover:ring-2 hover:ring-ring transition-all" title={activeAccount?.name}>
+            {activeAccount?.avatar?.startsWith?.("data:") ? <img src={activeAccount.avatar} alt="" className="w-full h-full object-cover" /> : <span>{getAccountInitials(activeAccount)}</span>}
+          </button>
+          {profileOpen && <><div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} /><div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden">
+            <div className="px-3 py-2.5 text-sm font-semibold border-b border-border">{activeAccount?.name}</div>
+            <button onClick={() => { navigate(role === "admin" ? "/admin/profile" : "/profile"); setProfileOpen(false); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-secondary/50 transition-colors text-left"><UserIcon size={15} /> Hồ sơ cá nhân</button>
+            <button onClick={() => { logOut(); setProfileOpen(false); }} className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-secondary/50 transition-colors text-left text-destructive"><LogOut size={15} /> Đăng xuất</button>
+          </div></>}
+        </div>
       </div>
     </div></Navbar>
     {open && <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setOpen(false)} />}
-    <aside className={`fixed top-16 left-0 bottom-0 w-64 z-40 border-r border-border bg-sidebar overflow-y-auto transition-transform duration-200 ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}><div className="p-3 flex flex-col h-full"><nav className="space-y-1 flex-1">{nav.map(item => <NavLink key={item.to} to={item.to} end={item.end} onClick={() => setOpen(false)} className={({ isActive }) => `w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all ${isActive ? "bg-primary text-primary-foreground font-semibold shadow-sm shadow-primary/25" : "text-sidebar-foreground hover:bg-secondary"}`}><span className="text-primary/70">{item.icon}</span>{item.label}{item.to === "/subscription" && plan === "Freemium" && <span className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded bg-accent/20 text-primary">PRO</span>}</NavLink>)}</nav>
-      {role === "user" && <div className="rounded-2xl p-4 mb-2 text-white relative overflow-hidden" style={{ background: "linear-gradient(135deg,#1D8B88,#2FE0DC)" }}><Crown size={20} className="mb-2" /><p className="font-bold text-sm" style={HEAD}>Gói {plan}</p><p className="text-xs text-white/85 mt-0.5 mb-3">{plan === "Premium" ? "Đã mở khóa mọi tính năng 🎉" : "Nâng cấp để mở khóa AI không giới hạn"}</p>{plan === "Freemium" && <button onClick={() => navigate("/subscription")} className="w-full py-1.5 rounded-lg bg-white text-primary text-xs font-semibold hover:bg-white/90">Nâng cấp</button>}</div>}
+    <aside className={`fixed top-16 left-0 bottom-0 w-64 z-40 border-r border-border bg-sidebar overflow-y-auto transition-transform duration-200 ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}><div className="p-3 flex flex-col h-full"><nav className="space-y-1 flex-1">{nav.map(item => <NavLink key={item.to} to={item.to} end={item.end} onClick={() => setOpen(false)} className={({ isActive }) => `w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-all ${isActive ? "bg-primary text-primary-foreground font-semibold shadow-sm shadow-primary/25" : "text-sidebar-foreground hover:bg-secondary"}`}><span className="text-primary/70">{item.icon}</span>{item.label}{item.to === "/subscription" && plan === "Free" && <span className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded bg-accent/20 text-primary">PRO</span>}</NavLink>)}</nav>
+      {role === "user" && <div className="rounded-2xl p-4 mb-2 text-white relative overflow-hidden" style={{ background: "linear-gradient(135deg,#1D8B88,#2FE0DC)" }}><Crown size={20} className="mb-2" /><p className="font-bold text-sm" style={HEAD}>Gói {plan}</p><p className="text-xs text-white/85 mt-0.5 mb-3">{plan === "Premium" ? "Đã mở khóa mọi tính năng 🎉" : "Nâng cấp để mở khóa AI không giới hạn"}</p>{plan === "Free" && <button onClick={() => navigate("/subscription")} className="w-full py-1.5 rounded-lg bg-white text-primary text-xs font-semibold hover:bg-white/90">Nâng cấp</button>}</div>}
       <button onClick={logOut} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-destructive hover:bg-destructive/10 transition-colors"><LogOut size={17} /> Đăng xuất</button></div></aside>
     <main className="lg:ml-64 pt-16 min-h-screen"><div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><Outlet /></div></main>
   </div>;

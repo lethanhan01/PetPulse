@@ -23,7 +23,7 @@ export const MOCK_COMMUNITY_POSTS: CommunityPost[] = Array.from({ length: 60 }, 
     id: `POST-${String(index + 1).padStart(3, "0")}`, authorId: author.id, author: author.name,
     handle: `@${author.email.split("@")[0].replace(/[^a-z0-9]/gi, "").toLowerCase()}`, avatar: author.name.split(" ").slice(-2).map(part => part[0]).join(""),
     time: index < 3 ? `${index + 2} giờ trước` : `${Math.floor(index / 3)} ngày trước`, pet: `${["Bơ", "Miu", "Cookie", "Bông", "Đậu"][index % 5]} ${index % 2 ? "🐈" : "🐕"}`,
-    content: captions[index % captions.length], image: index % 4 === 3 ? undefined : photos[index % photos.length], likes: 12 + (index * 17) % 580,
+    content: captions[index % captions.length], images: index % 4 === 3 ? undefined : [photos[index % photos.length]], likes: 12 + (index * 17) % 580,
     comments: index % 5 === 0 ? [] : [
       { id: `COMMENT-${index + 1}-1`, authorId: "U-1001", author: "Nguyễn Văn An", content: "Bé đáng yêu quá! 🥰", time: "1 giờ trước" },
       { id: `COMMENT-${index + 1}-2`, authorId: "U-1006", author: "Đỗ Hải Yến", content: "Chúc bé luôn khỏe mạnh nhé 🐾", time: "30 phút trước" },

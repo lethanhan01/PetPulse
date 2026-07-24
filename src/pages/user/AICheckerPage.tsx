@@ -50,9 +50,17 @@ export function AIChecker() {
             <div>
               <p className="text-xs text-muted-foreground mb-2">Triệu chứng phổ biến:</p>
               <div className="flex flex-wrap gap-2">
-                {SYMPTOM_TAGS.map(t => (
-                  <button key={t} onClick={() => setSymptoms(s => s ? `${s}, ${t.toLowerCase()}` : t)} className="px-2.5 py-1 rounded-full border border-border text-xs text-muted-foreground hover:border-primary hover:text-primary transition-colors">+ {t}</button>
-                ))}
+                {SYMPTOM_TAGS.map(t => {
+                  const selected = symptoms.split(",").map(s => s.trim().toLowerCase()).includes(t.toLowerCase());
+                  return (
+                    <button key={t} onClick={() => setSymptoms(s => {
+                      const list = s.split(",").map(x => x.trim()).filter(Boolean);
+                      const idx = list.findIndex(x => x.toLowerCase() === t.toLowerCase());
+                      if (idx >= 0) { list.splice(idx, 1); return list.join(", "); }
+                      return list.length ? `${list.join(", ")}, ${t.toLowerCase()}` : t;
+                    })} className={`px-2.5 py-1 rounded-full border text-xs transition-colors ${selected ? "border-primary bg-primary/10 text-primary font-medium" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}>{selected ? "✓" : "+"} {t}</button>
+                  );
+                })}
               </div>
             </div>
             <Btn block size="lg" icon={<Sparkles size={17} />} loading={loading} onClick={run}>{loading ? "Đang phân tích..." : "Phân tích với AI"}</Btn>

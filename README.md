@@ -20,7 +20,7 @@ Vite mặc định chạy tại [http://localhost:5173](http://localhost:5173). 
 
 | Vai trò | Email | Mật khẩu |
 | --- | --- | --- |
-| Admin | `admin@pawpulse.vn` | `paw123` |
+| Admin | `admin@petpulse.vn` | `paw123` |
 | User | `an@example.com` | `paw123` |
 
 ## Quality gate

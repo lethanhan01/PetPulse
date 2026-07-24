@@ -32,7 +32,7 @@ export type CommunityComment = { id: string; authorId: string; author: string; c
 export type ModerationStatus = "approved" | "pending" | "rejected";
 export type CommunityPost = {
   id: string; authorId: string; author: string; handle: string; avatar: string; time: string;
-  pet: string; content: string; image?: string; likes: number; comments: CommunityComment[]; status: ModerationStatus;
+  pet: string; content: string; images?: string[]; likes: number; comments: CommunityComment[]; status: ModerationStatus;
 };
 
 export type Subscription = {
@@ -40,6 +40,6 @@ export type Subscription = {
   subscribers: number; active: boolean; accent?: boolean; tagline?: string;
 };
 
-export type Notification = { id: string; title: string; subtitle: string; kind: "event" | "health" | "vaccine"; read: boolean };
+export type Notification = { id: string; title: string; subtitle: string; kind: "event" | "health" | "vaccine" | "moderation"; read: boolean };
 export type AnalyticsPoint = { label: string; value: number };
 export type AnalyticsSeries = Record<"Tuần" | "Tháng" | "Quý", AnalyticsPoint[]>;

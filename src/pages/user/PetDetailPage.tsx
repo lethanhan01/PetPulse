@@ -7,7 +7,7 @@ import { Card, Btn, Badge, Field, Select, Modal, TrendChart, HEAD, MONO } from "
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import {
   ArrowLeft, Activity, Calendar, Sparkles, Settings, Plus, Weight, Syringe,
-  Stethoscope, Pill, Bell, ShieldCheck, TrendingUp, CheckCircle2, Clock,
+  Stethoscope, Pill, Bell, ShieldCheck, TrendingUp, CheckCircle2, Clock, Trash2, Lightbulb, AlertTriangle,
 } from "lucide-react";
 
 const TABS = [
@@ -36,6 +36,7 @@ export function PetDetail() {
   const addHealth = (h: HealthEntry) => updatePet(pet.id, { health: [h, ...pet.health] });
   const addEvent = (ev: CareEvent) => updatePet(pet.id, { events: [ev, ...pet.events] });
   const toggleEvent = (id: string) => updatePet(pet.id, { events: pet.events.map(e => e.id === id ? { ...e, done: !e.done } : e) });
+  const deleteEvent = (id: string) => updatePet(pet.id, { events: pet.events.filter(e => e.id !== id) });
 
   return (
     <div className="space-y-6">
@@ -74,46 +75,44 @@ export function PetDetail() {
       {/* OVERVIEW */}
       {tab === "overview" && (
         <div className="grid lg:grid-cols-3 gap-6">
-          <Card className="p-6 lg:col-span-1 text-center">
-            <p className="text-sm text-muted-foreground mb-2">Health Score</p>
-            <div className="relative w-32 h-32 mx-auto mb-3">
-              <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-                <circle cx="50" cy="50" r="42" fill="none" stroke="var(--secondary)" strokeWidth="8" />
-                <circle cx="50" cy="50" r="42" fill="none" stroke="#1D8B88" strokeWidth="8" strokeLinecap="round"
-                  strokeDasharray={`${2 * Math.PI * 42}`} strokeDashoffset={`${2 * Math.PI * 42 * (1 - latest.score / 100)}`} />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-extrabold text-3xl text-primary" style={HEAD}>{latest.score}</span>
-                <span className="text-xs text-muted-foreground">/100</span>
+          <Card className="p-6 lg:col-span-1 text-center" hover={false}>
+            <div className="relative overflow-hidden rounded-xl -m-6 -mt-6 mb-0 p-6" style={{ background: "linear-gradient(135deg,#1D8B88,#2FE0DC)" }}>
+              <p className="text-sm text-white/80 mb-2">Health Score</p>
+              <div className="relative w-28 h-28 mx-auto mb-3">
+                <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="8" />
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="white" strokeWidth="8" strokeLinecap="round"
+                    strokeDasharray={`${2 * Math.PI * 42}`} strokeDashoffset={`${2 * Math.PI * 42 * (1 - latest.score / 100)}`} />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="font-extrabold text-4xl text-white" style={HEAD}>{latest.score}</span>
+                  <span className="text-xs text-white/70">/100</span>
+                </div>
               </div>
             </div>
-            <Badge v={level.v}>{level.l}</Badge>
+            <div className="mt-4"><Badge v={level.v}>{level.l}</Badge></div>
             <p className="text-xs text-muted-foreground mt-4 leading-relaxed">Khuyến nghị: Duy trì chế độ vận động, bổ sung dinh dưỡng cân bằng và khám răng định kỳ.</p>
           </Card>
 
-          <Card className="p-5 lg:col-span-2">
+          <Card className="p-5 lg:col-span-2" hover={false}>
             <h3 className="font-bold text-foreground mb-4" style={HEAD}>Chỉ số sức khỏe gần nhất</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
               {[
-                { icon: <Weight size={16} />, l: "Cân nặng", v: `${latest.weight}kg` },
-                { icon: <Stethoscope size={16} />, l: "Tình trạng", v: latest.condition },
-                { icon: <Activity size={16} />, l: "Dinh dưỡng", v: latest.nutrition },
-                { icon: <Syringe size={16} />, l: "Bệnh", v: latest.illness || "Không" },
+                { icon: <Weight size={16} />, bg: "bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600", l: "Cân nặng", v: `${latest.weight}kg` },
+                { icon: <Stethoscope size={16} />, bg: "bg-violet-100 dark:bg-violet-900/30 text-violet-600", l: "Tình trạng", v: latest.condition },
+                { icon: <Activity size={16} />, bg: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600", l: "Dinh dưỡng", v: latest.nutrition },
+                { icon: <Syringe size={16} />, bg: "bg-amber-100 dark:bg-amber-900/30 text-amber-600", l: "Bệnh", v: latest.illness || "Không" },
               ].map(m => (
                 <div key={m.l} className="bg-muted rounded-xl p-3">
-                  <div className="text-primary mb-1.5">{m.icon}</div>
+                  <div className={`${m.bg} w-8 h-8 rounded-lg flex items-center justify-center mb-2`}>{m.icon}</div>
                   <div className="text-sm font-bold text-foreground">{m.v}</div>
                   <div className="text-xs text-muted-foreground">{m.l}</div>
                 </div>
               ))}
             </div>
-            <div className="h-40">
+            <div className="h-52">
               <TrendChart
-                height={160}
-                showArea
-                showXLabels
-                min={60}
-                max={100}
+                height={208} showArea showXLabels min={60} max={100}
                 data={[...pet.health].reverse().map(h => ({ label: h.date, value: h.score }))}
               />
             </div>
@@ -128,25 +127,29 @@ export function PetDetail() {
             <h3 className="font-bold text-lg text-foreground" style={HEAD}>Health Timeline</h3>
             <Btn size="sm" icon={<Plus size={15} />} onClick={() => setHealthModal(true)}>Cập nhật sức khỏe</Btn>
           </div>
-          <div className="relative pl-6">
-            <div className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-border" />
-            {pet.health.map((h, i) => (
-              <div key={h.id} className="relative pb-6 last:pb-0">
-                <div className={`absolute -left-6 top-1 w-4 h-4 rounded-full border-2 border-card ${i === 0 ? "bg-primary" : "bg-accent"}`} />
-                <Card className="p-4" hover={false}>
-                  <div className="flex items-center justify-between mb-2">
-                    <code className="text-xs text-muted-foreground" style={MONO}>{h.date}</code>
-                    <Badge v={scoreLevel(h.score).v}>Score {h.score}</Badge>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
-                    <div><span className="text-muted-foreground text-xs block">Cân nặng</span><b className="text-foreground">{h.weight}kg</b></div>
-                    <div><span className="text-muted-foreground text-xs block">Tình trạng</span><b className="text-foreground">{h.condition}</b></div>
-                    <div><span className="text-muted-foreground text-xs block">Dinh dưỡng</span><b className="text-foreground">{h.nutrition}</b></div>
-                    <div><span className="text-muted-foreground text-xs block">Bệnh</span><b className="text-foreground">{h.illness || "Không"}</b></div>
-                  </div>
-                </Card>
-              </div>
-            ))}
+          <div className="relative pl-8">
+            <div className="absolute left-[15px] top-2 bottom-2 w-0.5 bg-border" />
+            {pet.health.map((h, i) => {
+              const lv = scoreLevel(h.score);
+              return (
+                <div key={h.id} className="relative pb-6 last:pb-0">
+                  <div className={`absolute -left-8 top-1.5 w-4 h-4 rounded-full border-[3px] border-card ${lv.v === "success" ? "bg-green-500" : lv.v === "info" ? "bg-primary" : lv.v === "warning" ? "bg-amber-500" : "bg-red-500"}`} />
+                  <Card className={`p-0 overflow-hidden border-l-4 ${lv.v === "success" ? "border-l-green-500" : lv.v === "info" ? "border-l-primary" : lv.v === "warning" ? "border-l-amber-500" : "border-l-red-500"}`} hover={false}>
+                    <div className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <code className="text-xs text-muted-foreground" style={MONO}>{h.date}</code>
+                        <Badge v={lv.v}>Score {h.score}</Badge>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {[{ icon: <Weight size={12} />, l: h.weight + "kg" }, { icon: <Stethoscope size={12} />, l: h.condition }, { icon: <Activity size={12} />, l: h.nutrition }, { icon: <Syringe size={12} />, l: h.illness || "Không" }].map((s, j) => (
+                          <span key={j} className="inline-flex items-center gap-1 px-2 py-1 bg-muted rounded-md text-xs text-foreground">{s.icon}{s.l}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -158,22 +161,28 @@ export function PetDetail() {
             <h3 className="font-bold text-lg text-foreground" style={HEAD}>Lịch chăm sóc sức khỏe</h3>
             <Btn size="sm" icon={<Plus size={15} />} onClick={() => setEventModal(true)}>Thêm sự kiện</Btn>
           </div>
-          <div className="flex items-start gap-2 p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200">
-            <Bell size={15} className="mt-0.5 flex-shrink-0 text-blue-500" />
+          <div className="flex items-start gap-3 p-3.5 rounded-xl bg-primary/5 border border-primary/10 text-primary">
+            <Bell size={16} className="mt-0.5 flex-shrink-0" />
             <p className="text-sm">Hệ thống sẽ gửi in-app notification nhắc bạn trước mỗi sự kiện.</p>
           </div>
           <div className="space-y-2.5">
             {pet.events.length === 0 && <Card className="p-8 text-center text-sm text-muted-foreground" hover={false}>Chưa có sự kiện nào. Thêm lịch khám, uống thuốc...</Card>}
             {pet.events.map(e => {
               const icon = e.type === "Uống thuốc" ? <Pill size={16} /> : e.type === "Khám" ? <Stethoscope size={16} /> : e.type === "Tiêm phòng" ? <Syringe size={16} /> : <Calendar size={16} />;
+              const done = e.done;
               return (
-                <Card key={e.id} className="p-4 flex items-center gap-3" hover={false}>
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${e.done ? "bg-green-100 dark:bg-green-900/30 text-green-600" : "bg-primary/10 text-primary"}`}>{icon}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium ${e.done ? "text-muted-foreground line-through" : "text-foreground"}`}>{e.title}</p>
-                    <p className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap"><Clock size={11} /> {e.date} · {e.time} · {e.repeat} <Badge v="neutral">{e.type}</Badge></p>
+                <Card key={e.id} className={`p-0 overflow-hidden border-l-4 ${done ? "border-l-green-500/60" : "border-l-primary"}`} hover={false}>
+                  <div className="p-4 flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${done ? "bg-green-100 dark:bg-green-900/30 text-green-600" : "bg-primary/10 text-primary"}`}>{icon}</div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-medium ${done ? "text-muted-foreground line-through" : "text-foreground"}`}>{e.title}</p>
+                      <p className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap mt-0.5"><Clock size={11} /> {e.date} · {e.time} · {e.repeat} <Badge v="neutral">{e.type}</Badge></p>
+                    </div>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <button onClick={() => toggleEvent(e.id)} className={`p-2 rounded-lg transition-colors ${done ? "text-green-600 bg-green-100 dark:bg-green-900/30" : "text-muted-foreground hover:bg-secondary"}`}><CheckCircle2 size={18} /></button>
+                      <button onClick={() => deleteEvent(e.id)} className="p-2 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"><Trash2 size={16} /></button>
+                    </div>
                   </div>
-                  <button onClick={() => toggleEvent(e.id)} className={`p-2 rounded-lg transition-colors ${e.done ? "text-green-600 bg-green-100 dark:bg-green-900/30" : "text-muted-foreground hover:bg-secondary"}`}><CheckCircle2 size={18} /></button>
                 </Card>
               );
             })}
@@ -189,41 +198,62 @@ export function PetDetail() {
             <Btn size="sm" icon={<Sparkles size={15} />} onClick={() => navigate("/ai-checker")}>Tư vấn mới</Btn>
           </div>
           {pet.consults.length === 0 && <Card className="p-8 text-center text-sm text-muted-foreground" hover={false}>Chưa có lịch sử tư vấn. Dùng AI Symptom Checker để kiểm tra sức khỏe.</Card>}
-          {pet.consults.map(c => (
-            <Card key={c.id} className="p-5" hover={false}>
-              <div className="flex items-center justify-between mb-3">
-                <code className="text-xs text-muted-foreground" style={MONO}>{c.date}</code>
-                <Badge v={c.severity === "Cao" ? "danger" : c.severity === "Trung bình" ? "warning" : "success"}>Cảnh báo: {c.severity}</Badge>
-              </div>
-              <p className="text-sm text-foreground mb-3"><b>Triệu chứng:</b> {c.symptoms}</p>
-              <div className="grid sm:grid-cols-2 gap-4 text-sm">
-                <div><p className="text-xs font-semibold text-muted-foreground mb-1">Bệnh có thể gặp</p><ul className="list-disc list-inside text-foreground space-y-0.5">{c.diseases.map(d => <li key={d}>{d}</li>)}</ul></div>
-                <div><p className="text-xs font-semibold text-muted-foreground mb-1">Sơ cứu</p><ul className="list-disc list-inside text-foreground space-y-0.5">{c.firstAid.map(d => <li key={d}>{d}</li>)}</ul></div>
-              </div>
-              <p className="text-sm text-primary mt-3 bg-primary/5 rounded-lg p-2.5">💡 {c.vetAdvice}</p>
-            </Card>
-          ))}
+          {pet.consults.map(c => {
+            const sv = c.severity === "Cao" ? { v: "danger" as const, c: "border-red-500/40 bg-red-50/50 dark:bg-red-950/20" } : c.severity === "Trung bình" ? { v: "warning" as const, c: "border-amber-500/40 bg-amber-50/50 dark:bg-amber-950/20" } : { v: "success" as const, c: "border-green-500/40 bg-green-50/50 dark:bg-green-950/20" };
+            return (
+              <Card key={c.id} className={`p-0 overflow-hidden border-l-4 ${sv.c}`} hover={false}>
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <code className="text-xs text-muted-foreground" style={MONO}>{c.date}</code>
+                    <Badge v={sv.v}><AlertTriangle size={11} /> Cảnh báo: {c.severity}</Badge>
+                  </div>
+                  <div className="flex items-start gap-2 mb-4 p-3 bg-background/80 rounded-xl text-sm text-foreground">
+                    <Activity size={15} className="mt-0.5 text-primary flex-shrink-0" />
+                    <span><b>Triệu chứng:</b> {c.symptoms}</span>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-4 text-sm mb-4">
+                    <div>
+                      <p className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1.5"><Stethoscope size={12} /> Bệnh có thể gặp</p>
+                      <div className="flex flex-wrap gap-1.5">{c.diseases.map(d => <span key={d} className="px-2.5 py-1 bg-destructive/10 text-destructive text-xs rounded-full">{d}</span>)}</div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1.5"><Pill size={12} /> Sơ cứu</p>
+                      <div className="flex flex-wrap gap-1.5">{c.firstAid.map(d => <span key={d} className="px-2.5 py-1 bg-primary/10 text-primary text-xs rounded-full">{d}</span>)}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5 p-3 bg-primary/5 rounded-xl text-sm text-primary">
+                    <Lightbulb size={16} className="mt-0.5 flex-shrink-0" />
+                    <span>{c.vetAdvice}</span>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
         </div>
       )}
 
       {/* SETTINGS */}
       {tab === "settings" && (
-        <Card className="p-6 max-w-lg" hover={false}>
-          <h3 className="font-bold text-foreground mb-4" style={HEAD}>Cài đặt hồ sơ {pet.name}</h3>
-          <div className="space-y-3.5">
+        <div className="max-w-lg space-y-4">
+          <h3 className="font-bold text-lg text-foreground" style={HEAD}>Cài đặt hồ sơ {pet.name}</h3>
+          <Card className="divide-y divide-border" hover={false}>
             {[
-              { l: "Hiển thị hồ sơ công khai", d: "Cho phép cộng đồng xem passport" },
-              { l: "Nhắc lịch qua thông báo", d: "In-app notification trước sự kiện" },
-              { l: "Tự động tính Health Score", d: "Sau mỗi lần cập nhật timeline" },
-              { l: "Lưu kết quả tư vấn AI", d: "Đồng bộ vào hồ sơ pet" },
+              { icon: <ShieldCheck size={17} />, l: "Hiển thị hồ sơ công khai", d: "Cho phép cộng đồng xem passport" },
+              { icon: <Bell size={17} />, l: "Nhắc lịch qua thông báo", d: "In-app notification trước sự kiện" },
+              { icon: <Activity size={17} />, l: "Tự động tính Health Score", d: "Sau mỗi lần cập nhật timeline" },
+              { icon: <Sparkles size={17} />, l: "Lưu kết quả tư vấn AI", d: "Đồng bộ vào hồ sơ pet" },
             ].map((s, i) => (
-              <div key={s.l} className="flex items-center justify-between">
-                <div><p className="text-sm font-medium text-foreground">{s.l}</p><p className="text-xs text-muted-foreground">{s.d}</p></div>
+              <div key={s.l} className="flex items-center gap-3 px-5 py-4 first:pt-5 last:pb-5">
+                <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">{s.icon}</div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground">{s.l}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{s.d}</p>
+                </div>
                 <Toggle defaultOn={i !== 0} />
               </div>
             ))}
-          </div>
-        </Card>
+          </Card>
+        </div>
       )}
 
       <HealthFormModal open={healthModal} onClose={() => setHealthModal(false)} onSave={addHealth} />
@@ -266,11 +296,12 @@ function HealthFormModal({ open, onClose, onSave }: { open: boolean; onClose: ()
 }
 
 function EventFormModal({ open, onClose, onSave }: { open: boolean; onClose: () => void; onSave: (e: CareEvent) => void }) {
-  const [f, setF] = useState({ title: "", date: "", time: "", repeat: "Không lặp", type: "Khám" });
+  const [f, setF] = useState({ title: "", date: "", time: "", repeat: "Không lặp", type: "Khám", customType: "" });
+  const isOther = f.type === "Khác";
   const save = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(createCareEvent({ title: f.title, date: f.date, time: f.time, repeat: f.repeat as CareEvent["repeat"], type: f.type as CareEvent["type"] }));
-    setF({ title: "", date: "", time: "", repeat: "Không lặp", type: "Khám" });
+    onSave(createCareEvent({ title: f.title, date: f.date, time: f.time, repeat: f.repeat as CareEvent["repeat"], type: isOther ? f.customType : f.type }));
+    setF({ title: "", date: "", time: "", repeat: "Không lặp", type: "Khám", customType: "" });
     onClose();
   };
   return (
@@ -285,10 +316,13 @@ function EventFormModal({ open, onClose, onSave }: { open: boolean; onClose: () 
           <Select label="Lặp lại" value={f.repeat} onChange={e => setF(p => ({ ...p, repeat: e.target.value }))}>
             <option>Không lặp</option><option>Hằng ngày</option><option>Hằng tuần</option>
           </Select>
-          <Select label="Loại sự kiện" value={f.type} onChange={e => setF(p => ({ ...p, type: e.target.value }))}>
+          <Select label="Loại sự kiện" value={f.type} onChange={e => setF(p => ({ ...p, type: e.target.value, customType: "" }))}>
             <option>Khám</option><option>Uống thuốc</option><option>Tiêm phòng</option><option>Khác</option>
           </Select>
         </div>
+        {isOther && (
+          <Field label="Nhập loại sự kiện khác" value={f.customType} onChange={e => setF(p => ({ ...p, customType: e.target.value }))} placeholder="VD: Tắm, cắt móng..." required />
+        )}
         <div className="flex gap-3 pt-1"><Btn variant="outline" block type="button" onClick={onClose}>Hủy</Btn><Btn block type="submit">Thêm vào lịch</Btn></div>
       </form>
     </Modal>
