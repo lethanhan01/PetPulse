@@ -4,6 +4,7 @@ import { useApp } from "@/stores/app.store";
 import { Logo, HEAD } from "@/components/common/kit";
 import { Navbar } from "@/components/Navbar/Navbar";
 import { MOCK_NOTIFICATIONS } from "@/mocks";
+import { getAccountInitials } from "@/services/user.service";
 import { Sun, Moon, Bell, Search, Menu, X, LogOut, LayoutDashboard, Users, PawPrint, Sparkles, Crown, User as UserIcon, CreditCard, Stethoscope, BarChart3, Shield, MessageSquare } from "lucide-react";
 
 type NavItem = { to: string; label: string; icon: ReactNode; end?: boolean };
@@ -26,7 +27,7 @@ const ADMIN_NAV: NavItem[] = [
 const notificationIcon = { event: <Bell size={14} />, health: <Stethoscope size={14} />, vaccine: <PawPrint size={14} /> };
 
 export function MainLayout() {
-  const { role, theme, toggleTheme, logout, plan } = useApp();
+  const { role, theme, toggleTheme, logout, plan, activeAccount } = useApp();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [notiOpen, setNotiOpen] = useState(false);
@@ -45,7 +46,7 @@ export function MainLayout() {
         <div className="relative"><button onClick={() => setNotiOpen(!notiOpen)} className="p-2 rounded-full border border-border hover:bg-secondary relative" aria-label="Notifications"><Bell size={16} />{MOCK_NOTIFICATIONS.some(notification => !notification.read) && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-destructive" />}</button>
           {notiOpen && <><div className="fixed inset-0 z-40" onClick={() => setNotiOpen(false)} /><div className="absolute right-0 mt-2 w-80 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden"><div className="p-3 border-b border-border font-semibold text-sm" style={HEAD}>Thông báo</div>{MOCK_NOTIFICATIONS.map(n => <div key={n.id} className="flex gap-3 p-3 hover:bg-secondary/50 border-b border-border last:border-0"><div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">{notificationIcon[n.kind]}</div><div><p className="text-sm text-foreground leading-tight">{n.title}</p><p className="text-xs text-muted-foreground mt-0.5">{n.subtitle}</p></div></div>)}</div></>}
         </div>
-        <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">{role === "admin" ? "AD" : "AN"}</div>
+        <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary" title={activeAccount?.name}>{getAccountInitials(activeAccount)}</div>
       </div>
     </div></Navbar>
     {open && <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setOpen(false)} />}

@@ -30,7 +30,7 @@ const accountRows: Array<[string, string, "user" | "admin", "Freemium" | "Premiu
 
 export const MOCK_ACCOUNTS: MockAccount[] = accountRows.map(([name, email, role, plan, status], index) => ({
   id: `U-${String(1001 + index).padStart(4, "0")}`, name, email, password: "paw123", role, plan, status,
-  phone: `090${String(1234567 + index).padStart(7, "0")}`, birthDate: `199${index % 10}-0${(index % 8) + 1}-12`, city: index % 2 ? "Hà Nội" : "TP. Hồ Chí Minh", gender: index % 3 === 0 ? "Nam" : "Nữ", joined: `202${index % 3 + 3}-${String(index % 12 + 1).padStart(2, "0")}-12`, petCount: index === 0 ? 10 : index % 4,
+  phone: `090${String(1234567 + index).padStart(7, "0")}`, birthDate: `199${index % 10}-0${(index % 8) + 1}-12`, city: index % 2 ? "Hà Nội" : "TP. Hồ Chí Minh", gender: index % 3 === 0 ? "Nam" : "Nữ", joined: `202${index % 3 + 3}-${String(index % 12 + 1).padStart(2, "0")}-12`, avatar: name.split(" ").slice(-2).map(part => part[0]).join(""),
 }));
 
 export const DEMO_USER_ACCOUNT_ID = "U-1001";

@@ -15,9 +15,10 @@ const photos = [
   "https://images.unsplash.com/photo-1624956578877-4948166c5dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
 ];
 const statuses: ModerationStatus[] = [...Array<ModerationStatus>(36).fill("approved"), ...Array<ModerationStatus>(18).fill("pending"), ...Array<ModerationStatus>(6).fill("rejected")];
+const communityAuthors = MOCK_ACCOUNTS.filter(account => account.role === "user");
 
 export const MOCK_COMMUNITY_POSTS: CommunityPost[] = Array.from({ length: 60 }, (_, index) => {
-  const author = MOCK_ACCOUNTS[(index + 2) % MOCK_ACCOUNTS.length];
+  const author = communityAuthors[(index + 2) % communityAuthors.length];
   return {
     id: `POST-${String(index + 1).padStart(3, "0")}`, authorId: author.id, author: author.name,
     handle: `@${author.email.split("@")[0].replace(/[^a-z0-9]/gi, "").toLowerCase()}`, avatar: author.name.split(" ").slice(-2).map(part => part[0]).join(""),

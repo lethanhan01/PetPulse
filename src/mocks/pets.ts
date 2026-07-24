@@ -1,4 +1,5 @@
 import type { AIConsult, CareEvent, HealthEntry, Pet } from "@/types/app.types";
+import type { AdminPet } from "./types";
 import { MOCK_ACCOUNTS, DEMO_USER_ACCOUNT_ID } from "./accounts";
 
 const images = [
@@ -47,18 +48,25 @@ export const MOCK_PETS: Pet[] = demoRows.map(([name, species, breed, gender, age
 const speciesRows = ["Chó", "Mèo", "Thỏ", "Chim", "Cá"] as const;
 const breeds: Record<(typeof speciesRows)[number], string[]> = { Chó: ["Corgi", "Poodle", "Shiba Inu"], Mèo: ["Ba Tư", "Maine Coon", "Mèo ta"], Thỏ: ["Holland Lop", "Netherland Dwarf"], Chim: ["Vẹt Yến Phụng", "Cockatiel"], Cá: ["Cá vàng", "Cá Betta"] };
 
-// Fixed deterministic fixture records for the system table. They deliberately do not use random data.
-export const MOCK_ADMIN_PETS = Array.from({ length: 100 }, (_, index) => {
-  const owner = MOCK_ACCOUNTS[index % MOCK_ACCOUNTS.length];
+const userAccounts = MOCK_ACCOUNTS.filter(account => account.role === "user");
+
+// The system collection is canonical. The first ten records are the detailed demo pets;
+// the remaining records provide complete, deterministic data for every other user account.
+export const MOCK_SYSTEM_PETS: Array<Pet & { ownerId: string }> = Array.from({ length: 100 }, (_, index) => {
+  const owner = index < MOCK_PETS.length ? MOCK_ACCOUNTS.find(account => account.id === DEMO_USER_ACCOUNT_ID)! : userAccounts[1 + ((index - MOCK_PETS.length) % (userAccounts.length - 1))];
   const species = speciesRows[index % speciesRows.length];
   const score = 55 + (index * 7) % 45;
   const demoPet = MOCK_PETS[index];
-  return demoPet ? { id: demoPet.id, name: demoPet.name, species: demoPet.species, breed: demoPet.breed, owner: demoPet.owner, ownerId: DEMO_USER_ACCOUNT_ID, score: demoPet.health[0].score } : {
+  return demoPet ? { ...demoPet, ownerId: DEMO_USER_ACCOUNT_ID } : {
     id: `PET-2026-${String(2001 + index).padStart(6, "0")}`, name: ["Bông", "Đậu", "Gạo", "Sữa", "Mây", "Tép", "Na", "Bim"][index % 8] + ` ${index + 1}`,
-    species, breed: breeds[species][index % breeds[species].length], owner: owner.name, ownerId: owner.id, score,
+    species, emoji: SPECIES_EMOJI[species], breed: breeds[species][index % breeds[species].length], gender: index % 2 ? "Cái" : "Đực", age: `${(index % 8) + 1} tuổi`, weight: `${(index % 18) + 2} kg`, color: ["#F59E0B", "#8B5CF6", "#10B981", "#EC4899"][index % 4], microchip: `985141003${String(50000 + index).padStart(6, "0")}`, owner: owner.name, ownerId: owner.id, chips: ["Vaccinated", "Microchipped"], health: health(`PET-2026-${String(2001 + index).padStart(6, "0")}`, (index % 18) + 2, score, score < 70 ? "Cần theo dõi sức khỏe" : undefined), events: events(`PET-2026-${String(2001 + index).padStart(6, "0")}`, index), consults: consults(`PET-2026-${String(2001 + index).padStart(6, "0")}`, `Pet ${index + 1}`, index),
   };
 });
 
+export const MOCK_ADMIN_PETS: AdminPet[] = MOCK_SYSTEM_PETS.map(pet => ({
+  id: pet.id, name: pet.name, species: pet.species, breed: pet.breed, owner: pet.owner, ownerId: pet.ownerId, score: pet.health[0].score,
+}));
+
 export function getPetsForAccount(accountId: string): Pet[] {
-  return accountId === DEMO_USER_ACCOUNT_ID ? structuredClone(MOCK_PETS) : [];
+  return structuredClone(MOCK_SYSTEM_PETS.filter(pet => pet.ownerId === accountId));
 }

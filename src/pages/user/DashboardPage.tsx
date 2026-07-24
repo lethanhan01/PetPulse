@@ -2,16 +2,18 @@ import { useApp } from "@/stores/app.store";
 import { useNavigate } from "react-router";
 import { Card, Btn, TrendChart, HEAD } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import { getUserDashboardStats } from "@/services/user.service";
 import { PawPrint, Syringe, Calendar, AlertTriangle, Activity, ArrowRight, Sparkles, Bell } from "lucide-react";
 
 export function Dashboard() {
   const { pets, activeAccount } = useApp();
   const navigate = useNavigate();
+  const overview = getUserDashboardStats(pets);
   const stats = [
-    { icon: <PawPrint size={17} />, l: "Thú cưng", v: String(pets.length), sub: "Đang quản lý", ic: "text-primary bg-primary/10" },
-    { icon: <Syringe size={17} />, l: "Tiêm phòng", v: "12", sub: "Cập nhật đầy đủ", ic: "text-green-600 bg-green-100 dark:bg-green-900/30" },
-    { icon: <Calendar size={17} />, l: "Lịch sắp tới", v: "3", sub: "Trong 2 tuần", ic: "text-blue-600 bg-blue-100 dark:bg-blue-900/30" },
-    { icon: <AlertTriangle size={17} />, l: "Cảnh báo", v: "1", sub: "Cần chú ý", ic: "text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30" },
+    { icon: <PawPrint size={17} />, l: "Thú cưng", v: String(overview.petCount), sub: "Đang quản lý", ic: "text-primary bg-primary/10" },
+    { icon: <Syringe size={17} />, l: "Tiêm phòng", v: String(overview.completedVaccinations), sub: "Đã hoàn thành", ic: "text-green-600 bg-green-100 dark:bg-green-900/30" },
+    { icon: <Calendar size={17} />, l: "Lịch sắp tới", v: String(overview.upcomingEvents), sub: "Chưa hoàn thành", ic: "text-blue-600 bg-blue-100 dark:bg-blue-900/30" },
+    { icon: <AlertTriangle size={17} />, l: "Cảnh báo", v: String(overview.alerts), sub: "Cần chú ý", ic: "text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30" },
   ];
   return (
     <div className="space-y-8">

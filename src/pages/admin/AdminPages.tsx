@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { MOCK_AI_USAGE, MOCK_COMMUNITY_POSTS, MOCK_REVENUE, MOCK_SUBSCRIPTIONS } from "@/mocks";
-import { getAdminPets, getAdminUsers } from "@/services/user.service";
+import { getAdminPets, getAdminStats, getAdminUsers } from "@/services/user.service";
 import { Card, Btn, Badge, Field, Modal, PageTitle, TrendChart, BarChart, HEAD, MONO } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Pagination } from "@/components/Pagination/Pagination";
@@ -13,11 +13,12 @@ import {
 // ── Dashboard ──
 export function AdminDashboard() {
   const [range, setRange] = useState("Tháng");
+  const statsData = getAdminStats(range as keyof typeof MOCK_AI_USAGE);
   const stats = [
-    { icon: <Users size={18} />, l: "Tổng User", v: "8,420", sub: "+12% so với tháng trước", ic: "text-primary bg-primary/10" },
-    { icon: <Crown size={18} />, l: "Premium User", v: "2,130", sub: "25.3% chuyển đổi", ic: "text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30" },
-    { icon: <PawPrint size={18} />, l: "Tổng Pet", v: "11,204", sub: "+340 tuần này", ic: "text-green-600 bg-green-100 dark:bg-green-900/30" },
-    { icon: <Bot size={18} />, l: "AI Usage", v: "920", sub: "Lượt tư vấn tháng 7", ic: "text-blue-600 bg-blue-100 dark:bg-blue-900/30" },
+    { icon: <Users size={18} />, l: "Tổng User", v: statsData.totalUsers.toLocaleString(), sub: "Tài khoản người dùng", ic: "text-primary bg-primary/10" },
+    { icon: <Crown size={18} />, l: "Premium User", v: statsData.premiumUsers.toLocaleString(), sub: `${statsData.conversionRate.toFixed(1)}% chuyển đổi`, ic: "text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30" },
+    { icon: <PawPrint size={18} />, l: "Tổng Pet", v: statsData.totalPets.toLocaleString(), sub: "Thú cưng trên hệ thống", ic: "text-green-600 bg-green-100 dark:bg-green-900/30" },
+    { icon: <Bot size={18} />, l: "AI Usage", v: statsData.aiUsage.toLocaleString(), sub: `Lượt tư vấn ${range.toLowerCase()}`, ic: "text-blue-600 bg-blue-100 dark:bg-blue-900/30" },
   ];
   return (
     <div className="space-y-6">

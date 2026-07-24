@@ -15,7 +15,17 @@ export type MockAccount = {
   city: string;
   gender: "Nam" | "Nữ" | "Khác";
   joined: string;
-  petCount: number;
+  avatar: string;
+};
+
+export type AdminPet = {
+  id: string;
+  name: string;
+  species: string;
+  breed: string;
+  owner: string;
+  ownerId: string;
+  score: number;
 };
 
 export type CommunityComment = { id: string; authorId: string; author: string; content: string; time: string };

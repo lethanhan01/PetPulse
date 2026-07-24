@@ -8,6 +8,7 @@ export function Profile() {
   const { pets, plan, role, activeAccount } = useApp();
   const navigate = useNavigate();
   const isAdmin = role === "admin";
+  const yearsWithPawPulse = activeAccount ? Math.max(0, new Date().getFullYear() - new Date(activeAccount.joined).getFullYear()) : 0;
   const [tab, setTab] = useState<"info" | "security" | "pets">("info");
   const tabs = isAdmin
     ? [{ k: "info", l: "Thông tin cá nhân" }, { k: "security", l: "Bảo mật" }] as const
@@ -18,13 +19,13 @@ export function Profile() {
       <PageTitle title={isAdmin ? "Hồ sơ Admin" : "Hồ sơ cá nhân"} />
       <div className="grid lg:grid-cols-3 gap-6">
         <Card className="p-6 text-center h-fit" hover={false}>
-          <div className="w-20 h-20 rounded-3xl bg-primary/20 flex items-center justify-center text-2xl font-extrabold text-primary mx-auto mb-3" style={HEAD}>{isAdmin ? "AD" : "AN"}</div>
+          <div className="w-20 h-20 rounded-3xl bg-primary/20 flex items-center justify-center text-2xl font-extrabold text-primary mx-auto mb-3" style={HEAD}>{activeAccount?.avatar ?? (isAdmin ? "AD" : "AN")}</div>
           <h3 className="font-bold text-lg text-foreground" style={HEAD}>{activeAccount?.name ?? (isAdmin ? "Quản trị viên" : "Nguyễn Văn An")}</h3>
           <p className="text-sm text-muted-foreground mb-3">{activeAccount?.email ?? (isAdmin ? "admin@pawpulse.vn" : "an@example.com")}</p>
           {!isAdmin && (plan === "Premium" ? <Badge v="primary"><Crown size={11} /> Premium</Badge> : <Badge v="neutral">Freemium</Badge>)}
           {!isAdmin && <div className="mt-4 pt-4 border-t border-border grid grid-cols-2 gap-2 text-center">
             <div><div className="font-extrabold text-xl text-primary" style={HEAD}>{pets.length}</div><div className="text-xs text-muted-foreground">Thú cưng</div></div>
-            <div><div className="font-extrabold text-xl text-primary" style={HEAD}>2</div><div className="text-xs text-muted-foreground">Năm cùng PawPulse</div></div>
+            <div><div className="font-extrabold text-xl text-primary" style={HEAD}>{yearsWithPawPulse}</div><div className="text-xs text-muted-foreground">Năm cùng PawPulse</div></div>
           </div>}
         </Card>
 

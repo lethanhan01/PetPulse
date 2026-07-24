@@ -17,4 +17,12 @@ describe("AppProvider mock reset", () => {
     render(<AppProvider><Probe /></AppProvider>);
     expect(screen.getByText("true:dark:Nguyễn Văn An:10")).toBeInTheDocument();
   });
+
+  it("restores the admin account without loading a user's pets", () => {
+    localStorage.setItem("petpulse:app-state", JSON.stringify({
+      theme: "light", role: "admin", plan: "Premium", authed: true, activeAccountId: "U-1002",
+    }));
+    render(<AppProvider><Probe /></AppProvider>);
+    expect(screen.getByText("true:light:Quản trị viên:0")).toBeInTheDocument();
+  });
 });
