@@ -1,15 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useApp } from "@/stores/app.store";
 import { useNavigate } from "react-router";
-import { Card, Btn, Field, Badge, PageTitle, HEAD } from "@/components/common/kit";
-import { Pencil, Lock, Crown, Plus, ChevronRight } from "lucide-react";
+import { Card, Btn, Field, Select, Badge, PageTitle, HEAD } from "@/components/common/kit";
+import { Pencil, Lock, Crown, Plus, ChevronRight, X, Check } from "lucide-react";
+import type { MockAccount } from "@/mocks/types";
+
+function InfoField({ label, value }: { label: string; value?: string }) {
+  return (
+    <div>
+      <p className="text-xs text-muted-foreground mb-1">{label}</p>
+      <p className="text-sm font-medium text-foreground">{value || "—"}</p>
+    </div>
+  );
+}
 
 export function Profile() {
-  const { pets, plan, role, activeAccount } = useApp();
+  const { pets, plan, role, activeAccount, updateAccount } = useApp();
   const navigate = useNavigate();
   const isAdmin = role === "admin";
   const yearsWithPawPulse = activeAccount ? Math.max(0, new Date().getFullYear() - new Date(activeAccount.joined).getFullYear()) : 0;
   const [tab, setTab] = useState<"info" | "security" | "pets">("info");
+  const [editing, setEditing] = useState(false);
+  const [changingPwd, setChangingPwd] = useState(false);
+  const [form, setForm] = useState<Pick<MockAccount, "name" | "email" | "phone" | "birthDate" | "city" | "gender">>({ name: "", email: "", phone: "", birthDate: "", city: "", gender: "Nam" });
+  useEffect(() => {
+    if (activeAccount) setForm({ name: activeAccount.name, email: activeAccount.email, phone: activeAccount.phone, birthDate: activeAccount.birthDate, city: activeAccount.city, gender: activeAccount.gender });
+  }, [activeAccount]);
   const tabs = isAdmin
     ? [{ k: "info", l: "Thông tin cá nhân" }, { k: "security", l: "Bảo mật" }] as const
     : [{ k: "info", l: "Thông tin cá nhân" }, { k: "security", l: "Bảo mật" }, { k: "pets", l: "Thú cưng của tôi" }] as const;
@@ -38,29 +54,56 @@ export function Profile() {
 
           {tab === "info" && (
             <Card className="p-6" hover={false}>
-              <form className="space-y-4" onSubmit={e => e.preventDefault()}>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <Field label="Họ và tên" defaultValue={activeAccount?.name} />
-                  <Field label="Email" type="email" defaultValue={activeAccount?.email} />
-                  <Field label="Số điện thoại" defaultValue={activeAccount?.phone} />
-                  <Field label="Ngày sinh" type="date" defaultValue={activeAccount?.birthDate} />
-                  <Field label="Thành phố" defaultValue={activeAccount?.city} />
-                  <Field label="Giới tính" defaultValue={activeAccount?.gender} />
+              {editing ? (
+                <form className="space-y-4" onSubmit={e => { e.preventDefault(); updateAccount(form); setEditing(false); }}>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <Field label="Họ và tên" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+                    <Field label="Email" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+                    <Field label="Số điện thoại" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
+                    <Field label="Ngày sinh" type="date" value={form.birthDate} onChange={e => setForm(f => ({ ...f, birthDate: e.target.value }))} />
+                    <Field label="Thành phố" value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))} />
+                    <Select label="Giới tính" value={form.gender} onChange={e => setForm(f => ({ ...f, gender: e.target.value as MockAccount["gender"] }))}><option value="Nam">Nam</option><option value="Nữ">Nữ</option><option value="Khác">Khác</option></Select>
+                  </div>
+                  <div className="flex gap-3">
+                    <Btn icon={<Check size={15} />} type="submit">Lưu thay đổi</Btn>
+                    <Btn variant="outline" icon={<X size={15} />} onClick={() => { setEditing(false); if (activeAccount) setForm({ name: activeAccount.name, email: activeAccount.email, phone: activeAccount.phone, birthDate: activeAccount.birthDate, city: activeAccount.city, gender: activeAccount.gender }); }} type="button">Hủy</Btn>
+                  </div>
+                </form>
+              ) : (
+                <div className="space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <InfoField label="Họ và tên" value={activeAccount?.name} />
+                    <InfoField label="Email" value={activeAccount?.email} />
+                    <InfoField label="Số điện thoại" value={activeAccount?.phone} />
+                    <InfoField label="Ngày sinh" value={activeAccount?.birthDate} />
+                    <InfoField label="Thành phố" value={activeAccount?.city} />
+                    <InfoField label="Giới tính" value={activeAccount?.gender} />
+                  </div>
+                  <Btn icon={<Pencil size={15} />} onClick={() => setEditing(true)}>Chỉnh sửa</Btn>
                 </div>
-                <Btn icon={<Pencil size={15} />} type="submit">Lưu thay đổi</Btn>
-              </form>
+              )}
             </Card>
           )}
 
           {tab === "security" && (
             <Card className="p-6" hover={false}>
-              <h3 className="font-bold text-foreground mb-4" style={HEAD}>Đổi mật khẩu</h3>
-              <form className="space-y-4 max-w-sm" onSubmit={e => e.preventDefault()}>
-                <Field label="Mật khẩu hiện tại" type="password" placeholder="••••••••" />
-                <Field label="Mật khẩu mới" type="password" placeholder="••••••••" />
-                <Field label="Xác nhận mật khẩu mới" type="password" placeholder="••••••••" />
-                <Btn icon={<Lock size={15} />} type="submit">Cập nhật mật khẩu</Btn>
-              </form>
+              <h3 className="font-bold text-foreground mb-4" style={HEAD}>Bảo mật</h3>
+              {changingPwd ? (
+                <form className="space-y-4 max-w-sm" onSubmit={e => { e.preventDefault(); setChangingPwd(false); }}>
+                  <Field label="Mật khẩu hiện tại" type="password" placeholder="••••••••" />
+                  <Field label="Mật khẩu mới" type="password" placeholder="••••••••" />
+                  <Field label="Xác nhận mật khẩu mới" type="password" placeholder="••••••••" />
+                  <div className="flex gap-3">
+                    <Btn icon={<Lock size={15} />} type="submit">Cập nhật mật khẩu</Btn>
+                    <Btn variant="outline" icon={<X size={15} />} onClick={() => setChangingPwd(false)} type="button">Hủy</Btn>
+                  </div>
+                </form>
+              ) : (
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">Thay đổi mật khẩu bảo vệ tài khoản của bạn.</p>
+                  <Btn icon={<Lock size={15} />} onClick={() => setChangingPwd(true)}>Đổi mật khẩu</Btn>
+                </div>
+              )}
             </Card>
           )}
 
