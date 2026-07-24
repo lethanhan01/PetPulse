@@ -1,23 +1,10 @@
 import { useState } from "react";
 import { useApp } from "@/stores/app.store";
 import type { AIConsult } from "@/types/app.types";
+import { createAIConsult, SYMPTOM_TAGS } from "@/mocks";
 import { Card, Btn, Badge, Select, Textarea, PageTitle, HEAD } from "@/components/common/kit";
 import { Sparkles, AlertTriangle, Stethoscope, HeartPulse, Save, Loader2, Bot } from "lucide-react";
 
-const SYMPTOM_TAGS = ["Biếng ăn", "Nôn mửa", "Tiêu chảy", "Ho khan", "Sốt", "Ngứa/gãi nhiều", "Mệt mỏi", "Chảy nước mắt"];
-
-// Mock AI — thay bằng lời gọi API thật (Claude/OpenAI) khi tích hợp backend.
-function mockAnalyze(symptoms: string): Omit<AIConsult, "id" | "date" | "petName"> {
-  const s = symptoms.toLowerCase();
-  const severe = /sốt|nôn|co giật|khó thở|máu/.test(s);
-  return {
-    symptoms,
-    severity: severe ? "Cao" : s.length > 40 ? "Trung bình" : "Thấp",
-    diseases: severe ? ["Nhiễm trùng đường ruột", "Ngộ độc thực phẩm"] : ["Rối loạn tiêu hóa nhẹ", "Dị ứng thức ăn"],
-    firstAid: ["Cho uống nhiều nước sạch, tránh mất nước", "Ngưng thức ăn lạ trong 12–24h", "Giữ ấm và theo dõi sát"],
-    vetAdvice: severe ? "Đưa thú cưng đến bác sĩ thú y NGAY trong 24h." : "Theo dõi 1–2 ngày, nếu không cải thiện hãy đi khám.",
-  };
-}
 
 export function AIChecker() {
   const { pets, updatePet } = useApp();
@@ -32,7 +19,7 @@ export function AIChecker() {
     setLoading(true); setResult(null); setSaved(false);
     setTimeout(() => {
       const pet = pets.find(p => p.id === petId);
-      setResult({ id: "c" + Date.now(), date: new Date().toISOString().slice(0, 10), petName: pet?.name || "", ...mockAnalyze(symptoms) });
+      setResult(createAIConsult(pet?.name || "", symptoms));
       setLoading(false);
     }, 1400);
   };

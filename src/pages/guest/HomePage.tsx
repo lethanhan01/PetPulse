@@ -1,19 +1,9 @@
 import { useApp } from "@/stores/app.store";
+import { PUBLIC_SUBSCRIPTIONS } from "@/mocks";
 import { useNavigate } from "react-router";
 import { Btn, Logo, Card, HEAD } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Sun, Moon, Activity, Sparkles, Calendar, Users, ShieldCheck, Heart, ArrowRight, Stethoscope, Bell, PawPrint, CheckCircle2, Crown, X } from "lucide-react";
-
-const PLANS = [
-  { name: "Freemium", price: "0đ", period: "mãi mãi", accent: false,
-    tagline: "Bắt đầu chăm sóc bé yêu miễn phí",
-    features: ["1 thú cưng", "Health timeline cơ bản", "Lịch chăm sóc", "Cộng đồng thú cưng"],
-    missing: ["AI Symptom Checker", "Không giới hạn pet", "Thống kê nâng cao"] },
-  { name: "Premium", price: "99.000đ", period: "mỗi tháng", accent: true,
-    tagline: "Mở khóa toàn bộ sức mạnh của PawPulse",
-    features: ["Không giới hạn thú cưng", "AI Symptom Checker không giới hạn", "Health Score nâng cao", "Thống kê & báo cáo chi tiết", "Ưu tiên hỗ trợ 24/7", "Xuất hồ sơ PDF"],
-    missing: [] },
-];
 
 const FEATURES = [
   { icon: <Activity size={20} />, title: "Health Timeline", desc: "Theo dõi cân nặng, dinh dưỡng & tình trạng sức khỏe theo trục thời gian." },
@@ -173,7 +163,7 @@ export function Landing() {
           <p className="text-muted-foreground max-w-xl mx-auto">Bắt đầu miễn phí với Freemium, nâng cấp Premium bất cứ lúc nào để mở khóa toàn bộ tính năng.</p>
         </div>
         <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-          {PLANS.map(p => (
+          {PUBLIC_SUBSCRIPTIONS.map(p => (
             <Card key={p.name} className={`p-6 relative ${p.accent ? "ring-2 ring-primary" : ""}`} hover={false}>
               {p.accent && <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold whitespace-nowrap">PHỔ BIẾN NHẤT</span>}
               <div className="flex items-center gap-2 mb-1">

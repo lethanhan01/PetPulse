@@ -2,14 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { Pet } from "@/types/app.types";
+import { createPet, SPECIES_EMOJI } from "@/mocks";
 import { Card, Btn, Badge, Field, Select, Modal, PageTitle, HEAD, MONO } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Plus, ChevronRight, Pencil, Trash2, ShieldCheck } from "lucide-react";
 
-const EMOJI: Record<string, string> = { "Chó": "🐕", "Mèo": "🐈", "Thỏ": "🐰", "Chim": "🐦", "Cá": "🐟", "Khác": "🐾" };
-
 export function AddPetModal({ open, onClose, edit }: { open: boolean; onClose: () => void; edit?: Pet }) {
-  const { addPet, updatePet } = useApp();
+  const { addPet, updatePet, activeAccount } = useApp();
   const [f, setF] = useState({
     name: edit?.name || "", species: edit?.species || "Chó", breed: edit?.breed || "",
     gender: edit?.gender || "Đực", age: edit?.age || "", weight: edit?.weight || "",
@@ -18,16 +17,9 @@ export function AddPetModal({ open, onClose, edit }: { open: boolean; onClose: (
   const save = (e: React.FormEvent) => {
     e.preventDefault();
     if (edit) {
-      updatePet(edit.id, { ...f, gender: f.gender as Pet["gender"], emoji: EMOJI[f.species] });
+      updatePet(edit.id, { ...f, gender: f.gender as Pet["gender"], emoji: SPECIES_EMOJI[f.species] });
     } else {
-      const id = "PET-2026-" + Math.floor(Math.random() * 900000 + 100000);
-      addPet({
-        id, name: f.name, species: f.species, emoji: EMOJI[f.species], breed: f.breed,
-        gender: f.gender as Pet["gender"], age: f.age, weight: f.weight, color: "#1D8B88",
-        microchip: String(Math.floor(Math.random() * 1e15)), owner: "Nguyễn Văn An",
-        chips: ["Microchipped"], health: [{ id: "h1", date: new Date().toISOString().slice(0, 10), weight: parseFloat(f.weight) || 0, condition: "Tốt", nutrition: "Cân bằng", score: 85 }],
-        events: [], consults: [],
-      });
+      addPet(createPet({ ...f, gender: f.gender as Pet["gender"] }, activeAccount?.name ?? "Nguyễn Văn An"));
     }
     onClose();
   };
@@ -37,7 +29,7 @@ export function AddPetModal({ open, onClose, edit }: { open: boolean; onClose: (
         <Field label="Tên thú cưng" value={f.name} onChange={e => set("name", e.target.value)} placeholder="VD: Mochi" required />
         <div className="grid grid-cols-2 gap-3">
           <Select label="Loài" value={f.species} onChange={e => set("species", e.target.value)}>
-            {Object.keys(EMOJI).map(s => <option key={s}>{s}</option>)}
+            {Object.keys(SPECIES_EMOJI).map(s => <option key={s}>{s}</option>)}
           </Select>
           <Select label="Giới tính" value={f.gender} onChange={e => set("gender", e.target.value as Pet["gender"])}>
             <option>Đực</option><option>Cái</option>

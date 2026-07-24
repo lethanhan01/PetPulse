@@ -5,7 +5,7 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { PawPrint, Syringe, Calendar, AlertTriangle, Activity, ArrowRight, Sparkles, Bell } from "lucide-react";
 
 export function Dashboard() {
-  const { pets } = useApp();
+  const { pets, activeAccount } = useApp();
   const navigate = useNavigate();
   const stats = [
     { icon: <PawPrint size={17} />, l: "Thú cưng", v: String(pets.length), sub: "Đang quản lý", ic: "text-primary bg-primary/10" },
@@ -19,8 +19,8 @@ export function Dashboard() {
       <div className="rounded-2xl p-6 sm:p-8 relative overflow-hidden text-white" style={{ background: "linear-gradient(135deg,#1D8B88 0%,#2FE0DC 60%,#78E3FD 100%)" }}>
         <div className="relative z-10 max-w-lg">
           <p className="text-white/85 text-sm mb-1">Chào buổi sáng 👋</p>
-          <h1 className="font-extrabold text-3xl mb-2" style={HEAD}>Nguyễn Văn An</h1>
-          <p className="text-white/90 mb-5">Các bé của bạn hôm nay đều khỏe mạnh. Đừng quên lịch uống thuốc của Mochi nhé!</p>
+          <h1 className="font-extrabold text-3xl mb-2" style={HEAD}>{activeAccount?.name ?? "Nguyễn Văn An"}</h1>
+          <p className="text-white/90 mb-5">Các bé của bạn hôm nay đều khỏe mạnh. Đừng quên lịch uống thuốc của {pets[0]?.name ?? "bé cưng"} nhé!</p>
           <div className="flex flex-wrap gap-3">
             <Btn className="!bg-white !text-[#1D8B88] hover:!bg-white/90 !shadow-none" icon={<Sparkles size={16} />} onClick={() => navigate("/ai-checker")}>Hỏi AI về sức khỏe</Btn>
             <Btn variant="outline" className="border-white/40 text-white hover:bg-white/10" icon={<PawPrint size={16} />} onClick={() => navigate("/pets")}>Xem thú cưng</Btn>
@@ -86,10 +86,10 @@ export function Dashboard() {
               <TrendChart
                 height={128}
                 showArea
-                data={[...pets[0].health].reverse().map(h => ({ label: h.date, value: h.score }))}
+                data={[...(pets[0]?.health ?? [])].reverse().map(h => ({ label: h.date, value: h.score }))}
               />
             </div>
-            <p className="text-xs text-muted-foreground text-center">Điểm sức khỏe của Mochi 4 tháng qua</p>
+            <p className="text-xs text-muted-foreground text-center">Điểm sức khỏe của {pets[0]?.name ?? "thú cưng"} 4 tháng qua</p>
           </Card>
 
           <Card className="p-5">

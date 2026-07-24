@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
 import { authenticateMock } from "@/services/auth.service";
+import { DEMO_ADMIN_ACCOUNT_ID, DEMO_USER_ACCOUNT_ID, MOCK_ACCOUNTS } from "@/mocks";
 import { Btn, Field, HEAD } from "@/components/common/kit";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import { Eye, EyeOff, ArrowLeft, CheckCircle2, Shield, User as UserIcon } from "lucide-react";
@@ -16,9 +17,9 @@ export function Login() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    const role = authenticateMock(email, pass);
-    if (!role) { setError("Email hoặc mật khẩu không đúng."); return; }
-    login(role); navigate(role === "admin" ? "/admin" : "/dashboard");
+    const account = authenticateMock(email, pass);
+    if (!account) { setError("Email, mật khẩu không đúng hoặc tài khoản đã bị tạm khóa."); return; }
+    login(account); navigate(account.role === "admin" ? "/admin" : "/dashboard");
   };
   return (
     <AuthLayout>
@@ -44,8 +45,8 @@ export function Login() {
         <Btn block size="lg" type="submit">Đăng nhập</Btn>
       </form>
       <div className="grid grid-cols-2 gap-3 mt-4">
-        <Btn variant="outline" size="sm" icon={<UserIcon size={15} />} onClick={() => { login("user"); navigate("/dashboard"); }}>Demo User</Btn>
-        <Btn variant="outline" size="sm" icon={<Shield size={15} />} onClick={() => { login("admin"); navigate("/admin"); }}>Demo Admin</Btn>
+        <Btn variant="outline" size="sm" icon={<UserIcon size={15} />} onClick={() => { login(MOCK_ACCOUNTS.find(account => account.id === DEMO_USER_ACCOUNT_ID)!); navigate("/dashboard"); }}>Demo User</Btn>
+        <Btn variant="outline" size="sm" icon={<Shield size={15} />} onClick={() => { login(MOCK_ACCOUNTS.find(account => account.id === DEMO_ADMIN_ACCOUNT_ID)!); navigate("/admin"); }}>Demo Admin</Btn>
       </div>
       <p className="text-sm text-muted-foreground text-center mt-6">Chưa có tài khoản? <button onClick={() => navigate("/register")} className="text-primary font-medium hover:underline">Đăng ký</button></p>
     </AuthLayout>
@@ -60,7 +61,7 @@ export function Register() {
     <AuthLayout>
       <h1 className="font-extrabold text-3xl text-foreground mb-1" style={HEAD}>Tạo tài khoản</h1>
       <p className="text-sm text-muted-foreground mb-6">Đăng ký miễn phí — mặc định gói <b className="text-primary">Freemium</b>.</p>
-      <form onSubmit={e => { e.preventDefault(); login("user"); navigate("/dashboard"); }} className="space-y-4">
+      <form onSubmit={e => { e.preventDefault(); login(MOCK_ACCOUNTS.find(account => account.id === DEMO_USER_ACCOUNT_ID)!); navigate("/dashboard"); }} className="space-y-4">
         <Field label="Họ và tên" placeholder="Nguyễn Văn An" required />
         <Field label="Email" type="email" placeholder="you@example.com" required />
         <div>

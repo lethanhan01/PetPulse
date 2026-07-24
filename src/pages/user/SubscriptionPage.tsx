@@ -1,17 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
+import { PUBLIC_SUBSCRIPTIONS } from "@/mocks";
 import { Card, Btn, Field, PageTitle, HEAD, MONO } from "@/components/common/kit";
 import { Check, Crown, ArrowLeft, CreditCard, Lock, ShieldCheck, Sparkles, CheckCircle2 } from "lucide-react";
-
-const PLANS = [
-  { name: "Freemium", price: "0đ", period: "mãi mãi", accent: false,
-    features: ["1 thú cưng", "Health timeline cơ bản", "Lịch chăm sóc", "Cộng đồng thú cưng"],
-    missing: ["AI Symptom Checker", "Không giới hạn pet", "Thống kê nâng cao"] },
-  { name: "Premium", price: "99.000đ", period: "mỗi tháng", accent: true,
-    features: ["Không giới hạn thú cưng", "AI Symptom Checker không giới hạn", "Health Score nâng cao", "Thống kê & báo cáo chi tiết", "Ưu tiên hỗ trợ 24/7", "Xuất hồ sơ PDF"],
-    missing: [] },
-];
 
 export function Subscription() {
   const { plan } = useApp();
@@ -20,7 +12,7 @@ export function Subscription() {
     <div>
       <PageTitle title="Nâng cấp gói dịch vụ" subtitle="Mở khóa toàn bộ sức mạnh của PawPulse" />
       <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-        {PLANS.map(p => (
+        {PUBLIC_SUBSCRIPTIONS.map(p => (
           <Card key={p.name} className={`p-6 relative ${p.accent ? "ring-2 ring-primary" : ""}`} hover={false}>
             {p.accent && <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold">PHỔ BIẾN NHẤT</span>}
             <div className="flex items-center gap-2 mb-2">

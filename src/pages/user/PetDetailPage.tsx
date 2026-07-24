@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { CareEvent, HealthEntry } from "@/types/app.types";
+import { createCareEvent, createHealthEntry } from "@/mocks";
 import { Card, Btn, Badge, Field, Select, Modal, TrendChart, HEAD, MONO } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import {
@@ -245,9 +246,7 @@ function HealthFormModal({ open, onClose, onSave }: { open: boolean; onClose: ()
   const [f, setF] = useState({ weight: "", condition: "Tốt", nutrition: "Cân bằng", illness: "" });
   const save = (e: React.FormEvent) => {
     e.preventDefault();
-    const w = parseFloat(f.weight) || 0;
-    const score = f.condition === "Tốt" ? 92 : f.condition === "Bình thường" ? 80 : 65;
-    onSave({ id: "h" + Date.now(), date: new Date().toISOString().slice(0, 10), weight: w, condition: f.condition as HealthEntry["condition"], nutrition: f.nutrition, illness: f.illness || undefined, score });
+    onSave(createHealthEntry({ weight: parseFloat(f.weight) || 0, condition: f.condition as HealthEntry["condition"], nutrition: f.nutrition, illness: f.illness || undefined }));
     setF({ weight: "", condition: "Tốt", nutrition: "Cân bằng", illness: "" });
     onClose();
   };
@@ -270,7 +269,7 @@ function EventFormModal({ open, onClose, onSave }: { open: boolean; onClose: () 
   const [f, setF] = useState({ title: "", date: "", time: "", repeat: "Không lặp", type: "Khám" });
   const save = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ id: "e" + Date.now(), title: f.title, date: f.date, time: f.time, repeat: f.repeat as CareEvent["repeat"], type: f.type as CareEvent["type"], done: false });
+    onSave(createCareEvent({ title: f.title, date: f.date, time: f.time, repeat: f.repeat as CareEvent["repeat"], type: f.type as CareEvent["type"] }));
     setF({ title: "", date: "", time: "", repeat: "Không lặp", type: "Khám" });
     onClose();
   };

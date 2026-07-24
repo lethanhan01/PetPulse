@@ -1,18 +1,17 @@
 import { useState } from "react";
-import { COMMUNITY } from "@/services/user.service";
+import { createCommunityComment, PUBLIC_COMMUNITY_POSTS, type CommunityComment } from "@/mocks";
+import { useApp } from "@/stores/app.store";
 import { Card, Btn, HEAD, Textarea } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { usePagination } from "@/hooks/usePagination";
 import { Heart, MessageCircle, Share2, Send, ImagePlus, PawPrint } from "lucide-react";
 
-function Post({ post }: { post: typeof COMMUNITY[number] }) {
+function Post({ post }: { post: typeof PUBLIC_COMMUNITY_POSTS[number] }) {
+  const { activeAccount } = useApp();
   const [liked, setLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const [comments, setComments] = useState([
-    { a: "Nguyễn Văn An", t: "Bé đáng yêu quá! 🥰" },
-    { a: "Đỗ Hải Yến", t: "Chúc bé luôn khỏe mạnh nhé 🐾" },
-  ]);
+  const [comments, setComments] = useState<CommunityComment[]>(post.comments);
   const [draft, setDraft] = useState("");
   return (
     <Card className="overflow-hidden" hover={false}>
@@ -30,7 +29,7 @@ function Post({ post }: { post: typeof COMMUNITY[number] }) {
           <Heart size={17} fill={liked ? "currentColor" : "none"} /> {post.likes + (liked ? 1 : 0)}
         </button>
         <button onClick={() => setShowComments(!showComments)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-secondary transition-colors">
-          <MessageCircle size={17} /> {post.comments}
+          <MessageCircle size={17} /> {comments.length}
         </button>
         <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-secondary transition-colors"><Share2 size={17} /> Chia sẻ</button>
       </div>
@@ -38,13 +37,13 @@ function Post({ post }: { post: typeof COMMUNITY[number] }) {
         <div className="px-4 pb-4 border-t border-border pt-3 space-y-3">
           {comments.map((c, i) => (
             <div key={i} className="flex gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-xs font-bold text-primary flex-shrink-0">{c.a[0]}</div>
-              <div className="bg-muted rounded-2xl px-3 py-2 flex-1"><p className="text-xs font-semibold text-foreground">{c.a}</p><p className="text-sm text-foreground">{c.t}</p></div>
+              <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-xs font-bold text-primary flex-shrink-0">{c.author[0]}</div>
+              <div className="bg-muted rounded-2xl px-3 py-2 flex-1"><p className="text-xs font-semibold text-foreground">{c.author}</p><p className="text-sm text-foreground">{c.content}</p></div>
             </div>
           ))}
           <div className="flex gap-2 items-center">
             <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Viết bình luận..." className="flex-1 px-3 py-2 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
-            <button onClick={() => { if (draft.trim()) { setComments([...comments, { a: "Nguyễn Văn An", t: draft }]); setDraft(""); } }} className="p-2.5 rounded-full bg-primary text-primary-foreground"><Send size={15} /></button>
+            <button onClick={() => { if (draft.trim() && activeAccount) { setComments([...comments, createCommunityComment(activeAccount.id, activeAccount.name, draft)]); setDraft(""); } }} className="p-2.5 rounded-full bg-primary text-primary-foreground"><Send size={15} /></button>
           </div>
         </div>
       )}
@@ -54,7 +53,7 @@ function Post({ post }: { post: typeof COMMUNITY[number] }) {
 
 export function Community() {
   const [draft, setDraft] = useState("");
-  const { items: posts, currentPage, totalPages, setPage } = usePagination(COMMUNITY);
+  const { items: posts, currentPage, totalPages, setPage } = usePagination(PUBLIC_COMMUNITY_POSTS);
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>

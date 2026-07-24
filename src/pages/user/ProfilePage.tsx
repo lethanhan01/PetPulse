@@ -5,7 +5,7 @@ import { Card, Btn, Field, Badge, PageTitle, HEAD } from "@/components/common/ki
 import { Pencil, Lock, Crown, Plus, ChevronRight } from "lucide-react";
 
 export function Profile() {
-  const { pets, plan, role } = useApp();
+  const { pets, plan, role, activeAccount } = useApp();
   const navigate = useNavigate();
   const isAdmin = role === "admin";
   const [tab, setTab] = useState<"info" | "security" | "pets">("info");
@@ -19,8 +19,8 @@ export function Profile() {
       <div className="grid lg:grid-cols-3 gap-6">
         <Card className="p-6 text-center h-fit" hover={false}>
           <div className="w-20 h-20 rounded-3xl bg-primary/20 flex items-center justify-center text-2xl font-extrabold text-primary mx-auto mb-3" style={HEAD}>{isAdmin ? "AD" : "AN"}</div>
-          <h3 className="font-bold text-lg text-foreground" style={HEAD}>{isAdmin ? "Quản trị viên" : "Nguyễn Văn An"}</h3>
-          <p className="text-sm text-muted-foreground mb-3">{isAdmin ? "admin@pawpulse.vn" : "an@example.com"}</p>
+          <h3 className="font-bold text-lg text-foreground" style={HEAD}>{activeAccount?.name ?? (isAdmin ? "Quản trị viên" : "Nguyễn Văn An")}</h3>
+          <p className="text-sm text-muted-foreground mb-3">{activeAccount?.email ?? (isAdmin ? "admin@pawpulse.vn" : "an@example.com")}</p>
           {!isAdmin && (plan === "Premium" ? <Badge v="primary"><Crown size={11} /> Premium</Badge> : <Badge v="neutral">Freemium</Badge>)}
           {!isAdmin && <div className="mt-4 pt-4 border-t border-border grid grid-cols-2 gap-2 text-center">
             <div><div className="font-extrabold text-xl text-primary" style={HEAD}>{pets.length}</div><div className="text-xs text-muted-foreground">Thú cưng</div></div>
@@ -39,12 +39,12 @@ export function Profile() {
             <Card className="p-6" hover={false}>
               <form className="space-y-4" onSubmit={e => e.preventDefault()}>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <Field label="Họ và tên" defaultValue={isAdmin ? "Quản trị viên" : "Nguyễn Văn An"} />
-                  <Field label="Email" type="email" defaultValue={isAdmin ? "admin@pawpulse.vn" : "an@example.com"} />
-                  <Field label="Số điện thoại" defaultValue="0901 234 567" />
-                  <Field label="Ngày sinh" type="date" defaultValue="1998-05-12" />
-                  <Field label="Thành phố" defaultValue="TP. Hồ Chí Minh" />
-                  <Field label="Giới tính" defaultValue="Nam" />
+                  <Field label="Họ và tên" defaultValue={activeAccount?.name} />
+                  <Field label="Email" type="email" defaultValue={activeAccount?.email} />
+                  <Field label="Số điện thoại" defaultValue={activeAccount?.phone} />
+                  <Field label="Ngày sinh" type="date" defaultValue={activeAccount?.birthDate} />
+                  <Field label="Thành phố" defaultValue={activeAccount?.city} />
+                  <Field label="Giới tính" defaultValue={activeAccount?.gender} />
                 </div>
                 <Btn icon={<Pencil size={15} />} type="submit">Lưu thay đổi</Btn>
               </form>

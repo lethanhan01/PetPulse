@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
-import { ADMIN_USERS, ADMIN_PETS, ADMIN_SUBS, COMMUNITY, REVENUE, AI_USAGE } from "@/services/user.service";
+import { MOCK_AI_USAGE, MOCK_COMMUNITY_POSTS, MOCK_REVENUE, MOCK_SUBSCRIPTIONS } from "@/mocks";
+import { getAdminPets, getAdminUsers } from "@/services/user.service";
 import { Card, Btn, Badge, Field, Modal, PageTitle, TrendChart, BarChart, HEAD, MONO } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Pagination } from "@/components/Pagination/Pagination";
@@ -41,13 +42,13 @@ export function AdminDashboard() {
             ))}</div>
           </div>
           <div className="h-56">
-            <BarChart height={224} data={REVENUE.map((r) => ({ label: r.m, value: r.v }))} />
+            <BarChart height={224} data={MOCK_REVENUE[range as keyof typeof MOCK_REVENUE]} />
           </div>
         </Card>
         <Card className="p-5" hover={false}>
           <h3 className="font-bold text-foreground flex items-center gap-2 mb-4" style={HEAD}><TrendingUp size={17} className="text-primary" /> AI Usage (lượt/tháng)</h3>
           <div className="h-56">
-            <TrendChart height={224} showArea showXLabels data={AI_USAGE.map((r) => ({ label: r.m, value: r.v }))} />
+            <TrendChart height={224} showArea showXLabels data={MOCK_AI_USAGE[range as keyof typeof MOCK_AI_USAGE]} />
           </div>
         </Card>
       </div>
@@ -74,9 +75,10 @@ function TableShell({ title, sub, children, action }: { title: string; sub: stri
 }
 
 export function AdminUsers() {
-  const { items: users, currentPage, totalPages, setPage } = usePagination(ADMIN_USERS);
+  const allUsers = getAdminUsers();
+  const { items: users, currentPage, totalPages, setPage } = usePagination(allUsers);
   return (
-    <TableShell title="Quản lý User" sub={`${ADMIN_USERS.length} người dùng`}>
+    <TableShell title="Quản lý User" sub={`${allUsers.length} người dùng`}>
       <table className="w-full text-sm">
         <thead><tr className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider bg-muted">
           <th className="p-3">ID</th><th className="p-3">Tên</th><th className="p-3 hidden sm:table-cell">Email</th><th className="p-3">Gói</th><th className="p-3 hidden md:table-cell">Pet</th><th className="p-3">Trạng thái</th><th className="p-3"></th>
@@ -88,7 +90,7 @@ export function AdminUsers() {
               <td className="p-3 font-medium text-foreground">{u.name}</td>
               <td className="p-3 text-muted-foreground hidden sm:table-cell">{u.email}</td>
               <td className="p-3">{u.plan === "Premium" ? <Badge v="primary"><Crown size={10} />Premium</Badge> : <Badge v="neutral">Freemium</Badge>}</td>
-              <td className="p-3 text-muted-foreground hidden md:table-cell">{u.pets}</td>
+              <td className="p-3 text-muted-foreground hidden md:table-cell">{u.petCount}</td>
               <td className="p-3">{u.status === "Active" ? <Badge v="success">Active</Badge> : <Badge v="danger">Suspended</Badge>}</td>
               <td className="p-3"><button className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground"><MoreHorizontal size={16} /></button></td>
             </tr>
@@ -101,9 +103,10 @@ export function AdminUsers() {
 }
 
 export function AdminPets() {
-  const { items: pets, currentPage, totalPages, setPage } = usePagination(ADMIN_PETS);
+  const allPets = getAdminPets();
+  const { items: pets, currentPage, totalPages, setPage } = usePagination(allPets);
   return (
-    <TableShell title="Quản lý Pet" sub={`${ADMIN_PETS.length} thú cưng trên hệ thống`}>
+    <TableShell title="Quản lý Pet" sub={`${allPets.length} thú cưng trên hệ thống`}>
       <table className="w-full text-sm">
         <thead><tr className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider bg-muted">
           <th className="p-3">ID</th><th className="p-3">Tên</th><th className="p-3">Loài</th><th className="p-3 hidden sm:table-cell">Giống</th><th className="p-3 hidden md:table-cell">Chủ</th><th className="p-3">Health</th>
@@ -128,7 +131,7 @@ export function AdminPets() {
 
 export function AdminSubs() {
   const [modal, setModal] = useState(false);
-  const { items: subscriptions, currentPage, totalPages, setPage } = usePagination(ADMIN_SUBS);
+  const { items: subscriptions, currentPage, totalPages, setPage } = usePagination(MOCK_SUBSCRIPTIONS);
   return (
     <TableShell title="Quản lý Subscription" sub="Các gói đăng ký dịch vụ"
       action={<Btn icon={<Plus size={16} />} onClick={() => setModal(true)}>Thêm gói</Btn>}>
@@ -141,7 +144,7 @@ export function AdminSubs() {
             <tr key={s.id} className={`border-t border-border ${i % 2 ? "bg-muted/20" : ""}`}>
               <td className="p-3 font-medium text-foreground">{s.name}</td>
               <td className="p-3 text-primary font-semibold">{s.price}</td>
-              <td className="p-3 text-muted-foreground hidden md:table-cell max-w-xs">{s.features}</td>
+              <td className="p-3 text-muted-foreground hidden md:table-cell max-w-xs">{s.features.join(", ")}</td>
               <td className="p-3 text-foreground">{s.subscribers.toLocaleString()}</td>
               <td className="p-3"><div className="flex gap-1">
                 <button className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground"><Pencil size={15} /></button>
@@ -165,7 +168,7 @@ export function AdminSubs() {
 }
 
 export function AdminModeration() {
-  const [posts, setPosts] = useState(COMMUNITY.map(p => ({ ...p, status: "pending" as "pending" | "approved" | "rejected" })));
+  const [posts, setPosts] = useState(MOCK_COMMUNITY_POSTS);
   const act = (id: string, status: "approved" | "rejected") => setPosts(ps => ps.map(p => p.id === id ? { ...p, status } : p));
   const { items: visiblePosts, currentPage, totalPages, setPage } = usePagination(posts);
   return (
