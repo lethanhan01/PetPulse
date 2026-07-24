@@ -1,4 +1,4 @@
-import { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes } from "react";
+import { ReactNode, useState, ButtonHTMLAttributes, InputHTMLAttributes } from "react";
 import { Loader2 } from "lucide-react";
 
 export const HEAD = { fontFamily: "'Nunito', sans-serif" };
@@ -12,7 +12,7 @@ export function Logo({ size = 28 }: { size?: number }) {
         style={{ width: size, height: size }}>
         <span style={{ fontSize: size * 0.5 }}>🐾</span>
       </div>
-      <span className="font-bold text-primary" style={{ ...HEAD, fontSize: size * 0.6 }}>PawPulse</span>
+      <span className="font-bold text-primary" style={{ ...HEAD, fontSize: size * 0.6 }}>PetPulse</span>
     </div>
   );
 }
@@ -77,11 +77,16 @@ export function TrendChart({
   const padB = showXLabels ? 22 : 12;
   const chartH = height - padT - padB;
   const chartW = W - padL - padR;
-  const values = data.map(d => d.value);
-  const lo = min ?? Math.min(...values);
-  const hi = max ?? Math.max(...values);
-  const span = hi - lo || 1;
   const n = data.length;
+
+  if (n === 0) return (
+    <div className="h-full flex items-center justify-center text-xs text-muted-foreground">Chưa có dữ liệu</div>
+  );
+
+  const values = data.map(d => d.value);
+  const lo = min ?? Math.min(...values) - 5;
+  const hi = max ?? Math.max(...values) + 5;
+  const span = hi - lo || 1;
   const x = (i: number) => padL + (n <= 1 ? chartW / 2 : (i / (n - 1)) * chartW);
   const y = (v: number) => padT + chartH - ((v - lo) / span) * chartH;
   const pts = data.map((d, i) => `${x(i)},${y(d.value)}`);
@@ -90,29 +95,46 @@ export function TrendChart({
     ? `M${x(0)},${padT + chartH} L${pts.join(" L")} L${x(n - 1)},${padT + chartH} Z`
     : "";
   const gid = `tc-${Math.round(lo)}-${Math.round(hi)}-${n}`;
+  const [hv, setHv] = useState(-1);
+  const ttIdx = hv;
   return (
-    <svg viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" className="w-full h-full" role="img" aria-label="Biểu đồ xu hướng">
-      {showArea && (
-        <>
-          <defs>
-            <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#2FE0DC" stopOpacity={0.4} />
-              <stop offset="100%" stopColor="#2FE0DC" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <path d={areaPath} fill={`url(#${gid})`} />
-        </>
+    <div className="relative w-full h-full">
+      <svg viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" className="w-full h-full" role="img" aria-label="Biểu đồ xu hướng">
+        {showArea && (
+          <>
+            <defs>
+              <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#2FE0DC" stopOpacity={0.4} />
+                <stop offset="100%" stopColor="#2FE0DC" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            {n > 1 && <path d={areaPath} fill={`url(#${gid})`} />}
+          </>
+        )}
+        <path d={linePath} fill="none" stroke="#1D8B88" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        {data.map((d, i) => (
+          <circle key={`pt-${i}`} cx={x(i)} cy={y(d.value)} r={hv === i ? 3.5 : 1.5} fill={hv === i ? "#fff" : "#2FE0DC"} stroke="#1D8B88" strokeWidth={1.5} style={{ cursor: "pointer", transition: "r .12s" }} onMouseEnter={() => setHv(i)} onMouseLeave={() => setHv(-1)} />
+        ))}
+        {showXLabels && data.map((d, i) => {
+          const anchor = i === 0 ? "start" : i === n - 1 ? "end" : "middle";
+          const offset = i === 0 ? 2 : i === n - 1 ? -2 : 0;
+          return <text key={`lbl-${i}`} x={x(i) + offset} y={height - 6} textAnchor={anchor} fontSize={9} fill="var(--muted-foreground)">
+            {d.label.includes("-") ? d.label.slice(5) : d.label}
+          </text>;
+        })}
+      </svg>
+      {ttIdx >= 0 && (
+        <div className="absolute pointer-events-none bg-popover text-popover-foreground text-xs px-2 py-1 rounded-md shadow-md border border-border z-50 whitespace-nowrap"
+          style={{
+            left: `${(x(ttIdx) / W) * 100}%`,
+            top: `${(y(data[ttIdx].value) / height) * 100}%`,
+            transform: "translate(-50%,calc(-100% - 8px))",
+          }}
+        >
+          <span className="font-bold text-foreground">{data[ttIdx].value}</span>
+        </div>
       )}
-      <path d={linePath} fill="none" stroke="#1D8B88" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-      {data.map((d, i) => (
-        <circle key={`pt-${i}`} cx={x(i)} cy={y(d.value)} r={3} fill="#2FE0DC" stroke="#1D8B88" strokeWidth={1.5} />
-      ))}
-      {showXLabels && data.map((d, i) => (
-        <text key={`lbl-${i}`} x={x(i)} y={height - 6} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          {d.label.includes("-") ? d.label.slice(5) : d.label}
-        </text>
-      ))}
-    </svg>
+    </div>
   );
 }
 
@@ -121,7 +143,7 @@ export function BarChart({ data, height = 224, showXLabels = true }: {
   data: { label: string; value: number }[]; height?: number; showXLabels?: boolean;
 }) {
   const W = 320;
-  const padL = 8, padR = 8, padT = 12;
+  const padL = 8, padR = 8, padT = 24;
   const padB = showXLabels ? 22 : 12;
   const chartH = height - padT - padB;
   const chartW = W - padL - padR;
@@ -129,20 +151,42 @@ export function BarChart({ data, height = 224, showXLabels = true }: {
   const n = data.length;
   const gap = 6;
   const bw = (chartW - gap * (n - 1)) / n;
+  const [hv, setHv] = useState(-1);
+  if (data.length === 0) return (
+    <div className="h-full flex items-center justify-center text-xs text-muted-foreground">Chưa có dữ liệu</div>
+  );
   return (
-    <svg viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" className="w-full h-full" role="img" aria-label="Biểu đồ cột">
-      {data.map((d, i) => {
-        const h = (d.value / hi) * chartH;
-        const bx = padL + i * (bw + gap);
-        const by = padT + chartH - h;
-        return <rect key={`bar-${i}`} x={bx} y={by} width={bw} height={h} rx={4} fill="#1D8B88" />;
-      })}
-      {showXLabels && data.map((d, i) => (
-        <text key={`blbl-${i}`} x={padL + i * (bw + gap) + bw / 2} y={height - 6} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
-          {d.label}
-        </text>
-      ))}
-    </svg>
+    <div className="relative w-full h-full">
+      <svg viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" className="w-full h-full" role="img" aria-label="Biểu đồ cột">
+        <defs>
+          <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#2FE0DC" stopOpacity={0.9} />
+            <stop offset="100%" stopColor="#1D8B88" stopOpacity={0.95} />
+          </linearGradient>
+        </defs>
+        {data.map((d, i) => {
+          const h = (d.value / hi) * chartH;
+          const bx = padL + i * (bw + gap);
+          const by = padT + chartH - h;
+          return (
+            <rect key={`bar-${i}`} x={bx} y={by} width={bw} height={h} rx={4}
+              fill={hv === i ? "#2FE0DC" : "url(#barGrad)"}
+              style={{ cursor: "pointer", transition: "fill .12s" }}
+              onMouseEnter={() => setHv(i)} onMouseLeave={() => setHv(-1)} />
+          );
+        })}
+        {showXLabels && data.map((d, i) => (
+          <text key={`blbl-${i}`} x={padL + i * (bw + gap) + bw / 2} y={height - 6} textAnchor="middle" fontSize={9} fill="var(--muted-foreground)">
+            {d.label}
+          </text>
+        ))}
+        {hv >= 0 && (
+          <text x={padL + hv * (bw + gap) + bw / 2} y={padT + chartH - (data[hv].value / hi) * chartH - 6} textAnchor="middle" fontSize={11} fontWeight={700} fill="var(--foreground)">
+            {data[hv].value}
+          </text>
+        )}
+      </svg>
+    </div>
   );
 }
 

@@ -1,5 +1,6 @@
-import { useState, type ReactNode } from "react";
-import { MOCK_AI_USAGE, MOCK_COMMUNITY_POSTS, MOCK_REVENUE, MOCK_SUBSCRIPTIONS } from "@/mocks";
+import { useState, useMemo, type ReactNode } from "react";
+import { MOCK_AI_USAGE, MOCK_REVENUE, MOCK_SUBSCRIPTIONS } from "@/mocks";
+import { useCommunity } from "@/stores/community.store";
 import { getAdminPets, getAdminStats, getAdminUsers } from "@/services/user.service";
 import { Card, Btn, Badge, Field, Modal, PageTitle, TrendChart, BarChart, HEAD, MONO } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
@@ -11,8 +12,18 @@ import {
 } from "lucide-react";
 
 // ── Dashboard ──
+const WEEK_DAYS = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+const WEEK_BASE = [12, 15, 13, 18, 21, 16, 20];
+const MONTH_LABELS = ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12"];
+const MONTH_BASE = [42, 55, 61, 58, 72, 89, 96, 102, 88, 76, 82, 95];
+const Q_DATA: Record<number, number[]> = {
+  2024: [72, 90, 108, 136], 2025: [164, 192, 226, 285],
+};
+
 export function AdminDashboard() {
   const [range, setRange] = useState("Tháng");
+  const [rangeYear, setRangeYear] = useState(2025);
+  const [weekOffset, setWeekOffset] = useState(-1);
   const statsData = getAdminStats(range as keyof typeof MOCK_AI_USAGE);
   const stats = [
     { icon: <Users size={18} />, l: "Tổng User", v: statsData.totalUsers.toLocaleString(), sub: "Tài khoản người dùng", ic: "text-primary bg-primary/10" },
@@ -20,10 +31,105 @@ export function AdminDashboard() {
     { icon: <PawPrint size={18} />, l: "Tổng Pet", v: statsData.totalPets.toLocaleString(), sub: "Thú cưng trên hệ thống", ic: "text-green-600 bg-green-100 dark:bg-green-900/30" },
     { icon: <Bot size={18} />, l: "AI Usage", v: statsData.aiUsage.toLocaleString(), sub: `Lượt tư vấn ${range.toLowerCase()}`, ic: "text-blue-600 bg-blue-100 dark:bg-blue-900/30" },
   ];
+  const revenueData = useMemo(() => {
+    if (range === "Tuần") {
+      return WEEK_DAYS.map((label, i) => ({ label, value: Math.max(8, WEEK_BASE[i] + weekOffset * 2 + (i % 3)) }));
+    }
+    if (range === "Tháng") {
+      return MONTH_LABELS.map((label, i) => ({ label, value: Math.round(MONTH_BASE[i]) }));
+    }
+    if (Q_DATA[rangeYear]) return Q_DATA[rangeYear].map((v, i) => ({ label: `Q${i + 1}`, value: v }));
+    const base = Q_DATA[2025];
+    const factor = 1 + (rangeYear - 2025) * 0.15;
+    return base.map((v, i) => ({ label: `Q${i + 1}`, value: Math.round(v * factor) }));
+  }, [range, rangeYear, weekOffset]);
+  const handleExport = () => {
+    const d = new Date(); const now = d.toLocaleDateString("vi-VN");
+    const aiData = MOCK_AI_USAGE[range as keyof typeof MOCK_AI_USAGE];
+    const u = getAdminUsers(); const p = getAdminPets();
+    const freeU = u.filter(x => x.plan === "Free").length;
+    const activeU = u.filter(x => x.status === "Active").length;
+    const suspendedU = u.length - activeU;
+    const species: Record<string, number> = {};
+    const tiers = { "Tốt (90+)": 0, "Khá (75-89)": 0, "TB (60-74)": 0, "Yếu (<60)": 0 };
+    p.forEach(pet => { species[pet.species] = (species[pet.species] || 0) + 1; });
+    p.forEach(pet => { if (pet.score >= 90) tiers["Tốt (90+)"]++; else if (pet.score >= 75) tiers["Khá (75-89)"]++; else if (pet.score >= 60) tiers["TB (60-74)"]++; else tiers["Yếu (<60)"]++; });
+    const topUsers = [...u].sort((a, b) => b.petCount - a.petCount).slice(0, 5);
+    const html = `<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><title>Báo cáo PetPulse</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#f8fafc;color:#0f172a;padding:40px}
+  @media print{body{padding:20px} .no-print{display:none!important}}
+  .header{text-align:center;padding:32px;background:linear-gradient(135deg,#0d9488,#14b8a6);border-radius:16px;color:#fff;margin-bottom:24px}
+  .header h1{font-size:28px;font-weight:700;margin-bottom:4px}
+  .header p{font-size:14px;opacity:.85}
+  .grid2{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+  .grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:24px}
+  .card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid #e2e8f0}
+  .card .label{font-size:13px;color:#64748b;margin-bottom:4px}
+  .card .value{font-size:28px;font-weight:700;color:#0f172a}
+  .card .sub{font-size:12px;color:#94a3b8;margin-top:2px}
+  section{margin-bottom:28px}
+  section h2{font-size:17px;font-weight:600;color:#0f172a;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
+  .stat-row{display:flex;gap:24px;font-size:14px;padding:6px 0}
+  .stat-row .lbl{color:#64748b;min-width:140px}
+  .stat-row .val{font-weight:600;color:#0f172a}
+  table{width:100%;border-collapse:collapse;margin-bottom:16px}
+  th{text-align:left;padding:9px 10px;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px;background:#f1f5f9;border-bottom:2px solid #e2e8f0}
+  td{padding:9px 10px;font-size:13px;border-bottom:1px solid #e2e8f0}
+  tr:last-child td{border-bottom:none}
+  .footer{text-align:center;font-size:12px;color:#94a3b8;margin-top:32px;padding-top:16px;border-top:1px solid #e2e8f0}
+  .btn-print{display:inline-block;padding:10px 24px;background:#0d9488;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-top:16px}
+  .btn-print:hover{background:#0f766e}
+</style></head><body>
+<div class="no-print" style="text-align:right;margin-bottom:16px"><button class="btn-print" onclick="window.print()">🖨 In / Lưu PDF</button></div>
+<div class="header"><h1>PetPulse</h1><p>Báo cáo thống kê hệ thống • ${now}</p></div>
+
+<div class="grid2">${stats.map(s => `<div class="card"><div class="label">${s.l}</div><div class="value">${s.v}</div><div class="sub">${s.sub}</div></div>`).join("")}</div>
+
+<div class="grid4">
+<div class="card">
+  <h2>👥 Người dùng</h2>
+  <div class="stat-row"><span class="lbl">Tổng người dùng</span><span class="val">${u.length}</span></div>
+  <div class="stat-row"><span class="lbl">Free</span><span class="val">${freeU}</span></div>
+  <div class="stat-row"><span class="lbl">Premium</span><span class="val">${u.length - freeU}</span></div>
+  <div class="stat-row"><span class="lbl">Tỷ lệ chuyển đổi</span><span class="val">${statsData.conversionRate.toFixed(1)}%</span></div>
+  <div class="stat-row"><span class="lbl">Đang hoạt động</span><span class="val">${activeU}</span></div>
+  <div class="stat-row"><span class="lbl">Tạm khóa</span><span class="val">${suspendedU}</span></div>
+</div>
+<div class="card">
+  <h2>🐾 Thú cưng</h2>
+  <div class="stat-row"><span class="lbl">Tổng số thú cưng</span><span class="val">${p.length}</span></div>
+  ${Object.entries(species).map(([s, n]) => `<div class="stat-row"><span class="lbl">${s}</span><span class="val">${n}</span></div>`).join("\n")}
+</div>
+<div class="card">
+  <h2>🏥 Phân bố sức khỏe</h2>
+  ${Object.entries(tiers).map(([t, n]) => `<div class="stat-row"><span class="lbl">${t}</span><span class="val">${n} (${(n / p.length * 100).toFixed(0)}%)</span></div>`).join("\n")}
+</div>
+<div class="card">
+  <h2>⭐ Top chủ nuôi</h2>
+  <table><thead><tr><th>Người dùng</th><th>Gói</th><th>Số pet</th></tr></thead><tbody>${topUsers.map(u2 => `<tr><td style="font-weight:500">${u2.name}</td><td>${u2.plan}</td><td>${u2.petCount}</td></tr>`).join("")}</tbody></table>
+</div>
+</div>
+
+<section><h2>📊 Doanh thu (${range})</h2>
+<table><thead><tr><th>Kỳ</th><th>Giá trị (triệu đồng)</th></tr></thead><tbody>${revenueData.map(d => `<tr><td style="font-weight:500">${d.label}</td><td>${d.value.toLocaleString("vi-VN")}</td></tr>`).join("")}</tbody></table></section>
+
+<section><h2>📈 AI Usage (${range})</h2>
+<table><thead><tr><th>Kỳ</th><th>Lượt tư vấn</th></tr></thead><tbody>${aiData.map(d => `<tr><td style="font-weight:500">${d.label}</td><td>${d.value.toLocaleString("vi-VN")}</td></tr>`).join("")}</tbody></table></section>
+
+<section><h2>💳 Gói đăng ký</h2>
+<table><thead><tr><th>Gói</th><th>Giá</th><th>Người đăng ký</th></tr></thead><tbody>${MOCK_SUBSCRIPTIONS.map(s2 => `<tr><td style="font-weight:500">${s2.name}</td><td>${s2.price}</td><td>${s2.subscribers.toLocaleString("vi-VN")}</td></tr>`).join("")}</tbody></table></section>
+
+<div class="footer">PetPulse &bull; Báo cáo được tạo lúc ${d.toLocaleTimeString("vi-VN")} &bull; Dữ liệu mô phỏng</div>
+</body></html>`;
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
+    a.download = `bao-cao-petpulse-${now.replace(/\//g, "-")}.html`; a.click(); URL.revokeObjectURL(a.href);
+  };
   return (
     <div className="space-y-6">
-      <PageTitle title="Thống kê hệ thống" subtitle="Tổng quan chỉ số PawPulse"
-        action={<Btn variant="outline" icon={<Download size={16} />}>Xuất báo cáo</Btn>} />
+      <PageTitle title="Thống kê hệ thống" subtitle="Tổng quan chỉ số PetPulse"
+        action={<Btn variant="outline" icon={<Download size={16} />} onClick={handleExport}>Xuất báo cáo</Btn>} />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map(s => (
           <Card key={s.l} className="p-5">
@@ -37,13 +143,29 @@ export function AdminDashboard() {
       <div className="grid lg:grid-cols-2 gap-6">
         <Card className="p-5" hover={false}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-foreground flex items-center gap-2" style={HEAD}><DollarSign size={17} className="text-primary" /> Doanh thu (triệu đ)</h3>
-            <div className="flex gap-1">{["Tuần", "Tháng", "Quý"].map(r => (
-              <button key={r} onClick={() => setRange(r)} className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${range === r ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary"}`}>{r}</button>
-            ))}</div>
+            <h3 className="font-bold text-foreground flex items-center gap-2" style={HEAD}><DollarSign size={17} className="text-primary" /> Doanh thu <span className="text-xs font-normal text-muted-foreground">(triệu đồng)</span></h3>
+            <div className="flex items-center gap-2">
+              {range === "Tuần" ? (
+                <div className="flex items-center gap-1 text-xs text-muted-foreground mr-1">
+                  <button onClick={() => setWeekOffset(w => w - 1)} className="px-1.5 py-1 rounded hover:bg-secondary transition-colors">←</button>
+                  <span className="px-1 font-medium text-foreground min-w-[7rem] text-center">Tuần {String(30 + weekOffset).padStart(2, "0")}, 2026</span>
+                  <button onClick={() => setWeekOffset(w => Math.min(w + 1, 0))} className="px-1.5 py-1 rounded hover:bg-secondary transition-colors">→</button>
+                  {weekOffset < 0 && <span className="text-[10px] ml-1">(tuần trước)</span>}
+                  {weekOffset === 0 && <span className="text-[10px] ml-1">(tuần này)</span>}
+                </div>
+              ) : range === "Quý" ? (
+                <select value={rangeYear} onChange={e => setRangeYear(Number(e.target.value))}
+                  className="text-xs bg-secondary text-foreground rounded-lg border border-border px-2 py-1 outline-none cursor-pointer">
+                  {[2024, 2025, 2026].map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+              ) : null}
+              {["Tuần", "Tháng", "Quý"].map(r => (
+                <button key={r} onClick={() => setRange(r)} className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${range === r ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary"}`}>{r}</button>
+              ))}
+            </div>
           </div>
           <div className="h-56">
-            <BarChart height={224} data={MOCK_REVENUE[range as keyof typeof MOCK_REVENUE]} />
+            <BarChart height={224} data={revenueData} />
           </div>
         </Card>
         <Card className="p-5" hover={false}>
@@ -90,7 +212,7 @@ export function AdminUsers() {
               <td className="p-3"><code className="text-xs text-muted-foreground" style={MONO}>{u.id}</code></td>
               <td className="p-3 font-medium text-foreground">{u.name}</td>
               <td className="p-3 text-muted-foreground hidden sm:table-cell">{u.email}</td>
-              <td className="p-3">{u.plan === "Premium" ? <Badge v="primary"><Crown size={10} />Premium</Badge> : <Badge v="neutral">Freemium</Badge>}</td>
+              <td className="p-3">{u.plan === "Premium" ? <Badge v="primary"><Crown size={10} />Premium</Badge> : <Badge v="neutral">Free</Badge>}</td>
               <td className="p-3 text-muted-foreground hidden md:table-cell">{u.petCount}</td>
               <td className="p-3">{u.status === "Active" ? <Badge v="success">Active</Badge> : <Badge v="danger">Suspended</Badge>}</td>
               <td className="p-3"><button className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground"><MoreHorizontal size={16} /></button></td>
@@ -169,8 +291,7 @@ export function AdminSubs() {
 }
 
 export function AdminModeration() {
-  const [posts, setPosts] = useState(MOCK_COMMUNITY_POSTS);
-  const act = (id: string, status: "approved" | "rejected") => setPosts(ps => ps.map(p => p.id === id ? { ...p, status } : p));
+  const { posts, approvePost, rejectPost, deletePost } = useCommunity();
   const { items: visiblePosts, currentPage, totalPages, setPage } = usePagination(posts);
   return (
     <div>
@@ -178,7 +299,7 @@ export function AdminModeration() {
       <div className="grid sm:grid-cols-2 gap-5">
         {visiblePosts.map(p => (
           <Card key={p.id} className="overflow-hidden" hover={false}>
-            {p.image && <ImageWithFallback src={p.image} alt="post" className="w-full h-40 object-cover" />}
+            {p.images?.[0] && <ImageWithFallback src={p.images[0]} alt="post" className="w-full h-40 object-cover" />}
             <div className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">{p.avatar}</div>
@@ -190,10 +311,11 @@ export function AdminModeration() {
               <p className="text-sm text-foreground mb-3">{p.content}</p>
               {p.status === "pending" && (
                 <div className="flex gap-2">
-                  <Btn size="sm" block icon={<Check size={15} />} onClick={() => act(p.id, "approved")}>Duyệt</Btn>
-                  <Btn size="sm" block variant="danger" icon={<X size={15} />} onClick={() => act(p.id, "rejected")}>Từ chối</Btn>
+                  <Btn size="sm" block icon={<Check size={15} />} onClick={() => approvePost(p.id)}>Duyệt</Btn>
+                  <Btn size="sm" block variant="danger" icon={<X size={15} />} onClick={() => rejectPost(p.id)}>Từ chối</Btn>
                 </div>
               )}
+              {p.status === "rejected" && <Btn size="sm" variant="danger" icon={<Trash2 size={15} />} onClick={() => deletePost(p.id)}>Xoá</Btn>}
             </div>
           </Card>
         ))}

@@ -59,7 +59,7 @@ export function Landing() {
               Hộ chiếu sức khỏe <span className="text-primary">điện tử</span> cho thú cưng của bạn
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed max-w-xl">
-              PawPulse giúp bạn quản lý hồ sơ, theo dõi health timeline, đặt lịch chăm sóc và tư vấn sức khỏe bằng AI — tất cả trong một nơi.
+              PetPulse giúp bạn quản lý hồ sơ, theo dõi health timeline, đặt lịch chăm sóc và tư vấn sức khỏe bằng AI — tất cả trong một nơi.
             </p>
             <div className="flex flex-wrap gap-3">
               <Btn size="lg" icon={<ArrowRight size={18} />} iconRight onClick={() => navigate("/login")}>Đăng nhập</Btn>
@@ -116,7 +116,7 @@ export function Landing() {
       <section id="features" className="px-4 sm:px-8 py-20 max-w-6xl mx-auto scroll-mt-20">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <h2 className="font-extrabold text-3xl sm:text-4xl text-foreground mb-3" style={HEAD}>Mọi thứ thú cưng cần, trong một nền tảng</h2>
-          <p className="text-muted-foreground">Từ hồ sơ điện tử đến tư vấn AI, PawPulse đồng hành cùng hành trình khỏe mạnh của bé.</p>
+          <p className="text-muted-foreground">Từ hồ sơ điện tử đến tư vấn AI, PetPulse đồng hành cùng hành trình khỏe mạnh của bé.</p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {FEATURES.map(f => (
@@ -160,11 +160,11 @@ export function Landing() {
             <Crown size={12} /> Bảng giá
           </span>
           <h2 className="font-extrabold text-3xl sm:text-4xl text-foreground mb-3" style={HEAD}>Chọn gói phù hợp với bạn</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">Bắt đầu miễn phí với Freemium, nâng cấp Premium bất cứ lúc nào để mở khóa toàn bộ tính năng.</p>
+          <p className="text-muted-foreground max-w-xl mx-auto">Bắt đầu miễn phí với Free, nâng cấp Premium bất cứ lúc nào để mở khóa toàn bộ tính năng.</p>
         </div>
-        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {PUBLIC_SUBSCRIPTIONS.map(p => (
-            <Card key={p.name} className={`p-6 relative ${p.accent ? "ring-2 ring-primary" : ""}`} hover={false}>
+            <Card key={p.name} className={`p-6 relative flex flex-col ${p.accent ? "ring-2 ring-primary" : ""}`} hover={false}>
               {p.accent && <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold whitespace-nowrap">PHỔ BIẾN NHẤT</span>}
               <div className="flex items-center gap-2 mb-1">
                 {p.accent ? <Crown size={20} className="text-primary" /> : <ShieldCheck size={20} className="text-muted-foreground" />}
@@ -172,13 +172,13 @@ export function Landing() {
               </div>
               <p className="text-xs text-muted-foreground mb-4">{p.tagline}</p>
               <div className="mb-5"><span className="font-extrabold text-3xl text-foreground" style={HEAD}>{p.price}</span> <span className="text-sm text-muted-foreground">/ {p.period}</span></div>
-              <ul className="space-y-2.5 mb-6">
+              <ul className="space-y-2.5 flex-1 mb-6">
                 {p.features.map(f => <li key={f} className="flex items-start gap-2 text-sm text-foreground"><CheckCircle2 size={16} className="text-green-600 mt-0.5 flex-shrink-0" /> {f}</li>)}
                 {p.missing.map(f => <li key={f} className="flex items-start gap-2 text-sm text-muted-foreground/60"><X size={16} className="mt-0.5 flex-shrink-0 opacity-40" /> {f}</li>)}
               </ul>
-              {p.accent
-                ? <Btn block size="lg" icon={<Crown size={16} />} onClick={() => navigate("/register")}>Dùng thử Premium</Btn>
-                : <Btn block variant="outline" onClick={() => navigate("/register")}>Bắt đầu miễn phí</Btn>}
+              {p.name === "Free"
+                ? <Btn block variant="primary" onClick={() => navigate("/register")}>Bắt đầu miễn phí</Btn>
+                : <Btn block size="lg" icon={<Crown size={16} />} onClick={() => navigate("/register")}>Dùng thử {p.name}</Btn>}
             </Card>
           ))}
         </div>
@@ -187,15 +187,15 @@ export function Landing() {
       <section id="about" className="px-4 sm:px-8 pb-20 max-w-6xl mx-auto scroll-mt-20">
         <div className="rounded-3xl border border-border bg-card overflow-hidden grid md:grid-cols-2">
           <div className="h-64 md:h-auto relative">
-            <ImageWithFallback src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Về PawPulse" className="w-full h-full object-cover" />
+            <ImageWithFallback src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Về PetPulse" className="w-full h-full object-cover" />
           </div>
           <div className="p-8 sm:p-10">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
               <PawPrint size={12} /> Về chúng tôi
             </span>
-            <h2 className="font-extrabold text-3xl text-foreground mb-4" style={HEAD}>Sứ mệnh của PawPulse</h2>
+            <h2 className="font-extrabold text-3xl text-foreground mb-4" style={HEAD}>Sứ mệnh của PetPulse</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              PawPulse ra đời với niềm tin rằng mỗi thú cưng đều xứng đáng được chăm sóc sức khỏe một cách khoa học và trọn vẹn. Chúng tôi số hóa toàn bộ hồ sơ sức khỏe, kết hợp công nghệ AI để giúp người nuôi trẻ theo dõi và chăm sóc bé yêu dễ dàng hơn bao giờ hết.
+              PetPulse ra đời với niềm tin rằng mỗi thú cưng đều xứng đáng được chăm sóc sức khỏe một cách khoa học và trọn vẹn. Chúng tôi số hóa toàn bộ hồ sơ sức khỏe, kết hợp công nghệ AI để giúp người nuôi trẻ theo dõi và chăm sóc bé yêu dễ dàng hơn bao giờ hết.
             </p>
             <div className="grid grid-cols-3 gap-4 mb-6">
               {[{ v: "2024", l: "Thành lập" }, { v: "10K+", l: "Thú cưng" }, { v: "50+", l: "Đối tác thú y" }].map(s => (
@@ -218,7 +218,7 @@ export function Landing() {
       <section className="px-4 sm:px-8 pb-20 max-w-6xl mx-auto">
         <div className="rounded-3xl p-10 sm:p-16 text-center relative overflow-hidden" style={{ background: "linear-gradient(135deg,#1D8B88 0%,#2FE0DC 55%,#78E3FD 100%)" }}>
           <h2 className="font-extrabold text-3xl sm:text-4xl text-white mb-4" style={HEAD}>Sẵn sàng chăm sóc bé yêu tốt hơn?</h2>
-          <p className="text-white/90 mb-8 max-w-xl mx-auto">Tạo tài khoản Freemium miễn phí ngay hôm nay. Nâng cấp Premium bất cứ lúc nào.</p>
+          <p className="text-white/90 mb-8 max-w-xl mx-auto">Tạo tài khoản Free miễn phí ngay hôm nay. Nâng cấp Premium bất cứ lúc nào.</p>
           <Btn size="lg" className="!bg-white !text-[#0D2828] hover:!bg-white/90 shadow-lg shadow-black/10" onClick={() => navigate("/register")}>Tạo tài khoản miễn phí</Btn>
         </div>
       </section>
@@ -226,7 +226,7 @@ export function Landing() {
       <footer id="footer" className="border-t border-border px-4 sm:px-8 py-8 text-center text-sm text-muted-foreground scroll-mt-20">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <Logo size={24} />
-          <p>© 2026 PawPulse. Chăm sóc thú cưng bằng cả trái tim 🐾</p>
+          <p>© 2026 PetPulse. Chăm sóc thú cưng bằng cả trái tim 🐾</p>
         </div>
       </footer>
     </div>

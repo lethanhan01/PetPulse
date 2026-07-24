@@ -44,7 +44,7 @@ describe("mock fixture integrity", () => {
 
   it("authenticates active demo accounts only", () => {
     expect(authenticateMock("an@example.com", "paw123")?.role).toBe("user");
-    expect(authenticateMock("admin@pawpulse.vn", "paw123")?.role).toBe("admin");
+    expect(authenticateMock("admin@petpulse.vn", "paw123")?.role).toBe("admin");
     expect(authenticateMock("linh@example.com", "paw123")).toBeNull();
     expect(authenticateMock("an@example.com", "wrong")).toBeNull();
   });

@@ -3,6 +3,7 @@ import { Route, Routes, useLocation } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { Role } from "@/types/app.types";
 import { MainLayout } from "@/layouts/MainLayout";
+import { CommunityProvider } from "@/stores/community.store";
 import { Landing } from "@/pages/guest/HomePage";
 import { Login } from "@/pages/guest/LoginPage";
 import { Register } from "@/pages/guest/RegisterPage";
@@ -38,7 +39,7 @@ function Protected({ role, children }: { role: Role; children: ReactNode }) {
 
 export function AppRouter() {
   const { theme } = useApp();
-  return <div className={theme === "dark" ? "dark" : ""}><div className="min-h-screen bg-background text-foreground" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}><ScrollToTop /><Routes>
+  return <div className={theme === "dark" ? "dark" : ""}><div className="min-h-screen bg-background text-foreground" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}><ScrollToTop /><CommunityProvider><Routes>
     <Route path="/" element={<Landing />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
@@ -50,5 +51,5 @@ export function AppRouter() {
       <Route path="/admin" element={<AdminDashboard />} /><Route path="/admin/users" element={<AdminUsers />} /><Route path="/admin/pets" element={<AdminPets />} /><Route path="/admin/subscriptions" element={<AdminSubs />} /><Route path="/admin/moderation" element={<AdminModeration />} /><Route path="/admin/profile" element={<Profile />} />
     </Route>
     <Route path="/403" element={<Forbidden />} /><Route path="*" element={<NotFound />} />
-  </Routes></div></div>;
+  </Routes></CommunityProvider></div></div>;
 }

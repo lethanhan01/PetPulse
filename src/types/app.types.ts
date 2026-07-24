@@ -1,5 +1,5 @@
 export type Role = "user" | "admin";
-export type Plan = "Freemium" | "Premium";
+export type Plan = "Free" | "Premium";
 
 export type HealthEntry = {
   id: string; date: string; weight: number;
@@ -10,7 +10,7 @@ export type HealthEntry = {
 export type CareEvent = {
   id: string; title: string; date: string; time: string;
   repeat: "Không lặp" | "Hằng ngày" | "Hằng tuần";
-  type: "Uống thuốc" | "Khám" | "Tiêm phòng" | "Khác"; done: boolean;
+  type: string; done: boolean;
 };
 
 export type AIConsult = {

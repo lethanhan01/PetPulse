@@ -19,12 +19,18 @@ const demoRows: Array<[string, string, string, "Đực" | "Cái", string, number
   ["Miu", "Mèo", "Ba Tư", "Đực", "6 tuổi", 6.8], ["Bơ", "Chó", "Shiba Inu", "Cái", "2 tuổi", 9.3],
 ];
 
-function health(id: string, baseWeight: number, score: number, illness?: string): HealthEntry[] {
+const healthDeltas: [number, number, number][] = [
+  [-4, +2, -4], [-6, -2, -8], [-2, +4, -3], [-5, +1, -7], [-8, -1, -5],
+  [-3, +3, -6], [-7, +4, -3], [-4, -1, -9], [-9, -3, -4], [-2, +6, -2],
+];
+
+function health(id: string, baseWeight: number, score: number, index: number, illness?: string): HealthEntry[] {
+  const d = healthDeltas[index % healthDeltas.length];
   return [
     { id: `${id}-H1`, date: "2026-07-20", weight: baseWeight, condition: score < 70 ? "Cần chú ý" : score < 85 ? "Bình thường" : "Tốt", nutrition: score < 70 ? "Cần điều chỉnh" : "Cân bằng", illness, score },
-    { id: `${id}-H2`, date: "2026-06-20", weight: Number((baseWeight * 0.98).toFixed(2)), condition: "Bình thường", nutrition: "Ổn", score: Math.max(62, score - 4) },
-    { id: `${id}-H3`, date: "2026-05-20", weight: Number((baseWeight * 0.96).toFixed(2)), condition: "Tốt", nutrition: "Tốt", score: Math.max(60, score - 2) },
-    { id: `${id}-H4`, date: "2026-04-20", weight: Number((baseWeight * 0.94).toFixed(2)), condition: "Bình thường", nutrition: "Ổn", score: Math.max(60, score - 6) },
+    { id: `${id}-H2`, date: "2026-06-20", weight: Number((baseWeight * 0.98).toFixed(2)), condition: "Bình thường", nutrition: "Ổn", score: Math.max(62, score + d[0]) },
+    { id: `${id}-H3`, date: "2026-05-20", weight: Number((baseWeight * 0.96).toFixed(2)), condition: "Tốt", nutrition: "Tốt", score: Math.max(60, score + d[1]) },
+    { id: `${id}-H4`, date: "2026-04-20", weight: Number((baseWeight * 0.94).toFixed(2)), condition: "Bình thường", nutrition: "Ổn", score: Math.max(60, score + d[2]) },
   ];
 }
 function events(id: string, index: number): CareEvent[] {
@@ -42,7 +48,7 @@ function consults(id: string, petName: string, index: number): AIConsult[] {
 export const MOCK_PETS: Pet[] = demoRows.map(([name, species, breed, gender, age, weight], index) => {
   const id = `PET-2026-${String(1001 + index).padStart(6, "0")}`;
   const score = [92, 95, 76, 88, 68, 91, 84, 72, 64, 98][index];
-  return { id, name, species, emoji: SPECIES_EMOJI[species], breed, gender, age, weight: `${weight} kg`, color: ["#F59E0B", "#8B5CF6", "#10B981", "#EC4899"][index % 4], microchip: `9851410021${String(45879 + index).padStart(5, "0")}`, owner: "Nguyễn Văn An", image: images[index % images.length], chips: index % 2 ? ["Vaccinated", "Microchipped"] : ["Vaccinated", "Microchipped", "Insured"], health: health(id, weight, score, score < 70 ? "Cần theo dõi cân nặng" : undefined), events: events(id, index), consults: consults(id, name, index) };
+  return { id, name, species, emoji: SPECIES_EMOJI[species], breed, gender, age, weight: `${weight} kg`, color: ["#F59E0B", "#8B5CF6", "#10B981", "#EC4899"][index % 4], microchip: `9851410021${String(45879 + index).padStart(5, "0")}`, owner: "Nguyễn Văn An", image: images[index % images.length], chips: index % 2 ? ["Vaccinated", "Microchipped"] : ["Vaccinated", "Microchipped", "Insured"], health: health(id, weight, score, index, score < 70 ? "Cần theo dõi cân nặng" : undefined), events: events(id, index), consults: consults(id, name, index) };
 });
 
 const speciesRows = ["Chó", "Mèo", "Thỏ", "Chim", "Cá"] as const;
@@ -59,7 +65,7 @@ export const MOCK_SYSTEM_PETS: Array<Pet & { ownerId: string }> = Array.from({ l
   const demoPet = MOCK_PETS[index];
   return demoPet ? { ...demoPet, ownerId: DEMO_USER_ACCOUNT_ID } : {
     id: `PET-2026-${String(2001 + index).padStart(6, "0")}`, name: ["Bông", "Đậu", "Gạo", "Sữa", "Mây", "Tép", "Na", "Bim"][index % 8] + ` ${index + 1}`,
-    species, emoji: SPECIES_EMOJI[species], breed: breeds[species][index % breeds[species].length], gender: index % 2 ? "Cái" : "Đực", age: `${(index % 8) + 1} tuổi`, weight: `${(index % 18) + 2} kg`, color: ["#F59E0B", "#8B5CF6", "#10B981", "#EC4899"][index % 4], microchip: `985141003${String(50000 + index).padStart(6, "0")}`, owner: owner.name, ownerId: owner.id, chips: ["Vaccinated", "Microchipped"], health: health(`PET-2026-${String(2001 + index).padStart(6, "0")}`, (index % 18) + 2, score, score < 70 ? "Cần theo dõi sức khỏe" : undefined), events: events(`PET-2026-${String(2001 + index).padStart(6, "0")}`, index), consults: consults(`PET-2026-${String(2001 + index).padStart(6, "0")}`, `Pet ${index + 1}`, index),
+    species, emoji: SPECIES_EMOJI[species], breed: breeds[species][index % breeds[species].length], gender: index % 2 ? "Cái" : "Đực", age: `${(index % 8) + 1} tuổi`, weight: `${(index % 18) + 2} kg`, color: ["#F59E0B", "#8B5CF6", "#10B981", "#EC4899"][index % 4], microchip: `985141003${String(50000 + index).padStart(6, "0")}`, owner: owner.name, ownerId: owner.id, chips: ["Vaccinated", "Microchipped"], health: health(`PET-2026-${String(2001 + index).padStart(6, "0")}`, (index % 18) + 2, score, index, score < 70 ? "Cần theo dõi sức khỏe" : undefined), events: events(`PET-2026-${String(2001 + index).padStart(6, "0")}`, index), consults: consults(`PET-2026-${String(2001 + index).padStart(6, "0")}`, `Pet ${index + 1}`, index),
   };
 });
 

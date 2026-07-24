@@ -60,7 +60,7 @@ export function Register() {
   return (
     <AuthLayout>
       <h1 className="font-extrabold text-3xl text-foreground mb-1" style={HEAD}>Tạo tài khoản</h1>
-      <p className="text-sm text-muted-foreground mb-6">Đăng ký miễn phí — mặc định gói <b className="text-primary">Freemium</b>.</p>
+      <p className="text-sm text-muted-foreground mb-6">Đăng ký miễn phí — mặc định gói <b className="text-primary">Free</b>.</p>
       <form onSubmit={e => { e.preventDefault(); login(MOCK_ACCOUNTS.find(account => account.id === DEMO_USER_ACCOUNT_ID)!); navigate("/dashboard"); }} className="space-y-4">
         <Field label="Họ và tên" placeholder="Nguyễn Văn An" required />
         <Field label="Email" type="email" placeholder="you@example.com" required />
@@ -75,7 +75,7 @@ export function Register() {
           </div>
         </div>
         <label className="flex items-start gap-2 text-sm text-muted-foreground cursor-pointer">
-          <input type="checkbox" required className="mt-1 accent-[#1D8B88]" /> Tôi đồng ý với Điều khoản dịch vụ & Chính sách bảo mật của PawPulse.
+          <input type="checkbox" required className="mt-1 accent-[#1D8B88]" /> Tôi đồng ý với Điều khoản dịch vụ & Chính sách bảo mật của PetPulse.
         </label>
         <Btn block size="lg" type="submit">Đăng ký</Btn>
       </form>

@@ -27,4 +27,8 @@ export const getUserDashboardStats = (pets: Pet[]) => ({
 });
 
 export const getAccountPets = (accountId: string) => getPetsForAccount(accountId);
-export const getAccountInitials = (account: Pick<MockAccount, "avatar"> | null) => account?.avatar ?? "PP";
+export const getAccountInitials = (account: Pick<MockAccount, "avatar" | "name"> | null) => {
+  if (!account) return "PP";
+  if (account.avatar && !account.avatar.startsWith("data:")) return account.avatar;
+  return account.name?.split(" ").map(s => s[0]).join("").slice(0, 2).toUpperCase() || "PP";
+};

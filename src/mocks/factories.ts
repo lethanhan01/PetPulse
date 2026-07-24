@@ -1,12 +1,21 @@
 import type { AIConsult, CareEvent, HealthEntry, Pet } from "@/types/app.types";
 import { getMockAnalysis } from "./ai";
 import { SPECIES_EMOJI } from "./pets";
-import type { CommunityComment } from "./types";
+import type { CommunityComment, CommunityPost, MockAccount } from "./types";
 
 const today = () => new Date().toISOString().slice(0, 10);
-const uid = (prefix: string) => `${prefix}-${Date.now()}`;
+export const uid = (prefix: string) => `${prefix}-${Date.now()}`;
 
-export function createPet(input: Pick<Pet, "name" | "species" | "breed" | "gender" | "age" | "weight">, owner: string): Pet {
+export function createCommunityPost(author: MockAccount, content: string, images?: string[]): CommunityPost {
+  return {
+    id: uid("POST"), authorId: author.id, author: author.name,
+    handle: `@${author.email.split("@")[0].replace(/[^a-z0-9]/gi, "").toLowerCase()}`,
+    avatar: author.avatar.startsWith("data:") ? author.name.split(" ").slice(-2).map(p => p[0]).join("") : author.avatar,
+    time: "Vừa xong", pet: "", content, images, likes: 0, comments: [], status: "pending",
+  };
+}
+
+export function createPet(input: Pick<Pet, "name" | "species" | "breed" | "gender" | "age" | "weight" | "image">, owner: string): Pet {
   const numericWeight = Number.parseFloat(input.weight) || 0;
   return { id: uid("PET"), ...input, emoji: SPECIES_EMOJI[input.species] ?? "🐾", color: "#1D8B88", microchip: String(Date.now()).padEnd(15, "0").slice(0, 15), owner, chips: ["Microchipped"], health: [{ id: uid("HEALTH"), date: today(), weight: numericWeight, condition: "Tốt", nutrition: "Cân bằng", score: 85 }], events: [], consults: [] };
 }

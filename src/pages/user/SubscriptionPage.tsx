@@ -10,27 +10,30 @@ export function Subscription() {
   const navigate = useNavigate();
   return (
     <div>
-      <PageTitle title="Nâng cấp gói dịch vụ" subtitle="Mở khóa toàn bộ sức mạnh của PawPulse" />
-      <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-        {PUBLIC_SUBSCRIPTIONS.map(p => (
-          <Card key={p.name} className={`p-6 relative ${p.accent ? "ring-2 ring-primary" : ""}`} hover={false}>
-            {p.accent && <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold">PHỔ BIẾN NHẤT</span>}
+      <PageTitle title="Nâng cấp gói dịch vụ" subtitle="Mở khóa toàn bộ sức mạnh của PetPulse" />
+      <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        {PUBLIC_SUBSCRIPTIONS.map(p => {
+          const isCurrent = plan === p.name;
+          return (
+          <Card key={p.name} className={`p-6 relative flex flex-col ${isCurrent ? "ring-2 ring-primary shadow-lg shadow-primary/15" : ""}`} hover={false}>
+            {isCurrent && <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold">ĐANG SỬ DỤNG</span>}
             <div className="flex items-center gap-2 mb-2">
-              {p.accent ? <Crown size={20} className="text-primary" /> : <ShieldCheck size={20} className="text-muted-foreground" />}
+              {isCurrent ? <Crown size={20} className="text-primary" /> : <ShieldCheck size={20} className="text-muted-foreground" />}
               <h3 className="font-bold text-xl text-foreground" style={HEAD}>{p.name}</h3>
             </div>
             <div className="mb-5"><span className="font-extrabold text-3xl text-foreground" style={HEAD}>{p.price}</span> <span className="text-sm text-muted-foreground">/ {p.period}</span></div>
-            <ul className="space-y-2.5 mb-5">
+            <ul className="space-y-2.5 flex-1 mb-6">
               {p.features.map(f => <li key={f} className="flex items-start gap-2 text-sm text-foreground"><Check size={16} className="text-green-600 mt-0.5 flex-shrink-0" /> {f}</li>)}
               {p.missing.map(f => <li key={f} className="flex items-start gap-2 text-sm text-muted-foreground/60 line-through"><Check size={16} className="mt-0.5 flex-shrink-0 opacity-40" /> {f}</li>)}
             </ul>
-            {plan === p.name
-              ? <Btn block variant="outline" disabled>Gói hiện tại của bạn</Btn>
-              : p.accent
-                ? <Btn block size="lg" icon={<Crown size={16} />} onClick={() => navigate("/checkout")}>Nâng cấp Premium</Btn>
-                : <Btn block variant="outline" disabled>Miễn phí</Btn>}
+            {isCurrent
+              ? <Btn block size="lg" variant="primary" className="opacity-100 cursor-default">Gói hiện tại của bạn</Btn>
+              : p.name === "Free"
+                ? <Btn block size="lg" variant="primary" disabled className="disabled:opacity-100 disabled:cursor-default">Miễn phí</Btn>
+                : <Btn block size="lg" icon={<Crown size={16} />} onClick={() => navigate("/checkout")}>Nâng cấp {p.name}</Btn>}
           </Card>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -45,7 +48,7 @@ export function Checkout() {
   if (done) return (
     <div className="max-w-md mx-auto text-center py-16">
       <div className="w-16 h-16 rounded-3xl bg-green-100 dark:bg-green-900/40 text-green-600 flex items-center justify-center mx-auto mb-5"><CheckCircle2 size={32} /></div>
-      <h1 className="font-extrabold text-2xl text-foreground mb-2" style={HEAD}>Thanh toán thành công! 🎉</h1>
+      <h1 className="font-extrabold text-2xl text-foreground mb-2" style={HEAD}>Thanh toán thành công!</h1>
       <p className="text-sm text-muted-foreground mb-6">Tài khoản của bạn đã được nâng cấp lên <b className="text-primary">Premium</b>. Mọi tính năng đã được mở khóa.</p>
       <Btn size="lg" icon={<Sparkles size={16} />} onClick={() => navigate("/dashboard")}>Về Dashboard</Btn>
     </div>
