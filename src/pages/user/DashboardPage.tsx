@@ -62,7 +62,7 @@ export function Dashboard() {
             {pets.slice(0, 4).map(p => {
               const latest = p.health[0];
               return (
-                <Card key={p.id} className="overflow-hidden cursor-pointer p-0 border-l-4 border-l-primary" hover={false}>
+                <Card key={p.id} className="overflow-hidden p-0 border-l-4 border-l-primary" hover={false}>
                   <button className="w-full text-left" onClick={() => navigate(`/pets/${p.id}`)}>
                     <div className="h-28 relative">
                       {p.image
@@ -93,7 +93,7 @@ export function Dashboard() {
               <div className="ml-auto" />
               {pets.length > 1 && (
                 <select value={selectedPetId} onChange={e => setSelectedPetId(e.target.value)}
-                  className="text-xs bg-secondary text-foreground rounded-lg border border-border px-2 py-1 outline-none cursor-pointer"
+                  className="text-xs bg-secondary text-foreground rounded-lg border border-border px-2 py-1 outline-none"
                 >
                   {pets.map(p => <option key={p.id} value={p.id}>{p.emoji} {p.name}</option>)}
                 </select>

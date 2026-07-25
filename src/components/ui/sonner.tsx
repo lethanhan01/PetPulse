@@ -6,12 +6,29 @@ export function Toaster(props: ToasterProps) {
   return (
     <Sonner
       theme={theme === "dark" ? "dark" : "light"}
+      position="bottom-right"
+      richColors
       className="toaster group"
-      style={{
-        "--normal-bg": "var(--popover)",
-        "--normal-text": "var(--popover-foreground)",
-        "--normal-border": "var(--border)",
-      } as React.CSSProperties}
+      toastOptions={{
+        duration: 4000,
+        style: { fontFamily: "var(--font-sans)" },
+      }}
+      style={
+        {
+          "--normal-bg": "var(--popover)",
+          "--normal-text": "var(--popover-foreground)",
+          "--normal-border": "var(--border)",
+          "--success-bg": "var(--success-surface)",
+          "--success-text": "var(--success)",
+          "--success-border": "var(--success-border)",
+          "--error-bg": "var(--destructive)",
+          "--error-text": "white",
+          "--error-border": "transparent",
+          "--info-bg": "var(--info-surface)",
+          "--info-text": "var(--info)",
+          "--info-border": "var(--info-border)",
+        } as React.CSSProperties
+      }
       {...props}
     />
   );

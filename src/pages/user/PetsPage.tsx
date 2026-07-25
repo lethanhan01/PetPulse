@@ -74,7 +74,7 @@ export function AddPetModal({ open, onClose, edit, petLimit }: { open: boolean; 
         <div>
           <label className="block text-sm font-medium text-foreground mb-1.5">Hình ảnh</label>
           <div className="flex items-center gap-3">
-            <button type="button" onClick={() => fileRef.current?.click()} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer">
+            <button type="button" onClick={() => fileRef.current?.click()} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
               <Upload size={16} /> Chọn file ảnh
             </button>
             <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} hidden />

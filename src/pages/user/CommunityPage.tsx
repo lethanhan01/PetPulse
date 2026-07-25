@@ -36,12 +36,12 @@ function PostItem({ post }: { post: CommunityPost }) {
   return (
     <Card className="overflow-hidden border-l-4 border-l-primary/30" hover={false}>
       <div className="p-4 flex items-center gap-3">
-        <button onClick={() => navigate(`/profile/${post.authorId}`)} className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 overflow-hidden hover:ring-2 hover:ring-ring transition-all cursor-pointer">
+        <button onClick={() => navigate(`/profile/${post.authorId}`)} className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 overflow-hidden hover:ring-2 hover:ring-ring transition-all">
           {authorAvatar.startsWith("data:") ? <img src={authorAvatar} alt="" className="w-full h-full object-cover" /> : authorAvatar}
         </button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <button onClick={() => navigate(`/profile/${post.authorId}`)} className="font-semibold text-foreground text-sm truncate hover:text-primary transition-colors cursor-pointer">{authorName}</button>
+            <button onClick={() => navigate(`/profile/${post.authorId}`)} className="font-semibold text-foreground text-sm truncate hover:text-primary transition-colors">{authorName}</button>
             {post.status === "pending" && <Badge v="warning">Chờ duyệt</Badge>}
             {post.status === "rejected" && <><Badge v="danger">Từ chối</Badge><button onClick={() => deletePost(post.id)} className="ml-auto text-muted-foreground hover:text-destructive p-1 rounded"><Trash2 size={14} /></button></>}
           </div>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { Btn, Logo, Card } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Sun, Moon, Activity, Sparkles, Calendar, Users, ShieldCheck, Heart, ArrowRight, Stethoscope, Bell, PawPrint, CheckCircle2, Crown, X } from "lucide-react";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
 const FEATURES = [
   { icon: <Activity size={20} />, title: "Health Timeline", desc: "Theo dõi cân nặng, dinh dưỡng & tình trạng sức khỏe theo trục thời gian." },
@@ -14,11 +15,21 @@ const FEATURES = [
   { icon: <Stethoscope size={20} />, title: "Health Score", desc: "Điểm sức khỏe chuẩn hóa cùng khuyến nghị chăm sóc cá nhân hóa." },
 ];
 
+const FAQS = [
+  { q: "PetPulse có miễn phí không?", a: "Có! Bạn có thể bắt đầu với gói Free miễn phí vĩnh viễn, quản lý tối đa 3 thú cưng. Khi cần mở khóa toàn bộ tính năng, bạn có thể nâng cấp lên Premium hoặc Premium Pro bất cứ lúc nào." },
+  { q: "Tôi có thể quản lý nhiều thú cưng không?", a: "Có. Gói Free cho phép quản lý tối đa 3 thú cưng. Nếu bạn có nhiều hơn, gói Premium hỗ trợ không giới hạn số lượng thú cưng, kèm theo các tính năng nâng cao như AI Symptom Checker và Lịch chăm sóc thông minh." },
+  { q: "AI Symptom Checker có chính xác không?", a: "AI Symptom Checker sử dụng mô hình ngôn ngữ lớn (LLM) phân tích triệu chứng bạn nhập vào, dựa trên cơ sở dữ liệu thú y. Kết quả chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ thú y. Chúng tôi luôn khuyến nghị bạn đưa thú cưng đến phòng khám khi có dấu hiệu bất thường." },
+  { q: "Dữ liệu của tôi có được bảo mật không?", a: "Tuyệt đối. PetPulse áp dụng các tiêu chuẩn bảo mật hàng đầu: mã hóa dữ liệu đầu cuối, xác thực đa lớp, và tuân thủ quy định bảo vệ dữ liệu cá nhân. Hồ sơ sức khỏe thú cưng của bạn được lưu trữ an toàn và chỉ bạn mới có quyền truy cập." },
+  { q: "Tôi có thể hủy gói Premium bất cứ lúc nào không?", a: "Có. Bạn có thể hủy gói Premium hoặc Premium Pro bất cứ lúc nào mà không mất thêm phí. Sau khi hủy, quyền lợi Premium vẫn được duy trì đến hết chu kỳ thanh toán hiện tại, sau đó tài khoản sẽ tự động chuyển về gói Free." },
+  { q: "PetPulse có hỗ trợ những loài thú cưng nào?", a: "PetPulse hỗ trợ Chó, Mèo, Chim, Cá, Hamster và nhiều loài thú cưng phổ biến khác. Bạn có thể thêm thú cưng với đầy đủ thông tin: giống, tuổi, cân nặng, microchip và lịch sử tiêm phòng." },
+];
+
 const NAV_LINKS = [
   { label: "Tính năng", id: "features" },
   { label: "Cộng đồng", id: "community-preview" },
   { label: "Bảng giá", id: "cta" },
   { label: "Về chúng tôi", id: "about" },
+  { label: "FAQ", id: "faq" },
 ];
 
 export function Landing() {
@@ -210,6 +221,27 @@ export function Landing() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="px-4 sm:px-8 pb-20 max-w-4xl mx-auto scroll-mt-20">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <h2 className="font-extrabold text-3xl sm:text-4xl text-foreground mb-3">Câu hỏi thường gặp</h2>
+          <p className="text-muted-foreground">Những thắc mắc phổ biến về PetPulse</p>
+        </div>
+        <Accordion type="single" collapsible className="w-full space-y-3">
+          {FAQS.map((faq, i) => (
+            <AccordionItem key={i} value={`faq-${i}`}
+              className="border border-border rounded-2xl bg-card px-6 has-[button[data-state=open]]:ring-1 has-[button[data-state=open]]:ring-primary/30">
+              <AccordionTrigger className="text-base font-medium text-foreground py-4 hover:no-underline">
+                {faq.q}
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground leading-relaxed pb-4">
+                {faq.a}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </section>
 
       {/* CTA banner */}

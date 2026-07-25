@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { MOCK_COMMUNITY_POSTS, MOCK_ADMIN_NOTIFICATIONS } from "@/mocks";
+import { MOCK_COMMUNITY_POSTS, MOCK_ADMIN_NOTIFICATIONS, MOCK_NOTIFICATIONS } from "@/mocks";
 import { uid } from "@/mocks/factories";
 import type { CommunityPost } from "@/mocks";
 
@@ -19,8 +19,10 @@ export const useCommunity = () => {
   return context;
 };
 
-const pushNoti = (title: string, subtitle: string) => {
-  MOCK_ADMIN_NOTIFICATIONS.unshift({ id: uid("AN"), title, subtitle, kind: "moderation", read: false });
+const pushNoti = (title: string, subtitle: string, targetUserId?: string) => {
+  const noti = { id: uid("AN"), title, subtitle, kind: "moderation" as const, read: false, targetUserId, link: "/community" } as const;
+  MOCK_ADMIN_NOTIFICATIONS.unshift({ ...noti });
+  if (targetUserId) MOCK_NOTIFICATIONS.unshift({ ...noti, id: uid("N") });
 };
 
 export function CommunityProvider({ children }: { children: ReactNode }) {
@@ -30,13 +32,13 @@ export function CommunityProvider({ children }: { children: ReactNode }) {
 
   const approvePost = (id: string) => {
     const post = posts.find(p => p.id === id);
-    if (post) pushNoti("Bài viết đã được duyệt ✅", `"${post.content.slice(0, 50)}${post.content.length > 50 ? "..." : ""}" đã được phê duyệt`);
+    if (post) pushNoti("Bài viết đã được duyệt ✅", `"${post.content.slice(0, 50)}${post.content.length > 50 ? "..." : ""}" đã được phê duyệt`, post.authorId);
     setPosts(prev => prev.map(p => p.id === id ? { ...p, status: "approved" as const } : p));
   };
 
   const rejectPost = (id: string) => {
     const post = posts.find(p => p.id === id);
-    if (post) pushNoti("Bài viết bị từ chối ❌", `"${post.content.slice(0, 50)}${post.content.length > 50 ? "..." : ""}" không được phê duyệt`);
+    if (post) pushNoti("Bài viết bị từ chối ❌", `"${post.content.slice(0, 50)}${post.content.length > 50 ? "..." : ""}" không được phê duyệt`, post.authorId);
     setPosts(prev => prev.map(p => p.id === id ? { ...p, status: "rejected" as const } : p));
   };
 

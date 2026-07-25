@@ -42,6 +42,6 @@ export type Subscription = {
   subscribers: number; active: boolean; accent?: boolean; tagline?: string;
 };
 
-export type Notification = { id: string; title: string; subtitle: string; kind: "event" | "health" | "vaccine" | "moderation"; read: boolean };
+export type Notification = { id: string; title: string; subtitle: string; kind: "event" | "health" | "vaccine" | "moderation"; read: boolean; targetUserId?: string; link?: string };
 export type AnalyticsPoint = { label: string; value: number };
 export type AnalyticsSeries = Record<"Tuần" | "Tháng" | "Quý", AnalyticsPoint[]>;

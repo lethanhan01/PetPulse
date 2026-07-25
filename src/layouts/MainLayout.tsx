@@ -1,4 +1,4 @@
-import { type CSSProperties, type KeyboardEvent, type ReactNode, useEffect, useState } from "react";
+import { type CSSProperties, type KeyboardEvent, type ReactNode, useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
 import { Logo } from "@/components/common/kit";
@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar/Navbar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { MOCK_NOTIFICATIONS, MOCK_ADMIN_NOTIFICATIONS } from "@/mocks";
 import { getAccountInitials } from "@/services/user.service";
+import { toast } from "sonner";
 import { Sun, Moon, Bell, Menu, X, LogOut, LayoutDashboard, Users, PawPrint, Sparkles, Crown, User as UserIcon, CreditCard, Stethoscope, BarChart3, Shield, MessageSquare, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 const SIDEBAR_SETTINGS_KEY = "petpulse.sidebar";
@@ -59,7 +60,17 @@ export function MainLayout() {
   const [isDesktop, setIsDesktop] = useState(() => typeof window === "undefined" || window.innerWidth >= 1024);
   const nav = role === "admin" ? ADMIN_NAV : USER_NAV;
   const isDark = theme === "dark";
-  const notifs = role === "admin" ? MOCK_ADMIN_NOTIFICATIONS : MOCK_NOTIFICATIONS;
+  const notifs = (role === "admin" ? MOCK_ADMIN_NOTIFICATIONS : MOCK_NOTIFICATIONS).filter(n => !n.targetUserId || n.targetUserId === activeAccount?.id);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  useEffect(() => {
+    const unread = notifs.filter(n => !n.read);
+    if (unread.length === 0) return;
+    unread.forEach((n, i) => {
+      const timer = setTimeout(() => toast.custom(t => <div onClick={() => { if (n.link) navigate(n.link); toast.dismiss(t); }} className="flex items-start bg-popover border border-border shadow-lg cursor-pointer overflow-hidden rounded-xl w-[356px] max-w-[356px]" style={{ fontFamily: "var(--font-sans)" }}><div className={"w-1 shrink-0 self-stretch " + { event: "bg-primary", health: "bg-success", vaccine: "bg-warm", moderation: "bg-info" }[n.kind]} /><div className="flex items-start gap-3 py-3 pr-3 flex-1"><div className={"w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 " + { event: "bg-primary/10 text-primary", health: "bg-success/10 text-success", vaccine: "bg-warm/10 text-warm", moderation: "bg-info/10 text-info" }[n.kind]}>{notificationIcon[n.kind]}</div><div className="min-w-0 flex-1"><p className="text-sm font-semibold leading-tight text-foreground truncate">{n.title}</p><p className="text-xs text-muted-foreground mt-1 truncate">{n.subtitle}</p></div></div></div>), i * 3000);
+      timersRef.current.push(timer);
+    });
+    return () => { timersRef.current.forEach(clearTimeout); timersRef.current = []; };
+  }, []);
   const logOut = () => { logout(); navigate("/"); };
   const { collapsed, width } = sidebarSettings;
   const desktopSidebarWidth = collapsed ? SIDEBAR_COLLAPSED_WIDTH : width;
@@ -110,7 +121,7 @@ export function MainLayout() {
       <div className="ml-auto flex items-center gap-2">
         <button onClick={toggleTheme} className="w-9 h-9 rounded-full border border-border hover:bg-secondary flex items-center justify-center" aria-label="Theme">{isDark ? <Sun size={16} className="text-accent" /> : <Moon size={16} className="text-primary" />}</button>
         <div className="relative"><button onClick={() => setNotiOpen(!notiOpen)} className="w-9 h-9 rounded-full border border-border hover:bg-secondary flex items-center justify-center relative" aria-label="Notifications"><Bell size={16} />{notifs.some(n => !n.read) && <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-destructive" />}</button>
-          {notiOpen && <><div className="fixed inset-0 z-40" onClick={() => setNotiOpen(false)} /><div className="absolute right-0 mt-2 w-80 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden"><div className="p-3 border-b border-border font-semibold text-sm">Thông báo</div>{notifs.map(n => <div key={n.id} className="flex gap-3 p-3 hover:bg-secondary/50 border-b border-border last:border-0"><div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">{notificationIcon[n.kind]}</div><div><p className="text-sm text-foreground leading-tight">{n.title}</p><p className="text-xs text-muted-foreground mt-0.5">{n.subtitle}</p></div></div>)}</div></>}
+          {notiOpen && <><div className="fixed inset-0 z-40" onClick={() => setNotiOpen(false)} /><div className="absolute right-0 mt-2 w-80 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden"><div className="p-3 border-b border-border font-semibold text-sm">Thông báo</div>{notifs.map(n => <div key={n.id} onClick={() => { if (n.link) navigate(n.link); setNotiOpen(false); }} className="flex gap-3 p-3 hover:bg-secondary/50 border-b border-border last:border-0 cursor-pointer transition-colors"><div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">{notificationIcon[n.kind]}</div><div><p className="text-sm text-foreground leading-tight">{n.title}</p><p className="text-xs text-muted-foreground mt-0.5">{n.subtitle}</p></div></div>)}</div></>}
         </div>
         <div className="relative">
           <button onClick={() => setProfileOpen(!profileOpen)} className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary overflow-hidden hover:ring-2 hover:ring-ring transition-all" title={activeAccount?.name}>

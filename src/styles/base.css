@@ -1,6 +1,7 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    cursor: url("/cursor-paw.svg") 16 16, auto !important;
   }
 
   html {
@@ -14,6 +15,6 @@
   h1 { font-family: var(--font-heading); font-size: var(--text-2xl); font-weight: var(--font-weight-medium); line-height: 1.5; }
   h2 { font-family: var(--font-heading); font-size: var(--text-xl); font-weight: var(--font-weight-medium); line-height: 1.5; }
   h3 { font-family: var(--font-heading); font-size: var(--text-lg); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  h4, label, button { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
+  h4, label { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
   input { font-size: var(--text-base); font-weight: var(--font-weight-normal); line-height: 1.5; }
 }

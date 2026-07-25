@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
 import { useCommunity } from "@/stores/community.store";
-import { MOCK_ACCOUNTS } from "@/mocks";
+import { MOCK_ACCOUNTS, getPetsForAccount } from "@/mocks";
 import { Card, Badge } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Crown, Calendar, PawPrint, Heart, MessageCircle, ChevronLeft } from "lucide-react";
@@ -26,6 +26,11 @@ export function UserProfile() {
   const sharedPosts = useMemo(
     () => posts.filter(p => account?.reposts.includes(p.id) && p.authorId !== userId),
     [posts, account?.reposts, userId]
+  );
+
+  const pets = useMemo(
+    () => getPetsForAccount(userId ?? ""),
+    [userId]
   );
 
   const allItems = useMemo(() => {
@@ -91,6 +96,34 @@ export function UserProfile() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Pets */}
+      <div>
+        <h3 className="font-bold text-foreground mb-3">
+          Thú cưng <span className="text-muted-foreground font-normal">({pets.length})</span>
+        </h3>
+        {pets.length === 0 ? (
+          <Card className="p-8 text-center" hover={false}>
+            <PawPrint size={32} className="text-muted-foreground/40 mx-auto mb-3" />
+            <p className="text-sm text-muted-foreground">Người dùng chưa nuôi thú cưng nào.</p>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            {pets.map(pet => (
+              <div key={pet.id}
+                className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl flex-shrink-0">
+                  {pet.emoji}
+                </div>
+                <div className="min-w-0">
+                  <p className="font-semibold text-sm text-foreground truncate">{pet.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{pet.species} · {pet.breed}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* My Posts button if own profile */}

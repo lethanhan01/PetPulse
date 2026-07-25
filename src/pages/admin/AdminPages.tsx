@@ -131,7 +131,7 @@ export function AdminDashboard() {
                 </div>
               ) : range === "Quý" ? (
                 <select value={rangeYear} onChange={e => setRangeYear(Number(e.target.value))}
-                  className="text-xs bg-secondary text-foreground rounded-lg border border-border px-2 py-1 outline-none cursor-pointer">
+                  className="text-xs bg-secondary text-foreground rounded-lg border border-border px-2 py-1 outline-none">
                   {[2024, 2025, 2026].map(y => <option key={y} value={y}>{y}</option>)}
                 </select>
               ) : null}

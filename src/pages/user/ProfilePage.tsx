@@ -75,7 +75,7 @@ export function Profile() {
         </div>
         <div className="px-5 sm:px-7 pb-6">
           <div className="-mt-10 sm:-mt-14 mb-4 flex">
-            <button type="button" onClick={() => avatarRef.current?.click()} className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-background border-4 border-border flex items-center justify-center text-2xl sm:text-3xl font-extrabold text-primary shadow-sm flex-shrink-0 overflow-hidden group cursor-pointer">
+            <button type="button" onClick={() => avatarRef.current?.click()} className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-background border-4 border-border flex items-center justify-center text-2xl sm:text-3xl font-extrabold text-primary shadow-sm flex-shrink-0 overflow-hidden group">
               {hasAvatar ? (
                 <img src={activeAccount!.avatar} alt="avatar" className="w-full h-full object-cover" />
               ) : initials}
@@ -215,7 +215,7 @@ export function Profile() {
         <div className="space-y-3">
           <div className="grid sm:grid-cols-2 gap-4">
             {pets.map(p => (
-              <button key={p.id} onClick={() => navigate(`/pets/${p.id}`)} className="rounded-2xl border border-border bg-card shadow-sm p-6 flex items-center gap-5 text-left hover:shadow-md transition-all cursor-pointer w-full">
+              <button key={p.id} onClick={() => navigate(`/pets/${p.id}`)} className="rounded-2xl border border-border bg-card shadow-sm p-6 flex items-center gap-5 text-left hover:shadow-md transition-all w-full">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-3xl flex-shrink-0">
                   {p.image ? (
                     <img src={p.image} alt={p.name} className="w-full h-full object-cover rounded-2xl" />

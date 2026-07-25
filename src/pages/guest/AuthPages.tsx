@@ -39,7 +39,7 @@ export function Login() {
           {error && <p className="text-xs text-destructive mt-1">{error}</p>}
         </div>
         <div className="flex items-center justify-between text-sm">
-          <label className="flex items-center gap-2 text-muted-foreground cursor-pointer"><input type="checkbox" className="accent-[var(--primary)]" /> Ghi nhớ</label>
+          <label className="flex items-center gap-2 text-muted-foreground"><input type="checkbox" className="accent-[var(--primary)]" /> Ghi nhớ</label>
           <button type="button" onClick={() => navigate("/forgot-password")} className="text-primary hover:underline">Quên mật khẩu?</button>
         </div>
         <Btn block size="lg" type="submit">Đăng nhập</Btn>
@@ -74,7 +74,7 @@ export function Register() {
             </button>
           </div>
         </div>
-        <label className="flex items-start gap-2 text-sm text-muted-foreground cursor-pointer">
+        <label className="flex items-start gap-2 text-sm text-muted-foreground">
           <input type="checkbox" required className="mt-1 accent-[var(--primary)]" /> Tôi đồng ý với Điều khoản dịch vụ & Chính sách bảo mật của PetPulse.
         </label>
         <Btn block size="lg" type="submit">Đăng ký</Btn>
