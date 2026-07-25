@@ -1,5 +1,5 @@
 export type Role = "user" | "admin";
-export type Plan = "Free" | "Premium";
+export type Plan = "Free" | "Premium" | "Premium Năm";
 
 export type HealthEntry = {
   id: string; date: string; weight: number;

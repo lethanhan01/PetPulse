@@ -26,7 +26,7 @@ describe("mock fixture integrity", () => {
 
     const monthly = getAdminStats("Tháng");
     expect(monthly).toMatchObject({ totalUsers: 49, totalPets: 100, aiUsage: 920 });
-    expect(monthly.premiumUsers).toBe(users.filter(user => user.plan === "Premium").length);
+    expect(monthly.premiumUsers).toBe(users.filter(user => user.plan === "Premium" || user.plan === "Premium Năm").length);
     expect(monthly.conversionRate).toBeCloseTo((monthly.premiumUsers / monthly.totalUsers) * 100);
   });
 

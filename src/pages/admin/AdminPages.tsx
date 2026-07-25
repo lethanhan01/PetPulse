@@ -1,14 +1,14 @@
 import { useState, useMemo, type ReactNode } from "react";
 import { MOCK_AI_USAGE, MOCK_SUBSCRIPTIONS } from "@/mocks";
 import { useCommunity } from "@/stores/community.store";
-import { getAdminPets, getAdminStats, getAdminUsers } from "@/services/user.service";
+import { getAdminPets, getAdminStats, getAdminUsers, toggleUserStatus } from "@/services/user.service";
 import { Card, Btn, Badge, Field, Modal, PageTitle, TrendChart, BarChart, HEAD, MONO } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { usePagination } from "@/hooks/usePagination";
 import {
   Users, PawPrint, Crown, DollarSign, Bot, Download, Search, Trash2, Pencil, Plus,
-  Check, X, TrendingUp, MoreHorizontal,
+  Check, X, TrendingUp,
 } from "lucide-react";
 
 // ── Dashboard ──
@@ -199,56 +199,97 @@ function TableShell({ title, sub, children, action }: { title: string; sub: stri
 
 export function AdminUsers() {
   const allUsers = getAdminUsers();
-  const { items: users, currentPage, totalPages, setPage } = usePagination(allUsers);
+  const [planFilter, setPlanFilter] = useState("");
+  const [searchQ, setSearchQ] = useState("");
+  const [, forceUpdate] = useState(0);
+  const filtered = allUsers.filter(u => (!planFilter || u.plan === planFilter) && (!searchQ || u.name.toLowerCase().includes(searchQ.toLowerCase()) || u.email.toLowerCase().includes(searchQ.toLowerCase())));
+  const { items: users, currentPage, totalPages, setPage } = usePagination(filtered);
+  const doToggle = (id: string) => { toggleUserStatus(id); forceUpdate(n => n + 1); };
+  const FILTERS = ["", "Free", "Premium", "Premium Năm"];
   return (
-    <TableShell title="Quản lý User" sub={`${allUsers.length} người dùng`}>
-      <table className="w-full text-sm">
-        <thead><tr className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider bg-muted">
-          <th className="p-3">ID</th><th className="p-3">Tên</th><th className="p-3 hidden sm:table-cell">Email</th><th className="p-3">Gói</th><th className="p-3 hidden md:table-cell">Pet</th><th className="p-3">Trạng thái</th><th className="p-3"></th>
-        </tr></thead>
-        <tbody>
-          {users.map((u, i) => (
-            <tr key={u.id} className={`border-t border-border ${i % 2 ? "bg-muted/20" : ""}`}>
-              <td className="p-3"><code className="text-xs text-muted-foreground" style={MONO}>{u.id}</code></td>
-              <td className="p-3 font-medium text-foreground">{u.name}</td>
-              <td className="p-3 text-muted-foreground hidden sm:table-cell">{u.email}</td>
-              <td className="p-3">{u.plan === "Premium" ? <Badge v="primary"><Crown size={10} />Premium</Badge> : <Badge v="neutral">Free</Badge>}</td>
-              <td className="p-3 text-muted-foreground hidden md:table-cell">{u.petCount}</td>
-              <td className="p-3">{u.status === "Active" ? <Badge v="success">Active</Badge> : <Badge v="danger">Suspended</Badge>}</td>
-              <td className="p-3"><button className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground"><MoreHorizontal size={16} /></button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <Pagination page={currentPage} totalPages={totalPages} setPage={setPage} />
-    </TableShell>
+    <div>
+      <PageTitle title="Quản lý User" subtitle={`${filtered.length} / ${allUsers.length} người dùng`} />
+      <Card className="overflow-hidden" hover={false}>
+        <div className="p-3 border-b border-border flex flex-wrap items-center gap-2">
+          <div className="relative flex-1 max-w-xs">
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <input placeholder="Tìm kiếm..." value={searchQ} onChange={e => setSearchQ(e.target.value)} className="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+          </div>
+          <div className="flex gap-1">{FILTERS.map(f => <button key={f} onClick={() => setPlanFilter(f)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${planFilter === f ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary"}`}>{f || "Tất cả"}</button>)}</div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead><tr className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider bg-muted">
+              <th className="p-3">ID</th><th className="p-3">Tên</th><th className="p-3 hidden sm:table-cell">Email</th><th className="p-3">Gói</th><th className="p-3 hidden md:table-cell">Pet</th><th className="p-3">Trạng thái</th><th className="p-3"></th>
+            </tr></thead>
+            <tbody>
+              {users.length === 0 ? <tr><td colSpan={7} className="p-8 text-center text-sm text-muted-foreground">Không có người dùng nào thuộc gói này</td></tr> : users.map((u, i) => (
+                <tr key={u.id} className={`border-t border-border ${i % 2 ? "bg-muted/20" : ""}`}>
+                  <td className="p-3"><code className="text-xs text-muted-foreground" style={MONO}>{u.id}</code></td>
+                  <td className="p-3 font-medium text-foreground">{u.name}</td>
+                  <td className="p-3 text-muted-foreground hidden sm:table-cell">{u.email}</td>
+                  <td className="p-3">{u.plan === "Premium" ? <Badge v="primary"><Crown size={10} />Premium</Badge> : u.plan === "Premium Năm" ? <Badge v="primary"><Crown size={10} />Premium Năm</Badge> : <Badge v="neutral">Free</Badge>}</td>
+                  <td className="p-3 text-muted-foreground hidden md:table-cell">{u.petCount}</td>
+                  <td className="p-3">{u.status === "Active" ? <Badge v="success">Active</Badge> : <Badge v="danger">Suspended</Badge>}</td>
+                  <td className="p-3"><button onClick={() => doToggle(u.id)} className={`p-1.5 rounded-lg transition-colors ${u.status === "Active" ? "hover:bg-destructive/10 text-destructive" : "hover:bg-secondary text-muted-foreground"}`}>{u.status === "Active" ? <X size={16} /> : <Check size={16} />}</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <Pagination page={currentPage} totalPages={totalPages} setPage={setPage} />
+      </Card>
+    </div>
   );
 }
 
 export function AdminPets() {
   const allPets = getAdminPets();
-  const { items: pets, currentPage, totalPages, setPage } = usePagination(allPets);
+  const [healthFilter, setHealthFilter] = useState("");
+  const [ownerFilter, setOwnerFilter] = useState("");
+  const ownerOptions = useMemo(() => [...new Set(allPets.map(p => p.owner))].sort(), [allPets]);
+  const filtered = useMemo(() => allPets.filter(p => {
+    if (healthFilter === "Tốt" && p.score < 90) return false;
+    if (healthFilter === "Bình thường" && (p.score < 75 || p.score >= 90)) return false;
+    if (healthFilter === "Cần chú ý" && p.score >= 75) return false;
+    if (ownerFilter && p.owner !== ownerFilter) return false;
+    return true;
+  }), [allPets, healthFilter, ownerFilter]);
+  const { items: pets, currentPage, totalPages, setPage } = usePagination(filtered);
+  const HEALTH_FILTERS = ["", "Tốt", "Bình thường", "Cần chú ý"];
   return (
-    <TableShell title="Quản lý Pet" sub={`${allPets.length} thú cưng trên hệ thống`}>
-      <table className="w-full text-sm">
-        <thead><tr className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider bg-muted">
-          <th className="p-3">ID</th><th className="p-3">Tên</th><th className="p-3">Loài</th><th className="p-3 hidden sm:table-cell">Giống</th><th className="p-3 hidden md:table-cell">Chủ</th><th className="p-3">Health</th>
-        </tr></thead>
-        <tbody>
-          {pets.map((p, i) => (
-            <tr key={p.id} className={`border-t border-border ${i % 2 ? "bg-muted/20" : ""}`}>
-              <td className="p-3"><code className="text-xs text-muted-foreground" style={MONO}>{p.id}</code></td>
-              <td className="p-3 font-medium text-foreground">{p.name}</td>
-              <td className="p-3 text-muted-foreground">{p.species}</td>
-              <td className="p-3 text-muted-foreground hidden sm:table-cell">{p.breed}</td>
-              <td className="p-3 text-muted-foreground hidden md:table-cell">{p.owner}</td>
-              <td className="p-3"><Badge v={p.score >= 90 ? "success" : p.score >= 75 ? "info" : "warning"}>{p.score}</Badge></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <Pagination page={currentPage} totalPages={totalPages} setPage={setPage} />
-    </TableShell>
+    <div>
+      <PageTitle title="Quản lý Pet" subtitle={`${filtered.length} / ${allPets.length} thú cưng`} />
+      <Card className="overflow-hidden" hover={false}>
+        <div className="p-3 border-b border-border flex flex-wrap items-center gap-2">
+          <div className="flex gap-1">{HEALTH_FILTERS.map(f => <button key={f} onClick={() => setHealthFilter(f)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${healthFilter === f ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary"}`}>{f || "Tất cả"}</button>)}</div>
+          <select value={ownerFilter} onChange={e => setOwnerFilter(e.target.value)} className="ml-auto px-3 py-1.5 rounded-lg border border-border bg-background text-xs font-medium text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+            <option value="">Tất cả chủ</option>
+            {ownerOptions.map(o => <option key={o} value={o}>{o}</option>)}
+          </select>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead><tr className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider bg-muted">
+              <th className="p-3">ID</th><th className="p-3">Tên</th><th className="p-3">Loài</th><th className="p-3 hidden sm:table-cell">Giống</th><th className="p-3 hidden md:table-cell">Chủ</th><th className="p-3">Health</th>
+            </tr></thead>
+            <tbody>
+              {pets.length === 0 ? <tr><td colSpan={6} className="p-8 text-center text-sm text-muted-foreground">Không có thú cưng nào</td></tr> : pets.map((p, i) => (
+                <tr key={p.id} className={`border-t border-border ${i % 2 ? "bg-muted/20" : ""}`}>
+                  <td className="p-3"><code className="text-xs text-muted-foreground" style={MONO}>{p.id}</code></td>
+                  <td className="p-3 font-medium text-foreground">{p.name}</td>
+                  <td className="p-3 text-muted-foreground">{p.species}</td>
+                  <td className="p-3 text-muted-foreground hidden sm:table-cell">{p.breed}</td>
+                  <td className="p-3 text-muted-foreground hidden md:table-cell">{p.owner}</td>
+                  <td className="p-3"><Badge v={p.score >= 90 ? "success" : p.score >= 75 ? "info" : "warning"}>{p.score}</Badge></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <Pagination page={currentPage} totalPages={totalPages} setPage={setPage} />
+      </Card>
+    </div>
   );
 }
 
@@ -292,7 +333,11 @@ export function AdminSubs() {
 
 export function AdminModeration() {
   const { posts, approvePost, rejectPost, deletePost } = useCommunity();
-  const { items: visiblePosts, currentPage, totalPages, setPage } = usePagination(posts);
+  const sorted = useMemo(() => {
+    const order = { pending: 0, approved: 1, rejected: 2 };
+    return [...posts].sort((a, b) => order[a.status] - order[b.status]);
+  }, [posts]);
+  const { items: visiblePosts, currentPage, totalPages, setPage } = usePagination(sorted);
   return (
     <div>
       <PageTitle title="Kiểm duyệt Community" subtitle="Duyệt các bài đăng trên mạng xã hội thú cưng" />
@@ -307,6 +352,7 @@ export function AdminModeration() {
                 {p.status === "approved" && <Badge v="success">Đã duyệt</Badge>}
                 {p.status === "rejected" && <Badge v="danger">Từ chối</Badge>}
                 {p.status === "pending" && <Badge v="warning">Chờ duyệt</Badge>}
+                {p.status !== "pending" && <button onClick={() => deletePost(p.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive/70 hover:text-destructive transition-colors" title="Xoá bài viết"><Trash2 size={15} /></button>}
               </div>
               <p className="text-sm text-foreground mb-3">{p.content}</p>
               {p.status === "pending" && (
@@ -315,7 +361,6 @@ export function AdminModeration() {
                   <Btn size="sm" block variant="danger" icon={<X size={15} />} onClick={() => rejectPost(p.id)}>Từ chối</Btn>
                 </div>
               )}
-              {p.status === "rejected" && <Btn size="sm" variant="danger" icon={<Trash2 size={15} />} onClick={() => deletePost(p.id)}>Xoá</Btn>}
             </div>
           </Card>
         ))}
