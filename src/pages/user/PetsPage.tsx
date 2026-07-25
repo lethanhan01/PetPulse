@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { Pet } from "@/types/app.types";
 import { createPet, SPECIES_EMOJI } from "@/mocks";
-import { Card, Btn, Badge, Field, Select, Modal, PageTitle, HEAD, MONO } from "@/components/common/kit";
+import { Card, Btn, Badge, Field, Select, Modal, PageTitle } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Plus, ChevronRight, Pencil, Trash2, ShieldCheck, Upload, PawPrint } from "lucide-react";
 import { toast } from "sonner";
@@ -42,15 +42,15 @@ export function AddPetModal({ open, onClose, edit, petLimit }: { open: boolean; 
   const save = (e: React.FormEvent) => {
     e.preventDefault();
     if (!edit && pets.length >= petLimit) {
-      toast.error(`Gói Free chỉ được tối đa ${petLimit} thú cưng`, { style: { background: "#dc2626", color: "#fff", border: "none" } });
+      toast.error(`Gói Free chỉ được tối đa ${petLimit} thú cưng`, { style: { background: "var(--destructive)", color: "var(--primary-foreground)", border: "none" } });
       return;
     }
     if (edit) {
       updatePet(edit.id, { ...f, gender: f.gender as Pet["gender"], emoji: SPECIES_EMOJI[f.species] });
-      toast.success("Đã cập nhật thú cưng thành công", { style: { background: "#16a34a", color: "#fff", border: "none" } });
+      toast.success("Đã cập nhật thú cưng thành công", { style: { background: "var(--success)", color: "var(--primary-foreground)", border: "none" } });
     } else {
       addPet(createPet({ ...f, gender: f.gender as Pet["gender"] }, activeAccount?.name ?? "Nguyễn Văn An"));
-      toast.success("Đã thêm thú cưng mới", { style: { background: "#16a34a", color: "#fff", border: "none" } });
+      toast.success("Đã thêm thú cưng mới", { style: { background: "var(--success)", color: "var(--primary-foreground)", border: "none" } });
     }
     onClose();
   };
@@ -102,12 +102,12 @@ export function Pets() {
   return (
     <div>
       <PageTitle title="Thú cưng của tôi" subtitle={petLimit === Infinity ? `Bạn đang quản lý ${pets.length} hồ sơ Pet Passport` : `Bạn đang quản lý ${pets.length}/${petLimit} hồ sơ Pet Passport`}
-        action={<Btn icon={<Plus size={16} />} disabled={atLimit} onClick={() => { if (atLimit) { toast.error(`Gói Free chỉ được tối đa ${petLimit} thú cưng. Nâng cấp để thêm!`, { style: { background: "#dc2626", color: "#fff", border: "none" } }); return; } setEdit(undefined); setAdd(true); }}>Thêm thú cưng</Btn>} />
+        action={<Btn icon={<Plus size={16} />} disabled={atLimit} onClick={() => { if (atLimit) { toast.error(`Gói Free chỉ được tối đa ${petLimit} thú cưng. Nâng cấp để thêm!`, { style: { background: "var(--destructive)", color: "var(--primary-foreground)", border: "none" } }); return; } setEdit(undefined); setAdd(true); }}>Thêm thú cưng</Btn>} />
 
       {pets.length === 0 ? (
         <Card className="p-12 text-center" hover={false}>
           <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4"><PawPrint size={32} className="text-primary" /></div>
-          <h3 className="font-bold text-lg text-foreground mb-1" style={HEAD}>Chưa có thú cưng nào</h3>
+          <h3 className="font-bold text-lg text-foreground mb-1">Chưa có thú cưng nào</h3>
           <p className="text-sm text-muted-foreground mb-5">Thêm thú cưng đầu tiên để bắt đầu quản lý sức khỏe.</p>
           <Btn icon={<Plus size={16} />} onClick={() => setAdd(true)} disabled={atLimit}>{atLimit ? `Đã đạt giới hạn ${petLimit} thú cưng` : "Thêm thú cưng"}</Btn>
         </Card>
@@ -120,7 +120,7 @@ export function Pets() {
               <Card key={p.id} className="overflow-hidden group border-l-4 border-l-primary">
                 <div className="h-32 relative">
                   {p.image ? <ImageWithFallback src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                    : <div className="w-full h-full flex items-center justify-center text-5xl" style={{ background: "linear-gradient(135deg,#1D8B88,#2FE0DC)" }}>{p.emoji}</div>}
+                    : <div className="w-full h-full flex items-center justify-center text-5xl" style={{ background: "linear-gradient(135deg,var(--primary),var(--accent))" }}>{p.emoji}</div>}
                   <div className="absolute top-2 right-2 flex gap-1.5">
                     <button onClick={() => { setEdit(p); setAdd(true); }} className="p-1.5 rounded-lg bg-card/90 backdrop-blur text-foreground hover:text-primary" aria-label="Edit"><Pencil size={14} /></button>
                     <button onClick={() => setDel(p)} className="p-1.5 rounded-lg bg-card/90 backdrop-blur text-foreground hover:text-destructive" aria-label="Delete"><Trash2 size={14} /></button>
@@ -128,11 +128,11 @@ export function Pets() {
                 </div>
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-bold text-lg text-foreground" style={HEAD}>{p.emoji} {p.name}</h3>
+                    <h3 className="font-bold text-lg text-foreground">{p.emoji} {p.name}</h3>
                     <Badge v={sv}><ShieldCheck size={11} /> {latest.score}</Badge>
                   </div>
                   <p className="text-xs text-muted-foreground mb-2">{p.breed} · {p.age} · {p.gender}</p>
-                  <code className="inline-block text-[11px] text-primary bg-secondary px-2 py-0.5 rounded-full mb-3" style={MONO}>{p.id}</code>
+                  <code className="inline-block text-[11px] text-primary bg-secondary px-2 py-0.5 rounded-full mb-3">{p.id}</code>
                   <Btn variant="outline" block size="sm" icon={<ChevronRight size={15} />} iconRight onClick={() => navigate(`/pets/${p.id}`)}>Xem hồ sơ</Btn>
                 </div>
               </Card>
@@ -146,7 +146,7 @@ export function Pets() {
         <p className="text-sm text-muted-foreground mb-5">Bạn có chắc muốn xóa hồ sơ của <b className="text-foreground">{del?.name}</b>? Hành động này không thể hoàn tác.</p>
         <div className="flex gap-3">
           <Btn variant="outline" block onClick={() => setDel(undefined)}>Hủy</Btn>
-          <Btn variant="danger" block onClick={() => { if (del) { const name = del.name; removePet(del.id); setDel(undefined); toast.error(`Đã xóa "${name}"`, { style: { background: "#dc2626", color: "#fff", border: "none" } }); } }}>Xóa</Btn>
+          <Btn variant="danger" block onClick={() => { if (del) { const name = del.name; removePet(del.id); setDel(undefined); toast.error(`Đã xóa "${name}"`, { style: { background: "var(--destructive)", color: "var(--primary-foreground)", border: "none" } }); } }}>Xóa</Btn>
         </div>
       </Modal>
     </div>

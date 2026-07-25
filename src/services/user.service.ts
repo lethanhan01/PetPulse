@@ -1,6 +1,7 @@
 import { MOCK_ADMIN_PETS, MOCK_ACCOUNTS, MOCK_AI_USAGE, getPetsForAccount } from "@/mocks";
 import type { Pet } from "@/types/app.types";
 import type { AccountStatus, AnalyticsSeries, MockAccount } from "@/mocks";
+import { isEventCancelledOn, isEventCompletedOn, todayLocalDate } from "@/utils/care-calendar";
 
 export type AdminUser = MockAccount & { petCount: number };
 export type AdminStats = { totalUsers: number; premiumUsers: number; conversionRate: number; totalPets: number; aiUsage: number };
@@ -19,12 +20,15 @@ export const getAdminStats = (range: keyof AnalyticsSeries): AdminStats => {
   return { totalUsers: users.length, premiumUsers, conversionRate: users.length ? (premiumUsers / users.length) * 100 : 0, totalPets: MOCK_ADMIN_PETS.length, aiUsage };
 };
 
-export const getUserDashboardStats = (pets: Pet[]) => ({
-  petCount: pets.length,
-  completedVaccinations: pets.flatMap(pet => pet.events).filter(event => event.type === "Tiêm phòng" && event.done).length,
-  upcomingEvents: pets.flatMap(pet => pet.events).filter(event => !event.done).length,
-  alerts: pets.filter(pet => pet.health[0]?.score < 70).length,
-});
+export const getUserDashboardStats = (pets: Pet[]) => {
+  const today = todayLocalDate();
+  return {
+    petCount: pets.length,
+    completedVaccinations: pets.flatMap(pet => pet.events).filter(event => event.type === "Tiêm phòng" && !isEventCancelledOn(event, today) && isEventCompletedOn(event, today)).length,
+    upcomingEvents: pets.flatMap(pet => pet.events).filter(event => !isEventCancelledOn(event, today) && !isEventCompletedOn(event, today)).length,
+    alerts: pets.filter(pet => pet.health[0]?.score < 70).length,
+  };
+};
 
 export const getAccountPets = (accountId: string) => getPetsForAccount(accountId);
 export const toggleUserStatus = (userId: string): AccountStatus => {

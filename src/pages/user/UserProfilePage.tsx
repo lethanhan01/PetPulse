@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
 import { useCommunity } from "@/stores/community.store";
 import { MOCK_ACCOUNTS } from "@/mocks";
-import { Card, Badge, HEAD } from "@/components/common/kit";
+import { Card, Badge } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Crown, Calendar, PawPrint, Heart, MessageCircle, ChevronLeft } from "lucide-react";
 
@@ -49,6 +49,14 @@ export function UserProfile() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+      >
+        <ChevronLeft size={17} /> Quay lại
+      </button>
+
       {/* Header */}
       <div className="relative rounded-2xl overflow-hidden border border-border bg-card shadow-sm">
         <div className="h-24 bg-gradient-to-r from-primary/80 via-primary to-cyan-400/60" />
@@ -63,7 +71,7 @@ export function UserProfile() {
           </div>
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="min-w-0">
-              <h2 className="font-bold text-xl text-foreground truncate" style={HEAD}>{account.name}</h2>
+              <h2 className="font-bold text-xl text-foreground truncate">{account.name}</h2>
               <p className="text-sm text-muted-foreground">{account.email}</p>
             </div>
             <Badge v={account.plan === "Free" ? "neutral" : "primary"}>
@@ -99,7 +107,7 @@ export function UserProfile() {
 
       {/* Posts */}
       <div>
-        <h3 className="font-bold text-foreground mb-4" style={HEAD}>Bài viết</h3>
+        <h3 className="font-bold text-foreground mb-4">Bài viết</h3>
         {allItems.length === 0 ? (
           <Card className="p-8 text-center" hover={false}>
             <PawPrint size={32} className="text-muted-foreground/40 mx-auto mb-3" />

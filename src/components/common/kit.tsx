@@ -1,9 +1,6 @@
 import { ReactNode, useState, ButtonHTMLAttributes, InputHTMLAttributes } from "react";
 import { Loader2 } from "lucide-react";
 
-export const HEAD = { fontFamily: "'Nunito', sans-serif" };
-export const MONO = { fontFamily: "'DM Mono', monospace" };
-
 // ── Logo ──
 export function Logo({ size = 28 }: { size?: number }) {
   return (
@@ -12,7 +9,7 @@ export function Logo({ size = 28 }: { size?: number }) {
         style={{ width: size, height: size }}>
         <span style={{ fontSize: size * 0.5 }}>🐾</span>
       </div>
-      <span className="font-bold text-primary" style={{ ...HEAD, fontSize: size * 0.6 }}>PetPulse</span>
+      <span className="font-heading font-bold text-primary" style={{ fontSize: size * 0.6 }}>PetPulse</span>
     </div>
   );
 }
@@ -50,10 +47,10 @@ export function Btn({ variant = "primary", size = "md", icon, iconRight, loading
 type BadgeV = "success" | "warning" | "danger" | "info" | "primary" | "neutral";
 export function Badge({ v = "primary", children }: { v?: BadgeV; children: ReactNode }) {
   const map: Record<BadgeV, string> = {
-    success: "bg-green-50 text-green-700 border-green-200 dark:bg-green-950/40 dark:text-green-300 dark:border-green-800",
-    warning: "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950/40 dark:text-yellow-300 dark:border-yellow-800",
-    danger: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800",
-    info: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800",
+    success: "bg-success-surface text-success-foreground border-success-border",
+    warning: "bg-warning-surface text-warning-foreground border-warning-border",
+    danger: "bg-destructive/10 text-destructive border-destructive/25",
+    info: "bg-info-surface text-info-foreground border-info-border",
     primary: "bg-primary/10 text-primary border-primary/25",
     neutral: "bg-muted text-muted-foreground border-border",
   };
@@ -104,16 +101,16 @@ export function TrendChart({
           <>
             <defs>
               <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#2FE0DC" stopOpacity={0.4} />
-                <stop offset="100%" stopColor="#2FE0DC" stopOpacity={0} />
+                <stop offset="0%" stopColor="var(--chart-2)" stopOpacity={0.4} />
+                <stop offset="100%" stopColor="var(--chart-2)" stopOpacity={0} />
               </linearGradient>
             </defs>
             {n > 1 && <path d={areaPath} fill={`url(#${gid})`} />}
           </>
         )}
-        <path d={linePath} fill="none" stroke="#1D8B88" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <path d={linePath} fill="none" stroke="var(--chart-1)" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         {data.map((d, i) => (
-          <circle key={`pt-${i}`} cx={x(i)} cy={y(d.value)} r={hv === i ? 3.5 : 1.5} fill={hv === i ? "#fff" : "#2FE0DC"} stroke="#1D8B88" strokeWidth={1.5} style={{ cursor: "pointer", transition: "r .12s" }} onMouseEnter={() => setHv(i)} onMouseLeave={() => setHv(-1)} />
+          <circle key={`pt-${i}`} cx={x(i)} cy={y(d.value)} r={hv === i ? 3.5 : 1.5} fill={hv === i ? "var(--card)" : "var(--chart-2)"} stroke="var(--chart-1)" strokeWidth={1.5} style={{ cursor: "pointer", transition: "r .12s" }} onMouseEnter={() => setHv(i)} onMouseLeave={() => setHv(-1)} />
         ))}
         {showXLabels && data.map((d, i) => {
           const anchor = i === 0 ? "start" : i === n - 1 ? "end" : "middle";
@@ -160,8 +157,8 @@ export function BarChart({ data, height = 224, showXLabels = true }: {
       <svg viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" className="w-full h-full" role="img" aria-label="Biểu đồ cột">
         <defs>
           <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#2FE0DC" stopOpacity={0.9} />
-            <stop offset="100%" stopColor="#1D8B88" stopOpacity={0.95} />
+            <stop offset="0%" stopColor="var(--chart-2)" stopOpacity={0.9} />
+            <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0.95} />
           </linearGradient>
         </defs>
         {data.map((d, i) => {
@@ -170,7 +167,7 @@ export function BarChart({ data, height = 224, showXLabels = true }: {
           const by = padT + chartH - h;
           return (
             <rect key={`bar-${i}`} x={bx} y={by} width={bw} height={h} rx={4}
-              fill={hv === i ? "#2FE0DC" : "url(#barGrad)"}
+              fill={hv === i ? "var(--chart-2)" : "url(#barGrad)"}
               style={{ cursor: "pointer", transition: "fill .12s" }}
               onMouseEnter={() => setHv(i)} onMouseLeave={() => setHv(-1)} />
           );
@@ -230,7 +227,7 @@ export function PageTitle({ title, subtitle, action }: { title: string; subtitle
   return (
     <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
-        <h1 className="font-extrabold text-3xl text-foreground" style={HEAD}>{title}</h1>
+        <h1 className="font-heading font-extrabold text-3xl text-foreground">{title}</h1>
         {subtitle && <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>}
       </div>
       {action}
@@ -245,7 +242,7 @@ export function Modal({ open, onClose, title, children, wide }: { open: boolean;
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>
       <div className={`bg-card rounded-2xl border border-border shadow-2xl w-full ${wide ? "max-w-2xl" : "max-w-md"} max-h-[90vh] overflow-y-auto`} onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-5 border-b border-border sticky top-0 bg-card z-10">
-          <h3 className="font-bold text-lg text-foreground" style={HEAD}>{title}</h3>
+          <h3 className="font-heading font-bold text-lg text-foreground">{title}</h3>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground">✕</button>
         </div>
         <div className="p-5">{children}</div>

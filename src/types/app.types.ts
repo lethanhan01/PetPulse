@@ -10,7 +10,7 @@ export type HealthEntry = {
 export type CareEvent = {
   id: string; title: string; date: string; time: string;
   repeat: "Không lặp" | "Hằng ngày" | "Hằng tuần";
-  type: string; done: boolean;
+  type: string; done: boolean; completedDates?: string[]; cancelledDates?: string[];
 };
 
 export type AIConsult = {
