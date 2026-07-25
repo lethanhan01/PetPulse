@@ -17,10 +17,13 @@ export function createCommunityPost(author: MockAccount, content: string, images
 
 export function createPet(input: Pick<Pet, "name" | "species" | "breed" | "gender" | "age" | "weight" | "image">, owner: string): Pet {
   const numericWeight = Number.parseFloat(input.weight) || 0;
-  return { id: uid("PET"), ...input, emoji: SPECIES_EMOJI[input.species] ?? "🐾", color: "#1D8B88", microchip: String(Date.now()).padEnd(15, "0").slice(0, 15), owner, chips: ["Microchipped"], health: [{ id: uid("HEALTH"), date: today(), weight: numericWeight, condition: "Tốt", nutrition: "Cân bằng", score: 85 }], events: [], consults: [] };
+  const initialHealth = createHealthEntry({ weight: numericWeight, condition: "Tốt", nutrition: "Cân bằng" });
+  return { id: uid("PET"), ...input, emoji: SPECIES_EMOJI[input.species] ?? "🐾", color: "#1D8B88", microchip: String(Date.now()).padEnd(15, "0").slice(0, 15), owner, chips: ["Microchipped"], health: [initialHealth], events: [], consults: [] };
 }
 export function createHealthEntry(input: Omit<HealthEntry, "id" | "date" | "score">): HealthEntry {
-  return { ...input, id: uid("HEALTH"), date: today(), score: input.condition === "Tốt" ? 92 : input.condition === "Bình thường" ? 80 : 65 };
+  const baseScore = input.condition === "Tốt" ? 90 : input.condition === "Bình thường" ? 78 : 62;
+  const penalty = input.illness ? 12 : 0;
+  return { ...input, id: uid("HEALTH"), date: today(), score: Math.max(0, baseScore - penalty) };
 }
 export function createCareEvent(input: Omit<CareEvent, "id" | "done">): CareEvent { return { ...input, id: uid("EVENT"), done: false }; }
 export function createAIConsult(petName: string, symptoms: string): AIConsult { return { id: uid("CONSULT"), date: today(), petName, ...getMockAnalysis(symptoms) }; }

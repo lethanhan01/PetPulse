@@ -24,13 +24,23 @@ const healthDeltas: [number, number, number][] = [
   [-3, +3, -6], [-7, +4, -3], [-4, -1, -9], [-9, -3, -4], [-2, +6, -2],
 ];
 
+function scoreToCondition(s: number): HealthEntry["condition"] {
+  return s >= 85 ? "Tốt" : s >= 70 ? "Bình thường" : "Cần chú ý";
+}
+function scoreToNutrition(s: number): string {
+  return s < 70 ? "Cần điều chỉnh" : s < 85 ? "Ổn" : "Cân bằng";
+}
+
 function health(id: string, baseWeight: number, score: number, index: number, illness?: string): HealthEntry[] {
   const d = healthDeltas[index % healthDeltas.length];
+  const s2 = Math.max(62, score + d[0]);
+  const s3 = Math.max(60, score + d[1]);
+  const s4 = Math.max(60, score + d[2]);
   return [
-    { id: `${id}-H1`, date: "2026-07-20", weight: baseWeight, condition: score < 70 ? "Cần chú ý" : score < 85 ? "Bình thường" : "Tốt", nutrition: score < 70 ? "Cần điều chỉnh" : "Cân bằng", illness, score },
-    { id: `${id}-H2`, date: "2026-06-20", weight: Number((baseWeight * 0.98).toFixed(2)), condition: "Bình thường", nutrition: "Ổn", score: Math.max(62, score + d[0]) },
-    { id: `${id}-H3`, date: "2026-05-20", weight: Number((baseWeight * 0.96).toFixed(2)), condition: "Tốt", nutrition: "Tốt", score: Math.max(60, score + d[1]) },
-    { id: `${id}-H4`, date: "2026-04-20", weight: Number((baseWeight * 0.94).toFixed(2)), condition: "Bình thường", nutrition: "Ổn", score: Math.max(60, score + d[2]) },
+    { id: `${id}-H1`, date: "2026-07-20", weight: baseWeight, condition: scoreToCondition(score), nutrition: scoreToNutrition(score), illness, score },
+    { id: `${id}-H2`, date: "2026-06-20", weight: Number((baseWeight * 0.98).toFixed(2)), condition: scoreToCondition(s2), nutrition: scoreToNutrition(s2), score: s2 },
+    { id: `${id}-H3`, date: "2026-05-20", weight: Number((baseWeight * 0.96).toFixed(2)), condition: scoreToCondition(s3), nutrition: scoreToNutrition(s3), score: s3 },
+    { id: `${id}-H4`, date: "2026-04-20", weight: Number((baseWeight * 0.94).toFixed(2)), condition: scoreToCondition(s4), nutrition: scoreToNutrition(s4), score: s4 },
   ];
 }
 function events(id: string, index: number): CareEvent[] {
