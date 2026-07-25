@@ -2,10 +2,11 @@ import { useState, useMemo, type ReactNode } from "react";
 import { MOCK_AI_USAGE, MOCK_SUBSCRIPTIONS } from "@/mocks";
 import { useCommunity } from "@/stores/community.store";
 import { getAdminPets, getAdminStats, getAdminUsers, toggleUserStatus } from "@/services/user.service";
-import { Card, Btn, Badge, Field, Modal, PageTitle, TrendChart, BarChart, HEAD, MONO } from "@/components/common/kit";
+import { Card, Btn, Badge, Field, Modal, PageTitle, TrendChart, BarChart } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { usePagination } from "@/hooks/usePagination";
+import reportPrintCss from "@/styles/report-print.css?raw";
 import {
   Users, PawPrint, Crown, DollarSign, Bot, Download, Search, Trash2, Pencil, Plus,
   Check, X, TrendingUp,
@@ -27,9 +28,9 @@ export function AdminDashboard() {
   const statsData = getAdminStats(range as keyof typeof MOCK_AI_USAGE);
   const stats = [
     { icon: <Users size={18} />, l: "Tổng User", v: statsData.totalUsers.toLocaleString(), sub: "Tài khoản người dùng", ic: "text-primary bg-primary/10" },
-    { icon: <Crown size={18} />, l: "Premium User", v: statsData.premiumUsers.toLocaleString(), sub: `${statsData.conversionRate.toFixed(1)}% chuyển đổi`, ic: "text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30" },
-    { icon: <PawPrint size={18} />, l: "Tổng Pet", v: statsData.totalPets.toLocaleString(), sub: "Thú cưng trên hệ thống", ic: "text-green-600 bg-green-100 dark:bg-green-900/30" },
-    { icon: <Bot size={18} />, l: "AI Usage", v: statsData.aiUsage.toLocaleString(), sub: `Lượt tư vấn ${range.toLowerCase()}`, ic: "text-blue-600 bg-blue-100 dark:bg-blue-900/30" },
+    { icon: <Crown size={18} />, l: "Premium User", v: statsData.premiumUsers.toLocaleString(), sub: `${statsData.conversionRate.toFixed(1)}% chuyển đổi`, ic: "text-warning bg-warning-surface" },
+    { icon: <PawPrint size={18} />, l: "Tổng Pet", v: statsData.totalPets.toLocaleString(), sub: "Thú cưng trên hệ thống", ic: "text-success bg-success-surface" },
+    { icon: <Bot size={18} />, l: "AI Usage", v: statsData.aiUsage.toLocaleString(), sub: `Lượt tư vấn ${range.toLowerCase()}`, ic: "text-info bg-info-surface" },
   ];
   const revenueData = useMemo(() => {
     if (range === "Tuần") {
@@ -56,32 +57,7 @@ export function AdminDashboard() {
     p.forEach(pet => { if (pet.score >= 90) tiers["Tốt (90+)"]++; else if (pet.score >= 75) tiers["Khá (75-89)"]++; else if (pet.score >= 60) tiers["TB (60-74)"]++; else tiers["Yếu (<60)"]++; });
     const topUsers = [...u].sort((a, b) => b.petCount - a.petCount).slice(0, 5);
     const html = `<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><title>Báo cáo PetPulse</title>
-<style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',system-ui,sans-serif;background:#f8fafc;color:#0f172a;padding:40px}
-  @media print{body{padding:20px} .no-print{display:none!important}}
-  .header{text-align:center;padding:32px;background:linear-gradient(135deg,#0d9488,#14b8a6);border-radius:16px;color:#fff;margin-bottom:24px}
-  .header h1{font-size:28px;font-weight:700;margin-bottom:4px}
-  .header p{font-size:14px;opacity:.85}
-  .grid2{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
-  .grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:24px}
-  .card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid #e2e8f0}
-  .card .label{font-size:13px;color:#64748b;margin-bottom:4px}
-  .card .value{font-size:28px;font-weight:700;color:#0f172a}
-  .card .sub{font-size:12px;color:#94a3b8;margin-top:2px}
-  section{margin-bottom:28px}
-  section h2{font-size:17px;font-weight:600;color:#0f172a;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
-  .stat-row{display:flex;gap:24px;font-size:14px;padding:6px 0}
-  .stat-row .lbl{color:#64748b;min-width:140px}
-  .stat-row .val{font-weight:600;color:#0f172a}
-  table{width:100%;border-collapse:collapse;margin-bottom:16px}
-  th{text-align:left;padding:9px 10px;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px;background:#f1f5f9;border-bottom:2px solid #e2e8f0}
-  td{padding:9px 10px;font-size:13px;border-bottom:1px solid #e2e8f0}
-  tr:last-child td{border-bottom:none}
-  .footer{text-align:center;font-size:12px;color:#94a3b8;margin-top:32px;padding-top:16px;border-top:1px solid #e2e8f0}
-  .btn-print{display:inline-block;padding:10px 24px;background:#0d9488;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-top:16px}
-  .btn-print:hover{background:#0f766e}
-</style></head><body>
+<style>${reportPrintCss}</style></head><body>
 <div class="no-print" style="text-align:right;margin-bottom:16px"><button class="btn-print" onclick="window.print()">🖨 In / Lưu PDF</button></div>
 <div class="header"><h1>PetPulse</h1><p>Báo cáo thống kê hệ thống • ${now}</p></div>
 
@@ -134,7 +110,7 @@ export function AdminDashboard() {
         {stats.map(s => (
           <Card key={s.l} className="p-5">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${s.ic}`}>{s.icon}</div>
-            <div className="font-extrabold text-2xl text-foreground" style={HEAD}>{s.v}</div>
+            <div className="font-extrabold text-2xl text-foreground">{s.v}</div>
             <div className="text-sm font-medium text-foreground">{s.l}</div>
             <div className="text-xs text-muted-foreground mt-0.5">{s.sub}</div>
           </Card>
@@ -143,7 +119,7 @@ export function AdminDashboard() {
       <div className="grid lg:grid-cols-2 gap-6">
         <Card className="p-5" hover={false}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-foreground flex items-center gap-2" style={HEAD}><DollarSign size={17} className="text-primary" /> Doanh thu <span className="text-xs font-normal text-muted-foreground">(triệu đồng)</span></h3>
+            <h3 className="font-bold text-foreground flex items-center gap-2"><DollarSign size={17} className="text-primary" /> Doanh thu <span className="text-xs font-normal text-muted-foreground">(triệu đồng)</span></h3>
             <div className="flex items-center gap-2">
               {range === "Tuần" ? (
                 <div className="flex items-center gap-1 text-xs text-muted-foreground mr-1">
@@ -169,7 +145,7 @@ export function AdminDashboard() {
           </div>
         </Card>
         <Card className="p-5" hover={false}>
-          <h3 className="font-bold text-foreground flex items-center gap-2 mb-4" style={HEAD}><TrendingUp size={17} className="text-primary" /> AI Usage (lượt/tháng)</h3>
+          <h3 className="font-bold text-foreground flex items-center gap-2 mb-4"><TrendingUp size={17} className="text-primary" /> AI Usage (lượt/tháng)</h3>
           <div className="h-56">
             <TrendChart height={224} showArea showXLabels data={MOCK_AI_USAGE[range as keyof typeof MOCK_AI_USAGE]} />
           </div>
@@ -225,7 +201,7 @@ export function AdminUsers() {
             <tbody>
               {users.length === 0 ? <tr><td colSpan={7} className="p-8 text-center text-sm text-muted-foreground">Không có người dùng nào thuộc gói này</td></tr> : users.map((u, i) => (
                 <tr key={u.id} className={`border-t border-border ${i % 2 ? "bg-muted/20" : ""}`}>
-                  <td className="p-3"><code className="text-xs text-muted-foreground" style={MONO}>{u.id}</code></td>
+                  <td className="p-3"><code className="text-xs text-muted-foreground">{u.id}</code></td>
                   <td className="p-3 font-medium text-foreground">{u.name}</td>
                   <td className="p-3 text-muted-foreground hidden sm:table-cell">{u.email}</td>
                   <td className="p-3">{u.plan === "Premium" ? <Badge v="primary"><Crown size={10} />Premium</Badge> : u.plan === "Premium Năm" ? <Badge v="primary"><Crown size={10} />Premium Năm</Badge> : <Badge v="neutral">Free</Badge>}</td>
@@ -283,7 +259,7 @@ export function AdminPets() {
             <tbody>
               {pets.length === 0 ? <tr><td colSpan={6} className="p-8 text-center text-sm text-muted-foreground">Không có thú cưng nào</td></tr> : pets.map((p, i) => (
                 <tr key={p.id} className={`border-t border-border ${i % 2 ? "bg-muted/20" : ""}`}>
-                  <td className="p-3"><code className="text-xs text-muted-foreground" style={MONO}>{p.id}</code></td>
+                  <td className="p-3"><code className="text-xs text-muted-foreground">{p.id}</code></td>
                   <td className="p-3 font-medium text-foreground">{p.name}</td>
                   <td className="p-3 text-muted-foreground">{p.species}</td>
                   <td className="p-3 text-muted-foreground hidden sm:table-cell">{p.breed}</td>

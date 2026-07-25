@@ -3,9 +3,9 @@ import { useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
 import { useCommunity } from "@/stores/community.store";
 import type { CommunityPost } from "@/mocks";
-import { Card, PageTitle, Badge, HEAD } from "@/components/common/kit";
+import { Card, PageTitle, Badge } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
-import { Heart, MessageCircle, ChevronRight, PawPrint } from "lucide-react";
+import { Heart, MessageCircle, PawPrint } from "lucide-react";
 
 export function MyPosts() {
   const { activeAccount } = useApp();

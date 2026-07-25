@@ -4,7 +4,7 @@ import { createCommunityComment, createCommunityPost } from "@/mocks";
 import type { CommunityComment, CommunityPost } from "@/mocks";
 import { useApp } from "@/stores/app.store";
 import { useCommunity } from "@/stores/community.store";
-import { Card, Btn, Badge, HEAD, Textarea } from "@/components/common/kit";
+import { Card, Btn, Badge, Textarea } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { usePagination } from "@/hooks/usePagination";
@@ -108,7 +108,7 @@ export function Community() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="font-extrabold text-3xl text-foreground" style={HEAD}>Cộng đồng thú cưng</h1>
+        <h1 className="font-extrabold text-3xl text-foreground">Cộng đồng thú cưng</h1>
         <p className="text-sm text-muted-foreground mt-1">Chia sẻ khoảnh khắc & học hỏi mẹo chăm sóc từ cộng đồng.</p>
       </div>
       <Card className="p-4" hover={false}>

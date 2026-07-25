@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { AIConsult } from "@/types/app.types";
 import { createAIConsult, SYMPTOM_TAGS } from "@/mocks";
-import { Card, Btn, Badge, Select, Textarea, PageTitle, HEAD } from "@/components/common/kit";
+import { Card, Btn, Badge, Select, Textarea, PageTitle } from "@/components/common/kit";
 import { Sparkles, AlertTriangle, Stethoscope, HeartPulse, Save, Loader2, Bot } from "lucide-react";
 import { toast } from "sonner";
 
@@ -33,7 +33,7 @@ export function AIChecker() {
     if (pet) {
       updatePet(pet.id, { consults: [result, ...pet.consults] });
       const name = pet.name;
-      toast.success(`Đã lưu kết quả tư vấn cho ${name}`, { style: { background: "#16a34a", color: "#fff", border: "none" } });
+      toast.success(`Đã lưu kết quả tư vấn cho ${name}`, { style: { background: "var(--success)", color: "var(--primary-foreground)", border: "none" } });
       navigate("/pets/" + pet.id + "?tab=consult");
     }
   };
@@ -48,7 +48,7 @@ export function AIChecker() {
         <Card className="p-6" hover={false}>
           <div className="flex items-center gap-2 mb-4">
             <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><Bot size={18} /></div>
-            <h3 className="font-bold text-foreground" style={HEAD}>Mô tả triệu chứng</h3>
+            <h3 className="font-bold text-foreground">Mô tả triệu chứng</h3>
           </div>
           <div className="space-y-4">
             <Select label="Chọn thú cưng" value={petId} onChange={e => setPetId(e.target.value)}>
@@ -93,7 +93,7 @@ export function AIChecker() {
           {!loading && result && (
             <Card className="p-6" hover={false}>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-foreground" style={HEAD}>Kết quả phân tích</h3>
+                <h3 className="font-bold text-foreground">Kết quả phân tích</h3>
                 <Badge v={sevColor}><AlertTriangle size={11} /> Cảnh báo: {result.severity}</Badge>
               </div>
               <Section icon={<Stethoscope size={15} />} title="Các bệnh có khả năng gặp">

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useApp } from "@/stores/app.store";
 import { useNavigate } from "react-router";
-import { Card, Btn, Field, Select, Badge, PageTitle, HEAD } from "@/components/common/kit";
+import { Card, Btn, Field, Select, Badge, PageTitle } from "@/components/common/kit";
 import { PawPrint, Calendar, Heart, ShieldCheck, Crown, Lock, Pencil, Plus, ChevronRight, X, Check, Users, CreditCard, Sparkles, Camera } from "lucide-react";
 import type { MockAccount } from "@/mocks/types";
 
@@ -51,7 +51,7 @@ export function Profile() {
         <div className="h-24 sm:h-32 bg-gradient-to-r from-primary/80 via-primary to-cyan-400/60" />
         <div className="px-5 sm:px-7 pb-6">
           <div className="-mt-10 sm:-mt-14 mb-4 flex">
-            <button type="button" onClick={() => avatarRef.current?.click()} className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-background border-4 border-border flex items-center justify-center text-2xl sm:text-3xl font-extrabold text-primary shadow-sm flex-shrink-0 overflow-hidden group cursor-pointer" style={HEAD}>
+            <button type="button" onClick={() => avatarRef.current?.click()} className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-background border-4 border-border flex items-center justify-center text-2xl sm:text-3xl font-extrabold text-primary shadow-sm flex-shrink-0 overflow-hidden group cursor-pointer">
               {hasAvatar ? (
                 <img src={activeAccount!.avatar} alt="avatar" className="w-full h-full object-cover" />
               ) : initials}
@@ -69,7 +69,7 @@ export function Profile() {
           </div>
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="min-w-0">
-              <h2 className="font-bold text-xl sm:text-2xl text-foreground truncate" style={HEAD}>
+              <h2 className="font-bold text-xl sm:text-2xl text-foreground truncate">
                 {activeAccount?.name || (isAdmin ? "Quản trị viên" : "Nguyễn Văn An")}
               </h2>
               <p className="text-sm text-muted-foreground truncate">{activeAccount?.email}</p>
@@ -115,7 +115,7 @@ export function Profile() {
       {tab === "info" && (
         <Card className="p-6" hover={false}>
           <div className="flex items-center justify-between mb-5">
-            <h3 className="font-bold text-foreground" style={HEAD}>Thông tin cá nhân</h3>
+            <h3 className="font-bold text-foreground">Thông tin cá nhân</h3>
             {!editing && <Btn size="sm" variant="ghost" icon={<Pencil size={14} />} onClick={() => setEditing(true)}>Sửa</Btn>}
           </div>
           {editing ? (
@@ -159,7 +159,7 @@ export function Profile() {
       {/* ── Security Tab ── */}
       {tab === "security" && (
         <Card className="p-6" hover={false}>
-          <h3 className="font-bold text-foreground mb-5" style={HEAD}>Bảo mật</h3>
+          <h3 className="font-bold text-foreground mb-5">Bảo mật</h3>
           {changingPwd ? (
             <form className="space-y-4 max-w-sm" onSubmit={e => { e.preventDefault(); setChangingPwd(false); }}>
               <Field label="Mật khẩu hiện tại" type="password" placeholder="••••••••" />

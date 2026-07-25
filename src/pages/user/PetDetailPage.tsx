@@ -3,7 +3,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { CareEvent, HealthEntry } from "@/types/app.types";
 import { createCareEvent, createHealthEntry } from "@/mocks";
-import { Card, Btn, Badge, Field, Select, Modal, TrendChart, HEAD, MONO } from "@/components/common/kit";
+import { Card, Btn, Badge, Field, Select, Modal, TrendChart } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import {
   ArrowLeft, Activity, Calendar, Sparkles, Settings, Plus, Weight, Syringe,
@@ -45,7 +45,7 @@ export function PetDetail() {
 
       {/* Passport header */}
       <Card className="overflow-hidden" hover={false}>
-        <div className="h-28 relative" style={{ background: "linear-gradient(135deg,#1D8B88,#2FE0DC)" }}>
+        <div className="h-28 relative" style={{ background: "linear-gradient(135deg,var(--primary),var(--accent))" }}>
           <ShieldCheck size={120} className="absolute -right-4 -top-4 text-white/10" />
         </div>
         <div className="px-5 pb-5 relative">
@@ -54,9 +54,9 @@ export function PetDetail() {
           </div>
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mt-3">
             <div className="min-w-0">
-              <h1 className="font-extrabold text-2xl text-foreground" style={HEAD}>{pet.emoji} {pet.name}</h1>
+              <h1 className="font-extrabold text-2xl text-foreground">{pet.emoji} {pet.name}</h1>
               <p className="text-sm text-muted-foreground mt-0.5">{pet.breed} · {pet.age} · {pet.gender} · {pet.weight}</p>
-              <code className="inline-block text-xs text-primary bg-secondary px-2.5 py-1 rounded-full mt-2" style={MONO}>{pet.id}</code>
+              <code className="inline-block text-xs text-primary bg-secondary px-2.5 py-1 rounded-full mt-2">{pet.id}</code>
             </div>
             <div className="flex flex-wrap gap-1.5 sm:justify-end sm:pt-1">{pet.chips.map(c => <Badge key={c} v="primary">{c}</Badge>)}</div>
           </div>
@@ -77,7 +77,7 @@ export function PetDetail() {
       {tab === "overview" && (
         <div className="grid lg:grid-cols-3 gap-6">
           <Card className="p-6 lg:col-span-1 text-center" hover={false}>
-            <div className="relative overflow-hidden rounded-xl -m-6 -mt-6 mb-0 p-6" style={{ background: "linear-gradient(135deg,#1D8B88,#2FE0DC)" }}>
+            <div className="relative overflow-hidden rounded-xl -m-6 -mt-6 mb-0 p-6" style={{ background: "linear-gradient(135deg,var(--primary),var(--accent))" }}>
               <p className="text-sm text-white/80 mb-2">Health Score</p>
               <div className="relative w-28 h-28 mx-auto mb-3">
                 <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
@@ -86,7 +86,7 @@ export function PetDetail() {
                     strokeDasharray={`${2 * Math.PI * 42}`} strokeDashoffset={`${2 * Math.PI * 42 * (1 - latest.score / 100)}`} />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="font-extrabold text-4xl text-white" style={HEAD}>{latest.score}</span>
+                  <span className="font-extrabold text-4xl text-white">{latest.score}</span>
                   <span className="text-xs text-white/70">/100</span>
                 </div>
               </div>
@@ -96,13 +96,13 @@ export function PetDetail() {
           </Card>
 
           <Card className="p-5 lg:col-span-2" hover={false}>
-            <h3 className="font-bold text-foreground mb-4" style={HEAD}>Chỉ số sức khỏe gần nhất</h3>
+            <h3 className="font-bold text-foreground mb-4">Chỉ số sức khỏe gần nhất</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
               {[
-                { icon: <Weight size={16} />, bg: "bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600", l: "Cân nặng", v: `${latest.weight}kg` },
-                { icon: <Stethoscope size={16} />, bg: "bg-violet-100 dark:bg-violet-900/30 text-violet-600", l: "Tình trạng", v: latest.condition },
-                { icon: <Activity size={16} />, bg: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600", l: "Dinh dưỡng", v: latest.nutrition },
-                { icon: <Syringe size={16} />, bg: "bg-amber-100 dark:bg-amber-900/30 text-amber-600", l: "Bệnh", v: latest.illness || "Không" },
+                { icon: <Weight size={16} />, bg: "bg-info-surface bg-info-surface text-info", l: "Cân nặng", v: `${latest.weight}kg` },
+                { icon: <Stethoscope size={16} />, bg: "bg-info-surface bg-info-surface text-info", l: "Tình trạng", v: latest.condition },
+                { icon: <Activity size={16} />, bg: "bg-success-surface bg-success-surface text-success", l: "Dinh dưỡng", v: latest.nutrition },
+                { icon: <Syringe size={16} />, bg: "bg-warning-surface text-warning", l: "Bệnh", v: latest.illness || "Không" },
               ].map(m => (
                 <div key={m.l} className="bg-muted rounded-xl p-3">
                   <div className={`${m.bg} w-8 h-8 rounded-lg flex items-center justify-center mb-2`}>{m.icon}</div>
@@ -125,7 +125,7 @@ export function PetDetail() {
       {tab === "timeline" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-lg text-foreground" style={HEAD}>Health Timeline</h3>
+            <h3 className="font-bold text-lg text-foreground">Health Timeline</h3>
             <Btn size="sm" icon={<Plus size={15} />} onClick={() => setHealthModal(true)}>Cập nhật sức khỏe</Btn>
           </div>
           <div className="relative pl-8">
@@ -134,11 +134,11 @@ export function PetDetail() {
               const lv = scoreLevel(h.score);
               return (
                 <div key={h.id} className="relative pb-6 last:pb-0">
-                  <div className={`absolute -left-8 top-1.5 w-4 h-4 rounded-full border-[3px] border-card ${lv.v === "success" ? "bg-green-500" : lv.v === "info" ? "bg-primary" : lv.v === "warning" ? "bg-amber-500" : "bg-red-500"}`} />
+                  <div className={`absolute -left-8 top-1.5 w-4 h-4 rounded-full border-[3px] border-card ${lv.v === "success" ? "bg-success" : lv.v === "info" ? "bg-primary" : lv.v === "warning" ? "bg-warning" : "bg-destructive/100"}`} />
                   <Card className={`p-0 overflow-hidden border-l-4 ${lv.v === "success" ? "border-l-green-500" : lv.v === "info" ? "border-l-primary" : lv.v === "warning" ? "border-l-amber-500" : "border-l-red-500"}`} hover={false}>
                     <div className="p-4">
                       <div className="flex items-center justify-between mb-3">
-                        <code className="text-xs text-muted-foreground" style={MONO}>{h.date}</code>
+                        <code className="text-xs text-muted-foreground">{h.date}</code>
                         <Badge v={lv.v}>Score {h.score}</Badge>
                       </div>
                       <div className="flex flex-wrap gap-2">
@@ -159,7 +159,7 @@ export function PetDetail() {
       {tab === "calendar" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-lg text-foreground" style={HEAD}>Lịch chăm sóc sức khỏe</h3>
+            <h3 className="font-bold text-lg text-foreground">Lịch chăm sóc sức khỏe</h3>
             <Btn size="sm" icon={<Plus size={15} />} onClick={() => setEventModal(true)}>Thêm sự kiện</Btn>
           </div>
           <div className="flex items-start gap-3 p-3.5 rounded-xl bg-primary/5 border border-primary/10 text-primary">
@@ -174,14 +174,14 @@ export function PetDetail() {
               return (
                 <Card key={e.id} className={`p-0 overflow-hidden border-l-4 ${done ? "border-l-green-500/60" : "border-l-primary"}`} hover={false}>
                   <div className="p-4 flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${done ? "bg-green-100 dark:bg-green-900/30 text-green-600" : "bg-primary/10 text-primary"}`}>{icon}</div>
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${done ? "bg-success-surface bg-success-surface text-success" : "bg-primary/10 text-primary"}`}>{icon}</div>
                     <div className="flex-1 min-w-0">
                       <p className={`text-sm font-medium ${done ? "text-muted-foreground line-through" : "text-foreground"}`}>{e.title}</p>
                       <p className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap mt-0.5"><Clock size={11} /> {e.date} · {e.time} · {e.repeat} <Badge v="neutral">{e.type}</Badge></p>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">
-                      <button onClick={() => toggleEvent(e.id)} className={`p-2 rounded-lg transition-colors ${done ? "text-green-600 bg-green-100 dark:bg-green-900/30" : "text-muted-foreground hover:bg-secondary"}`}><CheckCircle2 size={18} /></button>
-                      <button onClick={() => deleteEvent(e.id)} className="p-2 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"><Trash2 size={16} /></button>
+                      <button onClick={() => toggleEvent(e.id)} className={`p-2 rounded-lg transition-colors ${done ? "text-success bg-success-surface bg-success-surface" : "text-muted-foreground hover:bg-secondary"}`}><CheckCircle2 size={18} /></button>
+                      <button onClick={() => deleteEvent(e.id)} className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"><Trash2 size={16} /></button>
                     </div>
                   </div>
                 </Card>
@@ -195,17 +195,17 @@ export function PetDetail() {
       {tab === "consult" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-lg text-foreground" style={HEAD}>Lịch sử tư vấn AI</h3>
+            <h3 className="font-bold text-lg text-foreground">Lịch sử tư vấn AI</h3>
             <Btn size="sm" icon={<Sparkles size={15} />} onClick={() => navigate("/ai-checker")}>Tư vấn mới</Btn>
           </div>
           {pet.consults.length === 0 && <Card className="p-8 text-center text-sm text-muted-foreground" hover={false}>Chưa có lịch sử tư vấn. Dùng AI Symptom Checker để kiểm tra sức khỏe.</Card>}
           {pet.consults.map(c => {
-            const sv = c.severity === "Cao" ? { v: "danger" as const, c: "border-red-500/40 bg-red-50/50 dark:bg-red-950/20" } : c.severity === "Trung bình" ? { v: "warning" as const, c: "border-amber-500/40 bg-amber-50/50 dark:bg-amber-950/20" } : { v: "success" as const, c: "border-green-500/40 bg-green-50/50 dark:bg-green-950/20" };
+            const sv = c.severity === "Cao" ? { v: "danger" as const, c: "border-destructive/40 bg-destructive/10" } : c.severity === "Trung bình" ? { v: "warning" as const, c: "border-warning-border bg-warning-surface/50" } : { v: "success" as const, c: "border-success-border bg-success-surface/50" };
             return (
               <Card key={c.id} className={`p-0 overflow-hidden border-l-4 ${sv.c}`} hover={false}>
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <code className="text-xs text-muted-foreground" style={MONO}>{c.date}</code>
+                    <code className="text-xs text-muted-foreground">{c.date}</code>
                     <Badge v={sv.v}><AlertTriangle size={11} /> Cảnh báo: {c.severity}</Badge>
                   </div>
                   <div className="flex items-start gap-2 mb-4 p-3 bg-background/80 rounded-xl text-sm text-foreground">
@@ -236,7 +236,7 @@ export function PetDetail() {
       {/* SETTINGS */}
       {tab === "settings" && (
         <div className="max-w-lg space-y-4">
-          <h3 className="font-bold text-lg text-foreground" style={HEAD}>Cài đặt hồ sơ {pet.name}</h3>
+          <h3 className="font-bold text-lg text-foreground">Cài đặt hồ sơ {pet.name}</h3>
           <Card className="divide-y divide-border" hover={false}>
             {[
               { icon: <ShieldCheck size={17} />, l: "Hiển thị hồ sơ công khai", d: "Cho phép cộng đồng xem passport" },
