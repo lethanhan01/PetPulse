@@ -63,7 +63,7 @@ export function PetDetail() {
       </Card>
 
       {/* Tabs */}
-      <div className="flex gap-1 overflow-x-auto border-b border-border">
+      <div className="flex gap-1 flex-wrap border-b border-border">
         {TABS.map(t => (
           <button key={t.k} onClick={() => setTab(t.k)}
             className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-all ${tab === t.k ? "text-primary border-primary" : "text-muted-foreground border-transparent hover:text-foreground"}`}>
@@ -129,7 +129,7 @@ export function PetDetail() {
           </div>
           <div className="relative pl-8">
             <div className="absolute left-[15px] top-2 bottom-2 w-0.5 bg-border" />
-            {pet.health.map((h, i) => {
+            {pet.health.map((h) => {
               const lv = scoreLevel(h.score);
               return (
                 <div key={h.id} className="relative pb-6 last:pb-0">
