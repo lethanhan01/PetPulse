@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import { createCommunityComment, createCommunityPost } from "@/mocks";
 import type { CommunityComment, CommunityPost } from "@/mocks";
 import { useApp } from "@/stores/app.store";
@@ -10,20 +11,27 @@ import { usePagination } from "@/hooks/usePagination";
 import { Heart, MessageCircle, Share2, Send, ImagePlus, PawPrint, Trash2 } from "lucide-react";
 
 function PostItem({ post }: { post: CommunityPost }) {
-  const { activeAccount } = useApp();
+  const { activeAccount, updateAccount } = useApp();
   const { deletePost } = useCommunity();
+  const navigate = useNavigate();
   const [liked, setLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState<CommunityComment[]>(post.comments);
   const [draft, setDraft] = useState("");
   const postImages = post.images;
+  const isShared = activeAccount?.reposts?.includes(post.id) ?? false;
+  const handleShare = () => {
+    if (!activeAccount) return;
+    const current = activeAccount.reposts ?? [];
+    updateAccount({ reposts: isShared ? current.filter(id => id !== post.id) : [...current, post.id] });
+  };
   return (
     <Card className="overflow-hidden border-l-4 border-l-primary/30" hover={false}>
       <div className="p-4 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">{post.avatar}</div>
+        <button onClick={() => navigate(`/profile/${post.authorId}`)} className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 hover:ring-2 hover:ring-ring transition-all cursor-pointer">{post.avatar}</button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <p className="font-semibold text-foreground text-sm truncate">{post.author}</p>
+            <button onClick={() => navigate(`/profile/${post.authorId}`)} className="font-semibold text-foreground text-sm truncate hover:text-primary transition-colors cursor-pointer">{post.author}</button>
             {post.status === "pending" && <Badge v="warning">Chờ duyệt</Badge>}
             {post.status === "rejected" && <><Badge v="danger">Từ chối</Badge><button onClick={() => deletePost(post.id)} className="ml-auto text-muted-foreground hover:text-destructive p-1 rounded"><Trash2 size={14} /></button></>}
           </div>
@@ -43,7 +51,9 @@ function PostItem({ post }: { post: CommunityPost }) {
         <button onClick={() => setShowComments(!showComments)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-secondary transition-colors">
           <MessageCircle size={17} /> {comments.length}
         </button>
-        <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-secondary transition-colors"><Share2 size={17} /> Chia sẻ</button>
+        <button onClick={handleShare} className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm hover:bg-secondary transition-colors ${isShared ? "text-primary" : "text-muted-foreground"}`}>
+          <Share2 size={17} /> {isShared ? "Đã chia sẻ" : "Chia sẻ"}
+        </button>
       </div>
       {showComments && (
         <div className="px-4 pb-4 border-t border-border pt-3 space-y-3">

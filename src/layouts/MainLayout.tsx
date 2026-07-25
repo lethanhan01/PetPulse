@@ -13,6 +13,7 @@ const USER_NAV: NavItem[] = [
   { to: "/pets", label: "Thú cưng của tôi", icon: <PawPrint size={17} /> },
   { to: "/ai-checker", label: "AI Symptom Checker", icon: <Sparkles size={17} /> },
   { to: "/community", label: "Cộng đồng", icon: <MessageSquare size={17} /> },
+  { to: "/my-posts", label: "Bài viết của tôi", icon: <MessageSquare size={17} /> },
   { to: "/subscription", label: "Nâng cấp Premium", icon: <Crown size={17} /> },
   { to: "/profile", label: "Hồ sơ cá nhân", icon: <UserIcon size={17} /> },
 ];
@@ -43,8 +44,8 @@ export function MainLayout() {
       <Logo size={26} />
       {role === "admin" && <span className="hidden sm:block text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary ml-1">ADMIN</span>}
       <div className="ml-auto flex items-center gap-2">
-        <button onClick={toggleTheme} className="p-2 rounded-full border border-border hover:bg-secondary" aria-label="Theme">{isDark ? <Sun size={16} className="text-accent" /> : <Moon size={16} className="text-primary" />}</button>
-        <div className="relative"><button onClick={() => setNotiOpen(!notiOpen)} className="p-2 rounded-full border border-border hover:bg-secondary relative" aria-label="Notifications"><Bell size={16} />{notifs.some(n => !n.read) && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-destructive" />}</button>
+        <button onClick={toggleTheme} className="w-9 h-9 rounded-full border border-border hover:bg-secondary flex items-center justify-center" aria-label="Theme">{isDark ? <Sun size={16} className="text-accent" /> : <Moon size={16} className="text-primary" />}</button>
+        <div className="relative"><button onClick={() => setNotiOpen(!notiOpen)} className="w-9 h-9 rounded-full border border-border hover:bg-secondary flex items-center justify-center relative" aria-label="Notifications"><Bell size={16} />{notifs.some(n => !n.read) && <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-destructive" />}</button>
           {notiOpen && <><div className="fixed inset-0 z-40" onClick={() => setNotiOpen(false)} /><div className="absolute right-0 mt-2 w-80 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden"><div className="p-3 border-b border-border font-semibold text-sm" style={HEAD}>Thông báo</div>{notifs.map(n => <div key={n.id} className="flex gap-3 p-3 hover:bg-secondary/50 border-b border-border last:border-0"><div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">{notificationIcon[n.kind]}</div><div><p className="text-sm text-foreground leading-tight">{n.title}</p><p className="text-xs text-muted-foreground mt-0.5">{n.subtitle}</p></div></div>)}</div></>}
         </div>
         <div className="relative">

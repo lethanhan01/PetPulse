@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { CareEvent, HealthEntry } from "@/types/app.types";
 import { createCareEvent, createHealthEntry } from "@/mocks";
@@ -24,8 +24,9 @@ export function PetDetail() {
   const { pets, updatePet } = useApp();
   const navigate = useNavigate();
   const { petId } = useParams();
+  const [searchParams] = useSearchParams();
   const pet = pets.find(p => p.id === petId);
-  const [tab, setTab] = useState("overview");
+  const [tab, setTab] = useState(searchParams.get("tab") || "overview");
   const [healthModal, setHealthModal] = useState(false);
   const [eventModal, setEventModal] = useState(false);
 

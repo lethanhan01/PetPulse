@@ -188,25 +188,25 @@ export function Profile() {
       {/* ── Pets Tab (user only) ── */}
       {tab === "pets" && !isAdmin && (
         <div className="space-y-3">
-          <div className="grid sm:grid-cols-2 gap-3">
+          <div className="grid sm:grid-cols-2 gap-4">
             {pets.map(p => (
-              <button key={p.id} onClick={() => navigate(`/pets/${p.id}`)} className="rounded-2xl border border-border bg-card shadow-sm p-4 flex items-center gap-3 text-left hover:shadow-sm transition-all cursor-pointer w-full">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-xl flex-shrink-0">
+              <button key={p.id} onClick={() => navigate(`/pets/${p.id}`)} className="rounded-2xl border border-border bg-card shadow-sm p-6 flex items-center gap-5 text-left hover:shadow-md transition-all cursor-pointer w-full">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-3xl flex-shrink-0">
                   {p.image ? (
-                    <img src={p.image} alt={p.name} className="w-full h-full object-cover rounded-xl" />
+                    <img src={p.image} alt={p.name} className="w-full h-full object-cover rounded-2xl" />
                   ) : p.emoji}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-foreground text-sm truncate">{p.name}</p>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-xs text-muted-foreground truncate">{p.breed}</span>
-                    <span className="text-xs text-muted-foreground">·</span>
-                    <span className="text-xs text-muted-foreground">{p.age}</span>
-                    <span className="text-xs text-muted-foreground">·</span>
-                    <span className="text-xs text-muted-foreground">{p.health.length} bản ghi</span>
+                  <p className="font-bold text-foreground text-lg truncate">{p.name}</p>
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <span className="text-sm text-muted-foreground truncate">{p.breed}</span>
+                    <span className="text-sm text-muted-foreground">·</span>
+                    <span className="text-sm text-muted-foreground">{p.age}</span>
+                    <span className="text-sm text-muted-foreground">·</span>
+                    <span className="text-sm text-muted-foreground">{p.health.length} bản ghi</span>
                   </div>
                 </div>
-                <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
+                <ChevronRight size={22} className="text-muted-foreground flex-shrink-0" />
               </button>
             ))}
           </div>

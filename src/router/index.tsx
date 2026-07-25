@@ -16,6 +16,8 @@ import { AIChecker } from "@/pages/user/AICheckerPage";
 import { Subscription } from "@/pages/user/SubscriptionPage";
 import { Checkout } from "@/pages/user/CheckoutPage";
 import { Profile } from "@/pages/user/ProfilePage";
+import { MyPosts } from "@/pages/user/MyPostsPage";
+import { UserProfile } from "@/pages/user/UserProfilePage";
 import { AdminDashboard, AdminModeration, AdminPets, AdminSubs, AdminUsers } from "@/pages/admin/AdminPages";
 
 function ScrollToTop() {
@@ -45,7 +47,7 @@ export function AppRouter() {
     <Route path="/register" element={<Register />} />
     <Route path="/forgot-password" element={<Forgot />} />
     <Route element={<Protected role="user"><MainLayout /></Protected>}>
-      <Route path="/dashboard" element={<Dashboard />} /><Route path="/pets" element={<Pets />} /><Route path="/pets/:petId" element={<PetDetail />} /><Route path="/ai-checker" element={<AIChecker />} /><Route path="/community" element={<Community />} /><Route path="/subscription" element={<Subscription />} /><Route path="/checkout" element={<Checkout />} /><Route path="/profile" element={<Profile />} />
+      <Route path="/dashboard" element={<Dashboard />} /><Route path="/pets" element={<Pets />} /><Route path="/pets/:petId" element={<PetDetail />} /><Route path="/ai-checker" element={<AIChecker />} /><Route path="/community" element={<Community />} /><Route path="/subscription" element={<Subscription />} /><Route path="/checkout" element={<Checkout />} /><Route path="/profile" element={<Profile />} /><Route path="/profile/:userId" element={<UserProfile />} /><Route path="/my-posts" element={<MyPosts />} />
     </Route>
     <Route element={<Protected role="admin"><MainLayout /></Protected>}>
       <Route path="/admin" element={<AdminDashboard />} /><Route path="/admin/users" element={<AdminUsers />} /><Route path="/admin/pets" element={<AdminPets />} /><Route path="/admin/subscriptions" element={<AdminSubs />} /><Route path="/admin/moderation" element={<AdminModeration />} /><Route path="/admin/profile" element={<Profile />} />

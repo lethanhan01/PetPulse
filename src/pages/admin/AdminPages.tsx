@@ -246,15 +246,18 @@ export function AdminUsers() {
 export function AdminPets() {
   const allPets = getAdminPets();
   const [healthFilter, setHealthFilter] = useState("");
+  const [speciesFilter, setSpeciesFilter] = useState("");
   const [ownerFilter, setOwnerFilter] = useState("");
+  const speciesOptions = useMemo(() => [...new Set(allPets.map(p => p.species))].sort(), [allPets]);
   const ownerOptions = useMemo(() => [...new Set(allPets.map(p => p.owner))].sort(), [allPets]);
   const filtered = useMemo(() => allPets.filter(p => {
-    if (healthFilter === "Tốt" && p.score < 90) return false;
-    if (healthFilter === "Bình thường" && (p.score < 75 || p.score >= 90)) return false;
-    if (healthFilter === "Cần chú ý" && p.score >= 75) return false;
+    if (healthFilter === "Tốt" && p.score < 85) return false;
+    if (healthFilter === "Bình thường" && (p.score < 70 || p.score >= 85)) return false;
+    if (healthFilter === "Cần chú ý" && p.score >= 70) return false;
+    if (speciesFilter && p.species !== speciesFilter) return false;
     if (ownerFilter && p.owner !== ownerFilter) return false;
     return true;
-  }), [allPets, healthFilter, ownerFilter]);
+  }), [allPets, healthFilter, speciesFilter, ownerFilter]);
   const { items: pets, currentPage, totalPages, setPage } = usePagination(filtered);
   const HEALTH_FILTERS = ["", "Tốt", "Bình thường", "Cần chú ý"];
   return (
@@ -263,7 +266,11 @@ export function AdminPets() {
       <Card className="overflow-hidden" hover={false}>
         <div className="p-3 border-b border-border flex flex-wrap items-center gap-2">
           <div className="flex gap-1">{HEALTH_FILTERS.map(f => <button key={f} onClick={() => setHealthFilter(f)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${healthFilter === f ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary"}`}>{f || "Tất cả"}</button>)}</div>
-          <select value={ownerFilter} onChange={e => setOwnerFilter(e.target.value)} className="ml-auto px-3 py-1.5 rounded-lg border border-border bg-background text-xs font-medium text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+          <select value={speciesFilter} onChange={e => setSpeciesFilter(e.target.value)} className="px-3 py-1.5 rounded-lg border border-border bg-background text-xs font-medium text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+            <option value="">Tất cả loài</option>
+            {speciesOptions.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <select value={ownerFilter} onChange={e => setOwnerFilter(e.target.value)} className="px-3 py-1.5 rounded-lg border border-border bg-background text-xs font-medium text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
             <option value="">Tất cả chủ</option>
             {ownerOptions.map(o => <option key={o} value={o}>{o}</option>)}
           </select>

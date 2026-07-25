@@ -1,33 +1,41 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { AIConsult } from "@/types/app.types";
 import { createAIConsult, SYMPTOM_TAGS } from "@/mocks";
 import { Card, Btn, Badge, Select, Textarea, PageTitle, HEAD } from "@/components/common/kit";
 import { Sparkles, AlertTriangle, Stethoscope, HeartPulse, Save, Loader2, Bot } from "lucide-react";
+import { toast } from "sonner";
 
 
 export function AIChecker() {
   const { pets, updatePet } = useApp();
+  const navigate = useNavigate();
   const [petId, setPetId] = useState(pets[0]?.id || "");
   const [symptoms, setSymptoms] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AIConsult | null>(null);
-  const [saved, setSaved] = useState(false);
 
   const run = () => {
     if (!symptoms.trim()) return;
-    setLoading(true); setResult(null); setSaved(false);
+    const currentId = petId;
+    const currentSymptoms = symptoms;
+    setLoading(true); setResult(null);
     setTimeout(() => {
-      const pet = pets.find(p => p.id === petId);
-      setResult(createAIConsult(pet?.name || "", symptoms));
+      const pet = pets.find(p => p.id === currentId);
+      setResult(createAIConsult(pet?.name || "", currentSymptoms));
       setLoading(false);
     }, 1400);
   };
   const save = () => {
     if (!result) return;
     const pet = pets.find(p => p.id === petId);
-    if (pet) updatePet(pet.id, { consults: [result, ...pet.consults] });
-    setSaved(true);
+    if (pet) {
+      updatePet(pet.id, { consults: [result, ...pet.consults] });
+      const name = pet.name;
+      toast.success(`Đã lưu kết quả tư vấn cho ${name}`, { style: { background: "#16a34a", color: "#fff", border: "none" } });
+      navigate("/pets/" + pet.id + "?tab=consult");
+    }
   };
 
   const sevColor = result?.severity === "Cao" ? "danger" : result?.severity === "Trung bình" ? "warning" : "success";
@@ -98,7 +106,7 @@ export function AIChecker() {
                 <p className="text-xs font-semibold text-primary mb-1">Khuyến nghị thú y</p>
                 <p className="text-sm text-foreground">{result.vetAdvice}</p>
               </div>
-              <Btn block variant={saved ? "outline" : "primary"} icon={<Save size={16} />} disabled={saved} onClick={save}>{saved ? "Đã lưu vào hồ sơ ✓" : "Lưu vào hồ sơ thú cưng"}</Btn>
+              <Btn block icon={<Save size={16} />} onClick={save}>Lưu vào hồ sơ thú cưng</Btn>
             </Card>
           )}
         </div>

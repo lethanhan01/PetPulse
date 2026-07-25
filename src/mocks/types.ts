@@ -16,6 +16,7 @@ export type MockAccount = {
   gender: "Nam" | "Nữ" | "Khác";
   joined: string;
   avatar: string;
+  reposts: string[];
 };
 
 export type AdminPet = {

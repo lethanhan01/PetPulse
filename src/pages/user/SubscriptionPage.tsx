@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useApp } from "@/stores/app.store";
 import { PUBLIC_SUBSCRIPTIONS } from "@/mocks";
+import type { Subscription } from "@/mocks";
 import { Card, Btn, Field, PageTitle, HEAD, MONO } from "@/components/common/kit";
 import { Check, Crown, ArrowLeft, CreditCard, Lock, ShieldCheck, Sparkles, CheckCircle2 } from "lucide-react";
 
@@ -30,7 +31,7 @@ export function Subscription() {
               ? <Btn block size="lg" variant="primary" className="opacity-100 cursor-default">Gói hiện tại của bạn</Btn>
               : p.name === "Free"
                 ? <Btn block size="lg" variant="primary" disabled className="disabled:opacity-100 disabled:cursor-default">Miễn phí</Btn>
-                : <Btn block size="lg" icon={<Crown size={16} />} onClick={() => navigate("/checkout")}>Nâng cấp {p.name}</Btn>}
+                : <Btn block size="lg" icon={<Crown size={16} />} onClick={() => navigate("/checkout", { state: { plan: p.name } })}>Nâng cấp {p.name}</Btn>}
           </Card>
           );
         })}
@@ -42,14 +43,18 @@ export function Subscription() {
 export function Checkout() {
   const { setPlan } = useApp();
   const navigate = useNavigate();
+  const location = useLocation();
   const [done, setDone] = useState(false);
-  const pay = (e: React.FormEvent) => { e.preventDefault(); setDone(true); setPlan("Premium"); };
+
+  const planName = (location.state as Record<string, unknown>)?.plan as string | undefined;
+  const selected = PUBLIC_SUBSCRIPTIONS.find(s => s.name === planName) ?? PUBLIC_SUBSCRIPTIONS.find(s => s.name === "Premium")!;
+  const pay = (e: React.FormEvent) => { e.preventDefault(); setDone(true); setPlan(selected.name as "Premium" | "Premium Năm"); };
 
   if (done) return (
     <div className="max-w-md mx-auto text-center py-16">
       <div className="w-16 h-16 rounded-3xl bg-green-100 dark:bg-green-900/40 text-green-600 flex items-center justify-center mx-auto mb-5"><CheckCircle2 size={32} /></div>
       <h1 className="font-extrabold text-2xl text-foreground mb-2" style={HEAD}>Thanh toán thành công!</h1>
-      <p className="text-sm text-muted-foreground mb-6">Tài khoản của bạn đã được nâng cấp lên <b className="text-primary">Premium</b>. Mọi tính năng đã được mở khóa.</p>
+      <p className="text-sm text-muted-foreground mb-6">Tài khoản của bạn đã được nâng cấp lên <b className="text-primary">{selected.name}</b>. Mọi tính năng đã được mở khóa.</p>
       <Btn size="lg" icon={<Sparkles size={16} />} onClick={() => navigate("/dashboard")}>Về Dashboard</Btn>
     </div>
   );
@@ -60,8 +65,8 @@ export function Checkout() {
       <PageTitle title="Thanh toán" />
       <Card className="p-6" hover={false}>
         <div className="flex items-center justify-between p-4 rounded-xl bg-secondary mb-6">
-          <div className="flex items-center gap-2"><Crown size={18} className="text-primary" /><span className="font-semibold text-foreground">Gói Premium</span></div>
-          <span className="font-extrabold text-lg text-primary" style={HEAD}>99.000đ<span className="text-xs font-normal text-muted-foreground">/tháng</span></span>
+          <div className="flex items-center gap-2"><Crown size={18} className="text-primary" /><span className="font-semibold text-foreground">Gói {selected.name}</span></div>
+          <span className="font-extrabold text-lg text-primary" style={HEAD}>{selected.price}<span className="text-xs font-normal text-muted-foreground">/{selected.period}</span></span>
         </div>
         <form onSubmit={pay} className="space-y-4">
           <Field label="Tên trên thẻ" placeholder="NGUYEN VAN AN" required />
@@ -77,7 +82,7 @@ export function Checkout() {
             <Field label="CVV" placeholder="123" required />
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground"><Lock size={13} /> Thông tin thanh toán được mã hóa & bảo mật.</div>
-          <Btn block size="lg" type="submit">Thanh toán 99.000đ</Btn>
+          <Btn block size="lg" type="submit">Thanh toán {selected.price}</Btn>
         </form>
       </Card>
     </div>
