@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { createCommunityComment, createCommunityPost } from "@/mocks";
+import { createCommunityComment, createCommunityPost, MOCK_ACCOUNTS } from "@/mocks";
 import type { CommunityComment, CommunityPost } from "@/mocks";
 import { useApp } from "@/stores/app.store";
 import { useCommunity } from "@/stores/community.store";
@@ -19,6 +19,14 @@ function PostItem({ post }: { post: CommunityPost }) {
   const [comments, setComments] = useState<CommunityComment[]>(post.comments);
   const [draft, setDraft] = useState("");
   const postImages = post.images;
+  const authorAccount = activeAccount?.id === post.authorId
+    ? activeAccount
+    : MOCK_ACCOUNTS.find(account => account.id === post.authorId);
+  const authorName = authorAccount?.name ?? post.author;
+  const authorAvatar = authorAccount?.avatar ?? post.avatar;
+  const authorHandle = authorAccount
+    ? `@${authorAccount.email.split("@")[0].replace(/[^a-z0-9]/gi, "").toLowerCase()}`
+    : post.handle;
   const isShared = activeAccount?.reposts?.includes(post.id) ?? false;
   const handleShare = () => {
     if (!activeAccount) return;
@@ -28,14 +36,16 @@ function PostItem({ post }: { post: CommunityPost }) {
   return (
     <Card className="overflow-hidden border-l-4 border-l-primary/30" hover={false}>
       <div className="p-4 flex items-center gap-3">
-        <button onClick={() => navigate(`/profile/${post.authorId}`)} className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 hover:ring-2 hover:ring-ring transition-all cursor-pointer">{post.avatar}</button>
+        <button onClick={() => navigate(`/profile/${post.authorId}`)} className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 overflow-hidden hover:ring-2 hover:ring-ring transition-all cursor-pointer">
+          {authorAvatar.startsWith("data:") ? <img src={authorAvatar} alt="" className="w-full h-full object-cover" /> : authorAvatar}
+        </button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <button onClick={() => navigate(`/profile/${post.authorId}`)} className="font-semibold text-foreground text-sm truncate hover:text-primary transition-colors cursor-pointer">{post.author}</button>
+            <button onClick={() => navigate(`/profile/${post.authorId}`)} className="font-semibold text-foreground text-sm truncate hover:text-primary transition-colors cursor-pointer">{authorName}</button>
             {post.status === "pending" && <Badge v="warning">Chờ duyệt</Badge>}
             {post.status === "rejected" && <><Badge v="danger">Từ chối</Badge><button onClick={() => deletePost(post.id)} className="ml-auto text-muted-foreground hover:text-destructive p-1 rounded"><Trash2 size={14} /></button></>}
           </div>
-          <p className="text-xs text-muted-foreground truncate">{post.handle} · {post.time}{post.pet ? ` · ${post.pet}` : ""}</p>
+          <p className="text-xs text-muted-foreground truncate">{authorHandle} · {post.time}{post.pet ? ` · ${post.pet}` : ""}</p>
         </div>
       </div>
       <p className="px-4 pb-3 text-sm text-foreground leading-relaxed">{post.content}</p>
@@ -101,9 +111,7 @@ export function Community() {
     e.target.value = "";
   };
 
-  const formInitials = activeAccount?.avatar?.startsWith?.("data:")
-    ? activeAccount.name.split(" ").slice(-2).map(p => p[0]).join("")
-    : activeAccount?.avatar ?? "PP";
+  const formAvatar = activeAccount?.avatar ?? "PP";
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -113,7 +121,9 @@ export function Community() {
       </div>
       <Card className="p-4" hover={false}>
         <div className="flex gap-3">
-          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0">{formInitials}</div>
+          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 overflow-hidden">
+            {formAvatar.startsWith("data:") ? <img src={formAvatar} alt="" className="w-full h-full object-cover" /> : formAvatar}
+          </div>
           <div className="flex-1">
             <Textarea value={draft} onChange={e => setDraft(e.target.value)} placeholder="Chia sẻ về thú cưng của bạn..." rows={2} />
             {images.length > 0 && <div className="flex gap-2 mt-2 flex-wrap">

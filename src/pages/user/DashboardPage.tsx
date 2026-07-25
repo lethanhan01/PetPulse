@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { Card, Btn, TrendChart } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { getUserDashboardStats } from "@/services/user.service";
+import { isEventCancelledOn, isEventCompletedOn, todayLocalDate } from "@/utils/care-calendar";
 import { PawPrint, Syringe, Calendar, AlertTriangle, Activity, ArrowRight, Sparkles, Bell, Sun, Stethoscope, Pill, Clock } from "lucide-react";
 
 const eventIcon = (type: string) =>
@@ -15,6 +16,7 @@ export function Dashboard() {
   const [selectedPetId, setSelectedPetId] = useState(pets[0]?.id ?? "");
   const trendPet = pets.find(p => p.id === selectedPetId) ?? pets[0];
   const overview = getUserDashboardStats(pets);
+  const today = todayLocalDate();
   const stats = [
     { icon: <PawPrint size={17} />, l: "Thú cưng", v: String(overview.petCount), sub: "Đang quản lý", ic: "text-primary bg-primary/10" },
     { icon: <Syringe size={17} />, l: "Tiêm phòng", v: String(overview.completedVaccinations), sub: "Đã hoàn thành", ic: "text-success bg-success-surface bg-success-surface" },
@@ -109,13 +111,13 @@ export function Dashboard() {
               <h3 className="font-bold text-foreground">Lịch sắp tới</h3>
             </div>
             <div className="space-y-2.5">
-              {(trendPet?.events ?? []).filter(e => !e.done).slice(0, 3).map(e => (
+              {(trendPet?.events ?? []).filter(e => !isEventCancelledOn(e, today) && !isEventCompletedOn(e, today)).slice(0, 3).map(e => (
                 <div key={e.id} className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border-l-[3px] border-l-primary">
                   <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">{eventIcon(e.type)}</div>
                   <div className="flex-1 min-w-0"><p className="text-sm font-medium text-foreground truncate">{e.title}</p><p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5"><Clock size={11} /> {trendPet?.emoji} {trendPet?.name} · {e.date} · {e.time}</p></div>
                 </div>
               ))}
-              {(!trendPet || trendPet.events.filter(e => !e.done).length === 0) && <p className="text-xs text-muted-foreground text-center py-4">Không có lịch nào sắp tới</p>}
+              {(!trendPet || trendPet.events.filter(e => !isEventCancelledOn(e, today) && !isEventCompletedOn(e, today)).length === 0) && <p className="text-xs text-muted-foreground text-center py-4">Không có lịch nào sắp tới</p>}
             </div>
           </Card>
         </div>

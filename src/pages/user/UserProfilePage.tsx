@@ -49,6 +49,14 @@ export function UserProfile() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+      >
+        <ChevronLeft size={17} /> Quay lại
+      </button>
+
       {/* Header */}
       <div className="relative rounded-2xl overflow-hidden border border-border bg-card shadow-sm">
         <div className="h-24 bg-gradient-to-r from-primary/80 via-primary to-cyan-400/60" />

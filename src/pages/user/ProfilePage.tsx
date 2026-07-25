@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { Card, Btn, Field, Select, Badge, PageTitle } from "@/components/common/kit";
 import { PawPrint, Calendar, Heart, ShieldCheck, Crown, Lock, Pencil, Plus, ChevronRight, X, Check, Users, CreditCard, Sparkles, Camera } from "lucide-react";
 import type { MockAccount } from "@/mocks/types";
+import { MyPostsContent } from "./MyPostsPage";
 
 function StatChip({ icon, value, label }: { icon: ReactNode; value: string; label: string }) {
   return (
@@ -24,7 +25,8 @@ export function Profile() {
   const healthRecords = pets.reduce((s, p) => s + p.health.length, 0);
 
   const avatarRef = useRef<HTMLInputElement>(null);
-  const [tab, setTab] = useState<"info" | "security" | "pets">("info");
+  const coverRef = useRef<HTMLInputElement>(null);
+  const [tab, setTab] = useState<"info" | "security" | "pets" | "posts">("info");
   const [editing, setEditing] = useState(false);
   const [changingPwd, setChangingPwd] = useState(false);
   const [form, setForm] = useState<Pick<MockAccount, "name" | "email" | "phone" | "birthDate" | "city" | "gender">>({
@@ -40,7 +42,7 @@ export function Profile() {
 
   const tabs = isAdmin
     ? [{ k: "info" as const, l: "Thông tin" }, { k: "security" as const, l: "Bảo mật" }]
-    : [{ k: "info" as const, l: "Thông tin" }, { k: "security" as const, l: "Bảo mật" }, { k: "pets" as const, l: "Thú cưng" }];
+    : [{ k: "info" as const, l: "Thông tin" }, { k: "security" as const, l: "Bảo mật" }, { k: "pets" as const, l: "Thú cưng" }, { k: "posts" as const, l: "Bài viết" }];
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -48,7 +50,29 @@ export function Profile() {
 
       {/* ── Profile Header Card ── */}
       <div className="relative rounded-2xl overflow-hidden border border-border bg-card shadow-sm">
-        <div className="h-24 sm:h-32 bg-gradient-to-r from-primary/80 via-primary to-cyan-400/60" />
+        <div
+          className="group relative h-24 sm:h-32 bg-gradient-to-r from-primary/80 via-primary to-cyan-400/60 bg-cover bg-center"
+          style={activeAccount?.coverImage ? { backgroundImage: `url(${activeAccount.coverImage})` } : undefined}
+        >
+          <button
+            type="button"
+            onClick={() => coverRef.current?.click()}
+            className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100 focus-visible:bg-black/30 focus-visible:opacity-100"
+            aria-label="Tải ảnh nền hồ sơ"
+          >
+            <span className="flex items-center gap-2 rounded-lg bg-background/90 px-3 py-2 text-xs font-semibold text-foreground shadow-sm">
+              <Camera size={15} /> Tải ảnh nền
+            </span>
+          </button>
+          <input ref={coverRef} type="file" accept="image/*" className="hidden" onChange={e => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => updateAccount({ coverImage: reader.result as string });
+            reader.readAsDataURL(file);
+            e.currentTarget.value = "";
+          }} />
+        </div>
         <div className="px-5 sm:px-7 pb-6">
           <div className="-mt-10 sm:-mt-14 mb-4 flex">
             <button type="button" onClick={() => avatarRef.current?.click()} className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-background border-4 border-border flex items-center justify-center text-2xl sm:text-3xl font-extrabold text-primary shadow-sm flex-shrink-0 overflow-hidden group cursor-pointer">
@@ -145,6 +169,7 @@ export function Profile() {
                 { l: "Ngày sinh", v: activeAccount?.birthDate },
                 { l: "Thành phố", v: activeAccount?.city },
                 { l: "Giới tính", v: activeAccount?.gender },
+                ...(!isAdmin ? [{ l: "Gói đăng ký hiện tại", v: plan }] : []),
               ].map(f => (
                 <div key={f.l} className="bg-muted/50 rounded-xl px-4 py-3">
                   <p className="text-xs text-muted-foreground mb-0.5">{f.l}</p>
@@ -220,6 +245,9 @@ export function Profile() {
           <Btn variant="outline" block icon={<Sparkles size={16} />} onClick={() => navigate("/pets")}>Quản lý tất cả thú cưng</Btn>
         </div>
       )}
+
+      {/* ── Posts Tab (user only) ── */}
+      {tab === "posts" && !isAdmin && <MyPostsContent />}
     </div>
   );
 }

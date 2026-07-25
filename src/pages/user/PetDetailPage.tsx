@@ -5,9 +5,11 @@ import type { CareEvent, HealthEntry } from "@/types/app.types";
 import { createCareEvent, createHealthEntry } from "@/mocks";
 import { Card, Btn, Badge, Field, Select, Modal, TrendChart } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cancelEventOccurrence, eventsForDate, isEventCompletedOn, monthCalendarDays, toggleEventCompletion } from "@/utils/care-calendar";
 import {
   ArrowLeft, Activity, Calendar, Sparkles, Settings, Plus, Weight, Syringe,
-  Stethoscope, Pill, Bell, ShieldCheck, TrendingUp, CheckCircle2, Clock, Trash2, Lightbulb, AlertTriangle,
+  Stethoscope, Pill, Bell, ShieldCheck, TrendingUp, CheckCircle2, Clock, Trash2, Lightbulb, AlertTriangle, ChevronLeft, ChevronRight,
 } from "lucide-react";
 
 const TABS = [
@@ -19,6 +21,11 @@ const TABS = [
 ];
 
 const scoreLevel = (s: number) => s >= 90 ? { l: "Xuất sắc", v: "success" as const } : s >= 75 ? { l: "Tốt", v: "info" as const } : s >= 60 ? { l: "Khá", v: "warning" as const } : { l: "Cần chú ý", v: "danger" as const };
+const WEEKDAYS = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "CN"];
+
+function eventIcon(type: string, size = 16) {
+  return type === "Uống thuốc" ? <Pill size={size} /> : type === "Khám" ? <Stethoscope size={size} /> : type === "Tiêm phòng" ? <Syringe size={size} /> : <Calendar size={size} />;
+}
 
 export function PetDetail() {
   const { pets, updatePet } = useApp();
@@ -29,6 +36,11 @@ export function PetDetail() {
   const [tab, setTab] = useState(searchParams.get("tab") || "overview");
   const [healthModal, setHealthModal] = useState(false);
   const [eventModal, setEventModal] = useState(false);
+  const [cancelTarget, setCancelTarget] = useState<{ id: string; title: string; date: string } | null>(null);
+  const [calendarMonth, setCalendarMonth] = useState(() => {
+    const now = new Date();
+    return { year: now.getFullYear(), month: now.getMonth() + 1 };
+  });
 
   if (!pet) return <div className="py-16 text-center"><p className="text-5xl font-extrabold text-primary">404</p><h1 className="mt-4 text-2xl font-bold text-foreground">Không tìm thấy thú cưng</h1></div>;
   const latest = pet.health[0];
@@ -36,8 +48,16 @@ export function PetDetail() {
 
   const addHealth = (h: HealthEntry) => updatePet(pet.id, { health: [h, ...pet.health] });
   const addEvent = (ev: CareEvent) => updatePet(pet.id, { events: [ev, ...pet.events] });
-  const toggleEvent = (id: string) => updatePet(pet.id, { events: pet.events.map(e => e.id === id ? { ...e, done: !e.done } : e) });
+  const toggleEvent = (id: string, date: string) => updatePet(pet.id, { events: pet.events.map(e => e.id === id ? toggleEventCompletion(e, date) : e) });
   const deleteEvent = (id: string) => updatePet(pet.id, { events: pet.events.filter(e => e.id !== id) });
+  const cancelOccurrence = (id: string, date: string) => {
+    updatePet(pet.id, { events: pet.events.map(e => e.id === id ? cancelEventOccurrence(e, date) : e) });
+    setCancelTarget(null);
+  };
+  const requestDelete = (event: CareEvent, date: string) => {
+    if (event.repeat === "Không lặp") deleteEvent(event.id);
+    else setCancelTarget({ id: event.id, title: event.title, date });
+  };
 
   return (
     <div className="space-y-6">
@@ -158,7 +178,7 @@ export function PetDetail() {
       {/* CALENDAR */}
       {tab === "calendar" && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <h3 className="font-bold text-lg text-foreground">Lịch chăm sóc sức khỏe</h3>
             <Btn size="sm" icon={<Plus size={15} />} onClick={() => setEventModal(true)}>Thêm sự kiện</Btn>
           </div>
@@ -166,28 +186,51 @@ export function PetDetail() {
             <Bell size={16} className="mt-0.5 flex-shrink-0" />
             <p className="text-sm">Hệ thống sẽ gửi in-app notification nhắc bạn trước mỗi sự kiện.</p>
           </div>
-          <div className="space-y-2.5">
-            {pet.events.length === 0 && <Card className="p-8 text-center text-sm text-muted-foreground" hover={false}>Chưa có sự kiện nào. Thêm lịch khám, uống thuốc...</Card>}
-            {pet.events.map(e => {
-              const icon = e.type === "Uống thuốc" ? <Pill size={16} /> : e.type === "Khám" ? <Stethoscope size={16} /> : e.type === "Tiêm phòng" ? <Syringe size={16} /> : <Calendar size={16} />;
-              const done = e.done;
-              return (
-                <Card key={e.id} className={`p-0 overflow-hidden border-l-4 ${done ? "border-l-green-500/60" : "border-l-primary"}`} hover={false}>
-                  <div className="p-4 flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${done ? "bg-success-surface bg-success-surface text-success" : "bg-primary/10 text-primary"}`}>{icon}</div>
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-medium ${done ? "text-muted-foreground line-through" : "text-foreground"}`}>{e.title}</p>
-                      <p className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap mt-0.5"><Clock size={11} /> {e.date} · {e.time} · {e.repeat} <Badge v="neutral">{e.type}</Badge></p>
-                    </div>
-                    <div className="flex items-center gap-1 flex-shrink-0">
-                      <button onClick={() => toggleEvent(e.id)} className={`p-2 rounded-lg transition-colors ${done ? "text-success bg-success-surface bg-success-surface" : "text-muted-foreground hover:bg-secondary"}`}><CheckCircle2 size={18} /></button>
-                      <button onClick={() => deleteEvent(e.id)} className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"><Trash2 size={16} /></button>
+          <Card className="p-3 sm:p-5" hover={false}>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm mb-4">
+              <span className="inline-flex items-center gap-2 text-muted-foreground"><span className="w-2.5 h-2.5 rounded-full bg-primary" /> Đã lên lịch</span>
+              <span className="inline-flex items-center gap-2 text-muted-foreground"><span className="w-2.5 h-2.5 rounded-full bg-success" /> Hoàn thành</span>
+            </div>
+            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 mb-4">
+              <button type="button" aria-label="Tháng trước" onClick={() => setCalendarMonth(current => current.month === 1 ? { year: current.year - 1, month: 12 } : { ...current, month: current.month - 1 })} className="p-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"><ChevronLeft size={18} /></button>
+              <h4 className="text-center font-bold text-foreground">Tháng {calendarMonth.month} năm {calendarMonth.year}</h4>
+              <button type="button" aria-label="Tháng sau" onClick={() => setCalendarMonth(current => current.month === 12 ? { year: current.year + 1, month: 1 } : { ...current, month: current.month + 1 })} className="p-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"><ChevronRight size={18} /></button>
+            </div>
+            <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
+              {WEEKDAYS.map(day => <div key={day} className="py-1 text-center text-[10px] sm:text-xs font-semibold uppercase text-muted-foreground">{day}</div>)}
+              {monthCalendarDays(calendarMonth.year, calendarMonth.month).map((day, index) => {
+                if (!day) return <div key={`blank-${index}`} aria-hidden="true" className="min-h-24 sm:min-h-30 rounded-xl bg-muted/30 border border-transparent" />;
+                const dayEvents = eventsForDate(pet.events, day.date);
+                return (
+                  <div key={day.date} className="min-h-24 sm:min-h-30 rounded-xl border border-border bg-card p-1.5 sm:p-2 flex flex-col gap-1 overflow-hidden">
+                    <time dateTime={day.date} className="text-xs sm:text-sm font-semibold text-foreground">{day.day}</time>
+                    <div className="flex-1 min-h-0 space-y-1 overflow-y-auto pr-0.5">
+                      {dayEvents.map(event => (
+                        <Popover key={`${event.id}-${day.date}`}>
+                          {(() => {
+                            const done = isEventCompletedOn(event, day.date);
+                            return <>
+                          <PopoverTrigger asChild>
+                            <button type="button" aria-label={`Xem sự kiện ${event.title} ngày ${day.date}`} className={`w-full rounded-md px-1.5 py-1 text-left text-[10px] sm:text-xs font-medium leading-tight truncate transition-colors ${done ? "bg-success-surface text-success-foreground line-through hover:bg-success-surface/80" : "bg-primary/10 text-primary hover:bg-primary/20"}`}>{event.title}</button>
+                          </PopoverTrigger>
+                          <PopoverContent align="start" className="w-72 border-border p-4">
+                            <div className="flex items-start gap-3">
+                              <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${done ? "bg-success-surface text-success" : "bg-primary/10 text-primary"}`}>{eventIcon(event.type)}</div>
+                              <div className="min-w-0 flex-1"><p className={`font-semibold text-sm ${done ? "line-through text-muted-foreground" : "text-foreground"}`}>{event.title}</p><p className="mt-1 text-xs text-muted-foreground flex items-center gap-1.5"><Clock size={12} /> {day.date} · {event.time}</p></div>
+                            </div>
+                            <div className="mt-3 flex items-center justify-between gap-2"><Badge v="neutral">{event.type}</Badge><span className="text-xs text-muted-foreground">{event.repeat}</span></div>
+                            <div className="mt-4 flex gap-2"><Btn size="sm" variant="outline" className="flex-1" icon={<CheckCircle2 size={14} />} onClick={() => toggleEvent(event.id, day.date)}>{done ? "Khôi phục" : "Hoàn thành"}</Btn><Btn size="sm" variant="danger" aria-label={`Hủy sự kiện ${event.title}`} icon={<Trash2 size={14} />} onClick={() => requestDelete(event, day.date)} /></div>
+                          </PopoverContent>
+                            </>;
+                          })()}
+                        </Popover>
+                      ))}
                     </div>
                   </div>
-                </Card>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          </Card>
         </div>
       )}
 
@@ -259,6 +302,12 @@ export function PetDetail() {
 
       <HealthFormModal open={healthModal} onClose={() => setHealthModal(false)} onSave={addHealth} />
       <EventFormModal open={eventModal} onClose={() => setEventModal(false)} onSave={addEvent} />
+      <CancelRecurringEventModal
+        target={cancelTarget}
+        onClose={() => setCancelTarget(null)}
+        onCancelOccurrence={() => { if (cancelTarget) cancelOccurrence(cancelTarget.id, cancelTarget.date); }}
+        onCancelSeries={() => { if (cancelTarget) { deleteEvent(cancelTarget.id); setCancelTarget(null); } }}
+      />
     </div>
   );
 }
@@ -326,6 +375,23 @@ function EventFormModal({ open, onClose, onSave }: { open: boolean; onClose: () 
         )}
         <div className="flex gap-3 pt-1"><Btn variant="outline" block type="button" onClick={onClose}>Hủy</Btn><Btn block type="submit">Thêm vào lịch</Btn></div>
       </form>
+    </Modal>
+  );
+}
+
+function CancelRecurringEventModal({ target, onClose, onCancelOccurrence, onCancelSeries }: {
+  target: { title: string; date: string } | null; onClose: () => void; onCancelOccurrence: () => void; onCancelSeries: () => void;
+}) {
+  return (
+    <Modal open={!!target} onClose={onClose} title="Hủy sự kiện lặp lại">
+      <div className="space-y-4">
+        <p className="text-sm text-muted-foreground">Bạn muốn hủy <span className="font-semibold text-foreground">{target?.title}</span> như thế nào?</p>
+        <div className="space-y-2">
+          <Btn variant="outline" block className="!border-destructive/30 !text-destructive hover:!bg-destructive/10" onClick={onCancelOccurrence}>Hủy sự kiện ngày {target?.date}</Btn>
+          <Btn variant="danger" block onClick={onCancelSeries}>Hủy tất cả sự kiện lặp lại</Btn>
+          <Btn variant="ghost" block onClick={onClose}>Giữ lại</Btn>
+        </div>
+      </div>
     </Modal>
   );
 }

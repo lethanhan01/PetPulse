@@ -13,7 +13,6 @@ const USER_NAV: NavItem[] = [
   { to: "/pets", label: "Thú cưng của tôi", icon: <PawPrint size={17} /> },
   { to: "/ai-checker", label: "AI Symptom Checker", icon: <Sparkles size={17} /> },
   { to: "/community", label: "Cộng đồng", icon: <MessageSquare size={17} /> },
-  { to: "/my-posts", label: "Bài viết của tôi", icon: <MessageSquare size={17} /> },
   { to: "/subscription", label: "Nâng cấp Premium", icon: <Crown size={17} /> },
   { to: "/profile", label: "Hồ sơ cá nhân", icon: <UserIcon size={17} /> },
 ];

@@ -8,6 +8,15 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Heart, MessageCircle, PawPrint } from "lucide-react";
 
 export function MyPosts() {
+  return (
+    <div className="max-w-2xl mx-auto space-y-6">
+      <PageTitle title="Bài viết của tôi" />
+      <MyPostsContent />
+    </div>
+  );
+}
+
+export function MyPostsContent() {
   const { activeAccount } = useApp();
   const { posts } = useCommunity();
   const navigate = useNavigate();
@@ -24,9 +33,7 @@ export function MyPosts() {
   );
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <PageTitle title="Bài viết của tôi" />
-
+    <div className="space-y-6">
       <div className="flex gap-1 border-b border-border">
         {[
           { k: "my" as const, l: `Bài viết của tôi (${myPosts.length})` },
