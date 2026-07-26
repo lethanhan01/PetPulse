@@ -14,7 +14,7 @@ export function Logo({ size = 28 }: { size?: number }) {
     <button onClick={handleClick} className="flex items-center gap-2.5 border border-border rounded-xl px-3 py-1.5 cursor-pointer">
       <div className="rounded-xl bg-primary flex items-center justify-center shadow-sm shadow-primary/30"
         style={{ width: size, height: size }}>
-        <span style={{ fontSize: size * 0.5 }}>🐾</span>
+        <span style={{ fontSize: size * 0.65 }}>🐾</span>
       </div>
       <span className="font-heading font-bold text-primary" style={{ fontSize: size * 0.6 }}>PetPulse</span>
     </button>
