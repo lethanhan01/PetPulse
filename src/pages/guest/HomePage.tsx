@@ -261,7 +261,7 @@ export function Landing() {
         <div className="rounded-3xl p-10 sm:p-16 text-center relative overflow-hidden" style={{ background: "linear-gradient(135deg,var(--primary) 0%,var(--accent) 55%,var(--chart-3) 100%)" }}>
           <h2 className="font-extrabold text-3xl sm:text-4xl text-white mb-4">Sẵn sàng chăm sóc bé yêu tốt hơn?</h2>
           <p className="text-white/90 mb-8 max-w-xl mx-auto">Tạo tài khoản Free miễn phí ngay hôm nay. Nâng cấp Premium bất cứ lúc nào.</p>
-          <Btn size="lg" className="!bg-white !text-[var(--foreground)] hover:!bg-white/90 shadow-lg shadow-black/10" onClick={() => navigate("/register")}>Tạo tài khoản miễn phí</Btn>
+          <Btn size="lg" className="!bg-white !text-black hover:!bg-white/90 shadow-lg shadow-black/10" onClick={() => navigate("/register")}>Tạo tài khoản miễn phí</Btn>
         </div>
       </section>
 
