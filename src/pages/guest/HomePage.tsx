@@ -52,8 +52,8 @@ export function Landing() {
   return (
     <div className="min-h-screen">
       {/* Nav */}
-      <header className="sticky top-0 z-40 h-16 flex items-center px-4 sm:px-8 border-b border-border bg-background/85 backdrop-blur-md">
-        <Logo />
+      <header className="sticky top-0 z-40 h-20 flex items-center px-4 sm:px-8 border-b border-border bg-background/85 backdrop-blur-md">
+        <Logo size={36} />
         <nav className="hidden md:flex items-center gap-1 ml-8">
           {NAV_LINKS.map(i => (
             <button key={i.id} onClick={() => scrollTo(i.id)} className={`px-3 py-1.5 rounded-xl text-sm transition-colors border border-border ${activeSection === i.id ? "bg-secondary text-foreground font-semibold" : "text-foreground/70 hover:text-foreground hover:bg-secondary"}`}>{i.label}</button>

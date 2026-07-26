@@ -116,7 +116,7 @@ export function MainLayout() {
   return <div className="min-h-screen bg-background text-foreground">
     <Navbar><div className="w-full h-full flex items-center gap-3 border-b border-border bg-background/90 backdrop-blur-md px-4 lg:px-6">
       <button className="lg:hidden p-2 rounded-lg hover:bg-secondary" onClick={() => setOpen(!open)} aria-label="Menu">{open ? <X size={18} /> : <Menu size={18} />}</button>
-      <Logo size={26} />
+      <Logo size={32} />
       {role === "admin" && <span className="hidden sm:block text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary ml-1">ADMIN</span>}
       <div className="ml-auto flex items-center gap-2">
         <button onClick={toggleTheme} className="w-9 h-9 rounded-full border border-border hover:bg-secondary flex items-center justify-center" aria-label="Theme">{isDark ? <Sun size={16} className="text-accent" /> : <Moon size={16} className="text-primary" />}</button>
@@ -136,12 +136,12 @@ export function MainLayout() {
       </div>
     </div></Navbar>
     {open && <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setOpen(false)} />}
-    <aside data-testid="desktop-sidebar" className={`hidden lg:flex fixed top-16 left-0 bottom-0 z-40 flex-col border-r border-border bg-sidebar ${isResizing ? "transition-none" : "transition-[width] duration-200"}`} style={desktopSidebarStyle}>
+    <aside data-testid="desktop-sidebar" className={`hidden lg:flex fixed top-20 left-0 bottom-0 z-40 flex-col border-r border-border bg-sidebar ${isResizing ? "transition-none" : "transition-[width] duration-200"}`} style={desktopSidebarStyle}>
       <div className={`flex shrink-0 items-center p-3 pb-2 ${collapsed ? "justify-center" : "justify-end"}`}><Tooltip><TooltipTrigger asChild><button onClick={toggleSidebar} className="w-8 h-8 rounded-lg text-sidebar-foreground hover:bg-secondary flex items-center justify-center" aria-label={collapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}>{collapsed ? <ChevronsRight size={17} /> : <ChevronsLeft size={17} />}</button></TooltipTrigger><TooltipContent side="right" sideOffset={8}>{collapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}</TooltipContent></Tooltip></div>
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3"><SidebarLinks compact={collapsed} /></div>
       {!collapsed && <button type="button" className="absolute top-0 -right-2 h-full w-4 cursor-col-resize outline-none after:absolute after:inset-y-0 after:left-1/2 after:w-px after:bg-transparent hover:after:bg-primary focus-visible:after:bg-primary" role="separator" aria-label="Điều chỉnh độ rộng sidebar" aria-orientation="vertical" aria-valuemin={SIDEBAR_MIN_WIDTH} aria-valuemax={SIDEBAR_MAX_WIDTH} aria-valuenow={width} onKeyDown={resizeWithKeyboard} onDoubleClick={() => setSidebarWidth(SIDEBAR_DEFAULT_WIDTH)} onPointerDown={event => { const handle = event.currentTarget; if (!Number.isFinite(event.clientX)) return; handle.setPointerCapture(event.pointerId); setIsResizing(true); const startX = event.clientX; const startWidth = width; const move = (moveEvent: PointerEvent) => { if (Number.isFinite(moveEvent.clientX)) setSidebarWidth(startWidth + moveEvent.clientX - startX); }; const end = () => { setIsResizing(false); handle.removeEventListener("pointermove", move); handle.removeEventListener("pointerup", end); handle.removeEventListener("pointercancel", end); }; handle.addEventListener("pointermove", move); handle.addEventListener("pointerup", end); handle.addEventListener("pointercancel", end); }} />}
     </aside>
-    <aside data-testid="mobile-sidebar" className={`fixed top-16 left-0 bottom-0 w-64 z-40 border-r border-border bg-sidebar overflow-y-auto transition-transform duration-200 lg:hidden ${open ? "translate-x-0" : "-translate-x-full"}`}><div className="p-3 flex flex-col h-full"><SidebarLinks compact={false} /></div></aside>
+    <aside data-testid="mobile-sidebar" className={`fixed top-20 left-0 bottom-0 w-64 z-40 border-r border-border bg-sidebar overflow-y-auto transition-transform duration-200 lg:hidden ${open ? "translate-x-0" : "-translate-x-full"}`}><div className="p-3 flex flex-col h-full"><SidebarLinks compact={false} /></div></aside>
     <main className={`pt-16 min-h-screen ${isResizing ? "transition-none" : "transition-[margin] duration-200"}`} style={mainStyle}><div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><Outlet /></div></main>
   </div>;
 }

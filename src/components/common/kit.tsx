@@ -1,16 +1,23 @@
 import { ReactNode, useState, ButtonHTMLAttributes, InputHTMLAttributes } from "react";
+import { useNavigate, useLocation } from "react-router";
 import { Loader2 } from "lucide-react";
 
 // ── Logo ──
 export function Logo({ size = 28 }: { size?: number }) {
+  const nav = useNavigate();
+  const { pathname } = useLocation();
+  const handleClick = () => {
+    if (pathname === "/") { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    nav(pathname.startsWith("/admin") ? "/admin" : "/dashboard");
+  };
   return (
-    <div className="flex items-center gap-2.5">
+    <button onClick={handleClick} className="flex items-center gap-2.5 border border-border rounded-xl px-3 py-1.5 cursor-pointer">
       <div className="rounded-xl bg-primary flex items-center justify-center shadow-sm shadow-primary/30"
         style={{ width: size, height: size }}>
         <span style={{ fontSize: size * 0.5 }}>🐾</span>
       </div>
       <span className="font-heading font-bold text-primary" style={{ fontSize: size * 0.6 }}>PetPulse</span>
-    </div>
+    </button>
   );
 }
 
