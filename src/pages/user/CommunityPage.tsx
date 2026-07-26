@@ -6,8 +6,7 @@ import { useApp } from "@/stores/app.store";
 import { useCommunity } from "@/stores/community.store";
 import { Card, Btn, Badge, Textarea } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
-import { Pagination } from "@/components/Pagination/Pagination";
-import { usePagination } from "@/hooks/usePagination";
+
 import { Heart, MessageCircle, Share2, Send, ImagePlus, PawPrint, Trash2 } from "lucide-react";
 
 function PostItem({ post }: { post: CommunityPost }) {
@@ -90,8 +89,7 @@ export function Community() {
   const [images, setImages] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const visiblePosts = posts.filter(p => p.status === "approved" || p.authorId === activeAccount?.id);
-  const { items, currentPage, totalPages, setPage } = usePagination(visiblePosts);
+  const items = posts.filter(p => p.status === "approved" || p.authorId === activeAccount?.id).sort((a, b) => a.status === "pending" ? -1 : b.status === "pending" ? 1 : 0);
 
   const handlePost = () => {
     if (!draft.trim() || !activeAccount) return;
@@ -138,7 +136,6 @@ export function Community() {
         </div>
       </Card>
       {items.map(post => <PostItem key={post.id} post={post} />)}
-      <Pagination page={currentPage} totalPages={totalPages} setPage={setPage} />
     </div>
   );
 }
