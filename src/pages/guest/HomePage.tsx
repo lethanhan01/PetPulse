@@ -5,6 +5,7 @@ import { Btn, Logo, Card } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Sun, Moon, Activity, Sparkles, Calendar, Users, ShieldCheck, Heart, ArrowRight, Stethoscope, Bell, PawPrint, CheckCircle2, Crown, X } from "lucide-react";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { useEffect, useState } from "react";
 
 const FEATURES = [
   { icon: <Activity size={20} />, title: "Health Timeline", desc: "Theo dõi cân nặng, dinh dưỡng & tình trạng sức khỏe theo trục thời gian." },
@@ -36,7 +37,18 @@ export function Landing() {
   const { theme, toggleTheme } = useApp();
   const navigate = useNavigate();
   const isDark = theme === "dark";
+  const [activeSection, setActiveSection] = useState("");
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  useEffect(() => {
+    const ids = NAV_LINKS.map(i => i.id);
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) { setActiveSection(entry.target.id); break; }
+      }
+    }, { rootMargin: "-30% 0px -60% 0px" });
+    ids.forEach(id => document.getElementById(id) && observer.observe(document.getElementById(id)!));
+    return () => observer.disconnect();
+  }, []);
   return (
     <div className="min-h-screen">
       {/* Nav */}
@@ -44,14 +56,14 @@ export function Landing() {
         <Logo />
         <nav className="hidden md:flex items-center gap-1 ml-8">
           {NAV_LINKS.map(i => (
-            <button key={i.id} onClick={() => scrollTo(i.id)} className="px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">{i.label}</button>
+            <button key={i.id} onClick={() => scrollTo(i.id)} className={`px-3 py-1.5 rounded-xl text-sm transition-colors border border-border ${activeSection === i.id ? "bg-secondary text-foreground font-semibold" : "text-foreground/70 hover:text-foreground hover:bg-secondary"}`}>{i.label}</button>
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
           <button onClick={toggleTheme} className="p-2 rounded-full border border-border hover:bg-secondary transition-colors" aria-label="Toggle theme">
             {isDark ? <Sun size={16} className="text-accent" /> : <Moon size={16} className="text-primary" />}
           </button>
-          <Btn variant="ghost" size="sm" onClick={() => navigate("/login")}>Đăng nhập</Btn>
+          <Btn variant="ghost" size="sm" className="border border-border" onClick={() => navigate("/login")}>Đăng nhập</Btn>
           <Btn size="sm" onClick={() => navigate("/register")}>Đăng ký</Btn>
         </div>
       </header>

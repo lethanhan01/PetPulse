@@ -23,30 +23,33 @@ export function Login() {
   };
   return (
     <AuthLayout>
-      <h1 className="font-extrabold text-3xl text-foreground mb-1">Đăng nhập</h1>
-      <p className="text-sm text-muted-foreground mb-6">Nhập email & mật khẩu để tiếp tục.</p>
-      <form onSubmit={submit} className="space-y-4">
-        <Field label="Email" type="email" value={email} onChange={e => { setEmail(e.target.value); setError(""); }} placeholder="you@example.com" />
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-1.5">Mật khẩu</label>
-          <div className="relative">
-            <input type={show ? "text" : "password"} value={pass} onChange={e => { setPass(e.target.value); setError(""); }}
-              className={`w-full px-3 py-2.5 pr-10 rounded-xl border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all ${error ? "border-destructive" : "border-border"}`} />
-            <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-              {show ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
+      <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+        <h1 className="font-extrabold text-3xl text-foreground mb-1">Đăng nhập</h1>
+        <p className="text-sm text-muted-foreground mb-6">Nhập email & mật khẩu để tiếp tục.</p>
+        <form onSubmit={submit} className="space-y-4">
+          <Field label="Email" type="email" value={email} onChange={e => { setEmail(e.target.value); setError(""); }} placeholder="you@example.com" />
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Mật khẩu</label>
+            <div className="relative">
+              <input type={show ? "text" : "password"} value={pass} onChange={e => { setPass(e.target.value); setError(""); }}
+                className={`w-full px-3 py-2.5 pr-10 rounded-xl border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all ${error ? "border-destructive" : "border-border"}`} />
+              <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                {show ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+            {error && <p className="text-xs text-destructive mt-1">{error}</p>}
           </div>
-          {error && <p className="text-xs text-destructive mt-1">{error}</p>}
+          <div className="flex items-center justify-between text-sm">
+            <label className="flex items-center gap-2 text-muted-foreground"><input type="checkbox" className="accent-[var(--primary)]" /> Ghi nhớ</label>
+            <button type="button" onClick={() => navigate("/forgot-password")} className="text-primary hover:underline">Quên mật khẩu?</button>
+          </div>
+          <Btn block size="lg" type="submit">Đăng nhập</Btn>
+        </form>
+        <div className="relative my-5"><div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div><div className="relative flex justify-center"><span className="bg-card px-3 text-xs text-muted-foreground">Truy cập nhanh</span></div></div>
+        <div className="grid grid-cols-2 gap-3">
+          <Btn variant="outline" size="sm" icon={<UserIcon size={15} />} className="border-primary/30 text-primary hover:bg-primary/5 hover:border-primary" onClick={() => { login(MOCK_ACCOUNTS.find(account => account.id === DEMO_USER_ACCOUNT_ID)!); navigate("/dashboard"); }}>Demo User</Btn>
+          <Btn variant="outline" size="sm" icon={<Shield size={15} />} className="border-chart-2/30 text-chart-2 hover:bg-chart-2/5 hover:border-chart-2" onClick={() => { login(MOCK_ACCOUNTS.find(account => account.id === DEMO_ADMIN_ACCOUNT_ID)!); navigate("/admin"); }}>Demo Admin</Btn>
         </div>
-        <div className="flex items-center justify-between text-sm">
-          <label className="flex items-center gap-2 text-muted-foreground"><input type="checkbox" className="accent-[var(--primary)]" /> Ghi nhớ</label>
-          <button type="button" onClick={() => navigate("/forgot-password")} className="text-primary hover:underline">Quên mật khẩu?</button>
-        </div>
-        <Btn block size="lg" type="submit">Đăng nhập</Btn>
-      </form>
-      <div className="grid grid-cols-2 gap-3 mt-4">
-        <Btn variant="outline" size="sm" icon={<UserIcon size={15} />} onClick={() => { login(MOCK_ACCOUNTS.find(account => account.id === DEMO_USER_ACCOUNT_ID)!); navigate("/dashboard"); }}>Demo User</Btn>
-        <Btn variant="outline" size="sm" icon={<Shield size={15} />} onClick={() => { login(MOCK_ACCOUNTS.find(account => account.id === DEMO_ADMIN_ACCOUNT_ID)!); navigate("/admin"); }}>Demo Admin</Btn>
       </div>
       <p className="text-sm text-muted-foreground text-center mt-6">Chưa có tài khoản? <button onClick={() => navigate("/register")} className="text-primary font-medium hover:underline">Đăng ký</button></p>
     </AuthLayout>
