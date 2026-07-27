@@ -6,6 +6,7 @@ import { MOCK_ACCOUNTS, getPetsForAccount } from "@/mocks";
 import { Card, Badge } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Crown, Calendar, PawPrint, Heart, MessageCircle, ChevronLeft } from "lucide-react";
+import { isImageUrl } from "@/services/user.service";
 
 export function UserProfile() {
   const { userId } = useParams();
@@ -68,7 +69,7 @@ export function UserProfile() {
         <div className="px-5 pb-6">
           <div className="-mt-10 mb-4">
             <div className="w-20 h-20 rounded-2xl bg-background border-4 border-border flex items-center justify-center text-2xl font-extrabold text-primary shadow-sm">
-              {account.avatar.startsWith("data:")
+              {isImageUrl(account.avatar)
                 ? <img src={account.avatar} alt="" className="w-full h-full object-cover rounded-2xl" />
                 : account.avatar
               }
@@ -159,7 +160,9 @@ export function UserProfile() {
                 )}
                 <Card className="overflow-hidden border-l-4 border-l-primary/30" hover={false}>
                   <div className="p-4 flex items-center gap-3">
-                    <button onClick={() => navigate(`/profile/${post.authorId}`)} className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 hover:ring-2 hover:ring-ring transition-all">{post.avatar}</button>
+                    <button onClick={() => navigate(`/profile/${post.authorId}`)} className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 overflow-hidden hover:ring-2 hover:ring-ring transition-all">
+                      {isImageUrl(post.avatar) ? <img src={post.avatar} alt="" className="w-full h-full object-cover" /> : post.avatar}
+                    </button>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-foreground text-sm truncate">{post.author}</p>
                       <p className="text-xs text-muted-foreground truncate">{post.handle} · {post.time}{post.pet ? ` · ${post.pet}` : ""}</p>

@@ -6,6 +6,7 @@ import { PawPrint, Calendar, Heart, ShieldCheck, Crown, Lock, Pencil, Plus, Chev
 import type { MockAccount } from "@/mocks/types";
 import { MyPostsContent } from "./MyPostsPage";
 import { useTranslation } from "react-i18next";
+import { isImageUrl } from "@/services/user.service";
 
 function StatChip({ icon, value, label }: { icon: ReactNode; value: string; label: string }) {
   return (
@@ -39,7 +40,7 @@ export function Profile() {
     if (activeAccount) setForm({ name: activeAccount.name, email: activeAccount.email, phone: activeAccount.phone, birthDate: activeAccount.birthDate, city: activeAccount.city, gender: activeAccount.gender });
   }, [activeAccount]);
 
-  const hasAvatar = activeAccount?.avatar?.startsWith("data:");
+  const hasAvatar = activeAccount?.avatar && isImageUrl(activeAccount.avatar);
   const initials = !hasAvatar ? (activeAccount?.avatar || activeAccount?.name?.split(" ").map(s => s[0]).join("").slice(0, 2).toUpperCase() || (isAdmin ? "AD" : "VN")) : "";
 
   const tabs = isAdmin

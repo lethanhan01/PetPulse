@@ -1,7 +1,10 @@
+* {
+  cursor: url("/cursor-paw.png") 16 16, auto !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    cursor: url("/cursor-paw.png") 16 16, auto !important;
   }
 
   html {

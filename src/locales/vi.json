@@ -499,7 +499,14 @@
     "composer": {
       "placeholder": "Chia sẻ về thú cưng của bạn...",
       "photoBtn": "Ảnh",
-      "postBtn": "Đăng bài"
+      "postBtn": "Đăng bài",
+      "addText": "Thêm chữ",
+      "overlayHint": "Thêm chữ vào ảnh",
+      "overlayDefault": "Văn bản"
+    },
+    "story": {
+      "yourStory": "Tin của bạn",
+      "post": "Đăng tin"
     },
     "post": {
       "pending": "Chờ duyệt",
@@ -804,6 +811,7 @@
     }
   },
   "common": {
+    "cancel": "Hủy",
     "pagination": {
       "prev": "Trước",
       "next": "Sau"

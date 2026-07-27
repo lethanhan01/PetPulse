@@ -6,6 +6,7 @@ import type { CommunityPost } from "@/mocks";
 import { Card, PageTitle, Badge } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Heart, MessageCircle, PawPrint } from "lucide-react";
+import { isImageUrl } from "@/services/user.service";
 
 export function MyPosts() {
   return (
@@ -88,7 +89,9 @@ function PostCard({ post }: { post: CommunityPost }) {
   return (
     <Card className="overflow-hidden border-l-4 border-l-primary/30" hover={false}>
       <div className="p-4 flex items-center gap-3">
-        <button onClick={() => navigate(`/profile/${post.authorId}`)} className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 hover:ring-2 hover:ring-ring transition-all">{post.avatar}</button>
+        <button onClick={() => navigate(`/profile/${post.authorId}`)} className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 overflow-hidden hover:ring-2 hover:ring-ring transition-all">
+          {isImageUrl(post.avatar) ? <img src={post.avatar} alt="" className="w-full h-full object-cover" /> : post.avatar}
+        </button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <button onClick={() => navigate(`/profile/${post.authorId}`)} className="font-semibold text-foreground text-sm truncate hover:text-primary transition-colors">{post.author}</button>

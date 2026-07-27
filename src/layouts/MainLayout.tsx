@@ -5,7 +5,7 @@ import { Logo } from "@/components/common/kit";
 import { Navbar } from "@/components/Navbar/Navbar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { MOCK_NOTIFICATIONS, MOCK_ADMIN_NOTIFICATIONS } from "@/mocks";
-import { getAccountInitials } from "@/services/user.service";
+import { getAccountInitials, isImageUrl } from "@/services/user.service";
 import { toast } from "sonner";
 import { Sun, Moon, Bell, Menu, X, LogOut, LayoutDashboard, Users, PawPrint, Sparkles, Crown, User as UserIcon, CreditCard, Stethoscope, BarChart3, Shield, MessageSquare, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -130,7 +130,7 @@ export function MainLayout() {
         </div>
         <div className="relative">
           <button onClick={() => setProfileOpen(!profileOpen)} className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary overflow-hidden hover:ring-2 hover:ring-ring transition-all" title={activeAccount?.name}>
-            {activeAccount?.avatar?.startsWith?.("data:") ? <img src={activeAccount.avatar} alt="" className="w-full h-full object-cover" /> : <span>{getAccountInitials(activeAccount)}</span>}
+            {activeAccount?.avatar && isImageUrl(activeAccount.avatar) ? <img src={activeAccount.avatar} alt="" className="w-full h-full object-cover" /> : <span>{getAccountInitials(activeAccount)}</span>}
           </button>
           {profileOpen && <><div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} /><div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden">
             <div className="px-3 py-2.5 text-sm font-semibold border-b border-border">{activeAccount?.name}</div>

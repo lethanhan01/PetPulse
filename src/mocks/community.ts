@@ -1,5 +1,5 @@
 import { MOCK_ACCOUNTS } from "./accounts";
-import type { CommunityPost, ModerationStatus } from "./types";
+import type { CommunityPost, CommunityStory, ModerationStatus } from "./types";
 
 const captions = [
   "Bé nhà mình vừa hoàn thành mũi vaccine cuối cùng! Health Score tăng rõ rệt 🎉",
@@ -23,7 +23,7 @@ export const MOCK_COMMUNITY_POSTS: CommunityPost[] = Array.from({ length: 60 }, 
   const isNotPublished = status === "pending" || status === "rejected";
   return {
     id: `POST-${String(index + 1).padStart(3, "0")}`, authorId: author.id, author: author.name,
-    handle: `@${author.email.split("@")[0].replace(/[^a-z0-9]/gi, "").toLowerCase()}`, avatar: author.name.split(" ").slice(-2).map(part => part[0]).join(""),
+    handle: `@${author.email.split("@")[0].replace(/[^a-z0-9]/gi, "").toLowerCase()}`, avatar: author.avatar,
     time: isNotPublished ? (status === "rejected" ? "1 giờ trước" : "Vừa xong") : (index < 3 ? `${index + 2} giờ trước` : `${Math.floor(index / 3)} ngày trước`),
     pet: `${["Bơ", "Miu", "Cookie", "Bông", "Đậu"][index % 5]} ${index % 2 ? "🐈" : "🐕"}`,
     content: captions[index % captions.length], images: index % 4 === 3 ? undefined : [photos[index % photos.length]],
@@ -36,3 +36,22 @@ export const MOCK_COMMUNITY_POSTS: CommunityPost[] = Array.from({ length: 60 }, 
 });
 
 export const PUBLIC_COMMUNITY_POSTS = MOCK_COMMUNITY_POSTS.filter(post => post.status === "approved");
+
+const STORY_IMAGES = [
+  "https://images.unsplash.com/photo-1544568100-847a948585b9?w=400",
+  "https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=400",
+  "https://images.unsplash.com/photo-1553882809-a4f57e595701?w=400",
+  "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?w=400",
+  "https://images.unsplash.com/photo-1491604612772-6853927639ef?w=400",
+  "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=400",
+  "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400",
+  "https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400",
+];
+const storyAuthors = MOCK_ACCOUNTS.filter(a => a.role === "user" && a.status === "Active").slice(0, 8);
+export const MOCK_COMMUNITY_STORIES: CommunityStory[] = STORY_IMAGES.map((url, i) => ({
+  id: `STORY-${String(i + 1).padStart(3, "0")}`,
+  authorId: storyAuthors[i].id,
+  mediaUrl: url,
+  mediaType: "image",
+  createdAt: `${i + 1} giờ trước`,
+}));

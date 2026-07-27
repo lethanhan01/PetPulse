@@ -499,7 +499,14 @@
     "composer": {
       "placeholder": "Share about your pet...",
       "photoBtn": "Photo",
-      "postBtn": "Post"
+      "postBtn": "Post",
+      "addText": "Add text",
+      "overlayHint": "Add text on image",
+      "overlayDefault": "Text"
+    },
+    "story": {
+      "yourStory": "Your Story",
+      "post": "Post Story"
     },
     "post": {
       "pending": "Pending",
@@ -804,6 +811,7 @@
     }
   },
   "common": {
+    "cancel": "Cancel",
     "pagination": {
       "prev": "Previous",
       "next": "Next"

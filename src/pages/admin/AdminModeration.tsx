@@ -6,6 +6,7 @@ import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { usePagination } from "@/hooks/usePagination";
 import { Check, X, Trash2 } from "lucide-react";
+import { isImageUrl } from "@/services/user.service";
 
 export function AdminModeration() {
   const { t } = useTranslation();
@@ -27,7 +28,9 @@ export function AdminModeration() {
             {p.images?.[0] && <ImageWithFallback src={p.images[0]} alt="post" className="w-full h-40 object-cover" />}
             <div className="p-4">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">{p.avatar}</div>
+                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary overflow-hidden">
+                  {isImageUrl(p.avatar) ? <img src={p.avatar} alt="" className="w-full h-full object-cover" /> : p.avatar}
+                </div>
                 <div className="flex-1"><p className="text-sm font-semibold text-foreground">{p.author}</p><p className="text-xs text-muted-foreground">{p.time}</p></div>
                 {p.status === "approved" && <Badge v="success">{t("admin.moderation.status.approved")}</Badge>}
                 {p.status === "rejected" && <Badge v="danger">{t("admin.moderation.status.rejected")}</Badge>}

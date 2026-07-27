@@ -38,8 +38,10 @@ export const toggleUserStatus = (userId: string): AccountStatus => {
   return acct.status;
 };
 
+export const isImageUrl = (url: string) => url.startsWith("data:") || url.startsWith("http");
+
 export const getAccountInitials = (account: Pick<MockAccount, "avatar" | "name"> | null) => {
   if (!account) return "PP";
-  if (account.avatar && !account.avatar.startsWith("data:")) return account.avatar;
+  if (account.avatar && !isImageUrl(account.avatar)) return account.avatar;
   return account.name?.split(" ").map(s => s[0]).join("").slice(0, 2).toUpperCase() || "PP";
 };

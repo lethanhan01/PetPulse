@@ -1,7 +1,8 @@
 import type { AIConsult, CareEvent, HealthEntry, Pet } from "@/types/app.types";
 import { getMockAnalysis } from "./ai";
 import { SPECIES_EMOJI } from "./pets";
-import type { CommunityComment, CommunityPost, MockAccount } from "./types";
+import { isImageUrl } from "@/services/user.service";
+import type { CommunityComment, CommunityPost, CommunityStory, MockAccount } from "./types";
 
 const today = () => new Date().toISOString().slice(0, 10);
 export const uid = (prefix: string) => `${prefix}-${Date.now()}`;
@@ -10,7 +11,7 @@ export function createCommunityPost(author: MockAccount, content: string, images
   return {
     id: uid("POST"), authorId: author.id, author: author.name,
     handle: `@${author.email.split("@")[0].replace(/[^a-z0-9]/gi, "").toLowerCase()}`,
-    avatar: author.avatar.startsWith("data:") ? author.name.split(" ").slice(-2).map(p => p[0]).join("") : author.avatar,
+    avatar: isImageUrl(author.avatar) ? author.avatar : author.name.split(" ").slice(-2).map(p => p[0]).join(""),
     time: "Vừa xong", pet: "", content, images, likes: 0, comments: [], status: "pending",
   };
 }
@@ -28,3 +29,6 @@ export function createHealthEntry(input: Omit<HealthEntry, "id" | "date" | "scor
 export function createCareEvent(input: Omit<CareEvent, "id" | "done">): CareEvent { return { ...input, id: uid("EVENT"), done: false }; }
 export function createAIConsult(petName: string, symptoms: string): AIConsult { return { id: uid("CONSULT"), date: today(), petName, ...getMockAnalysis(symptoms) }; }
 export function createCommunityComment(authorId: string, author: string, content: string): CommunityComment { return { id: uid("COMMENT"), authorId, author, content, time: "Vừa xong" }; }
+export function createStory(authorId: string, mediaUrl: string, mediaType: "image" | "video" = "image"): CommunityStory {
+  return { id: uid("STORY"), authorId, mediaUrl, mediaType, createdAt: "Vừa xong" };
+}
