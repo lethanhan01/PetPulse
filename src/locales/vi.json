@@ -506,7 +506,23 @@
       "successTitle": "Thanh toán thành công!",
       "successDescPart1": "Tài khoản của bạn đã được nâng cấp lên ",
       "successDescPart2": ". Mọi tính năng đã được mở khóa.",
-      "backToDashboard": "Về Dashboard"
+      "backToDashboard": "Về Dashboard",
+      "invoice": {
+        "title": "Hóa đơn",
+        "downloadBtn": "Tải hóa đơn",
+        "invoiceNum": "Số hóa đơn",
+        "date": "Ngày",
+        "customer": "Khách hàng",
+        "plan": "Gói dịch vụ",
+        "amount": "Số tiền",
+        "period": "Chu kỳ",
+        "paymentMethod": "Phương thức",
+        "status": "Trạng thái",
+        "paid": "Đã thanh toán",
+        "card": "Thẻ tín dụng",
+        "footer": "PetPulse — Cảm ơn bạn đã tin tưởng!",
+        "printBtn": "In hóa đơn"
+      }
     }
   },
   "community": {
@@ -591,6 +607,32 @@
         "thisWeek": "(tuần này)"
       },
       "aiUsageChart": "AI Usage (lượt/tháng)",
+      "report": {
+        "title": "Báo cáo PetPulse",
+        "subtitle": "Báo cáo thống kê hệ thống",
+        "printBtn": "In / Lưu PDF",
+        "footer": "Báo cáo được tạo lúc {{time}} • Dữ liệu mô phỏng",
+        "users": "Người dùng",
+        "totalUsers": "Tổng người dùng",
+        "free": "Free",
+        "premium": "Premium",
+        "conversionRate": "Tỷ lệ chuyển đổi",
+        "active": "Đang hoạt động",
+        "suspended": "Tạm khóa",
+        "pets": "Thú cưng",
+        "totalPets": "Tổng số thú cưng",
+        "healthDistribution": "Phân bố sức khỏe",
+        "topOwners": "Top chủ nuôi",
+        "user": "Người dùng",
+        "plan": "Gói",
+        "petCount": "Số pet",
+        "revenue": "Doanh thu",
+        "revenueUnit": "(triệu đồng)",
+        "aiUsage": "AI Usage",
+        "aiUsageUnit": "Lượt tư vấn",
+        "period": "Kỳ",
+        "value": "Giá trị"
+      },
       "tiers": {
         "excellent": "Tốt (90+)",
         "good": "Khá (75-89)",
@@ -649,11 +691,19 @@
         "nameLabel": "Tên gói",
         "namePlaceholder": "VD: Premium Plus",
         "priceLabel": "Giá",
-        "pricePlaceholder": "VD: 149.000đ/tháng",
+        "pricePlaceholder": "VD: 149.000đ",
         "featuresLabel": "Tính năng",
         "featuresPlaceholder": "Mô tả tính năng...",
         "cancel": "Hủy",
-        "submit": "Thêm gói"
+        "submit": "Thêm gói",
+        "editTitle": "Chỉnh sửa gói",
+        "save": "Lưu thay đổi",
+        "confirmDelete": {
+          "title": "Xóa gói",
+          "message": "Bạn có chắc muốn xóa \"{{name}}\"? Hành động này không thể hoàn tác.",
+          "cancel": "Hủy",
+          "confirm": "Xóa"
+        }
       }
     },
     "moderation": {

@@ -506,7 +506,23 @@
       "successTitle": "Payment successful!",
       "successDescPart1": "Your account has been upgraded to ",
       "successDescPart2": ". All features are now unlocked.",
-      "backToDashboard": "Back to Dashboard"
+      "backToDashboard": "Back to Dashboard",
+      "invoice": {
+        "title": "Invoice",
+        "downloadBtn": "Download Invoice",
+        "invoiceNum": "Invoice No.",
+        "date": "Date",
+        "customer": "Customer",
+        "plan": "Plan",
+        "amount": "Amount",
+        "period": "Billing Period",
+        "paymentMethod": "Payment Method",
+        "status": "Status",
+        "paid": "Paid",
+        "card": "Credit Card",
+        "footer": "PetPulse — Thank you for your trust!",
+        "printBtn": "Print Invoice"
+      }
     }
   },
   "community": {
@@ -591,6 +607,32 @@
         "thisWeek": "(this week)"
       },
       "aiUsageChart": "AI Usage (requests/month)",
+      "report": {
+        "title": "PetPulse Report",
+        "subtitle": "System Statistics Report",
+        "printBtn": "Print / Save PDF",
+        "footer": "Report generated at {{time}} • Simulated data",
+        "users": "Users",
+        "totalUsers": "Total Users",
+        "free": "Free",
+        "premium": "Premium",
+        "conversionRate": "Conversion Rate",
+        "active": "Active",
+        "suspended": "Suspended",
+        "pets": "Pets",
+        "totalPets": "Total Pets",
+        "healthDistribution": "Health Distribution",
+        "topOwners": "Top Pet Owners",
+        "user": "User",
+        "plan": "Plan",
+        "petCount": "Pets",
+        "revenue": "Revenue",
+        "revenueUnit": "(million VND)",
+        "aiUsage": "AI Usage",
+        "aiUsageUnit": "Consultations",
+        "period": "Period",
+        "value": "Value"
+      },
       "tiers": {
         "excellent": "Excellent (90+)",
         "good": "Good (75-89)",
@@ -649,11 +691,19 @@
         "nameLabel": "Plan Name",
         "namePlaceholder": "E.g. Premium Plus",
         "priceLabel": "Price",
-        "pricePlaceholder": "E.g. 149,000VND/month",
+        "pricePlaceholder": "E.g. 149,000VND",
         "featuresLabel": "Features",
         "featuresPlaceholder": "Feature description...",
         "cancel": "Cancel",
-        "submit": "Add Plan"
+        "submit": "Add Plan",
+        "editTitle": "Edit Subscription Plan",
+        "save": "Save Changes",
+        "confirmDelete": {
+          "title": "Delete Plan",
+          "message": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+          "cancel": "Cancel",
+          "confirm": "Delete"
+        }
       }
     },
     "moderation": {

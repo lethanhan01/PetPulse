@@ -15,17 +15,22 @@ const Q_DATA: Record<number, number[]> = {
 };
 
 export function AdminDashboard() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [range, setRange] = useState("Tháng");
   const [rangeYear, setRangeYear] = useState(2025);
   const [weekOffset, setWeekOffset] = useState(-1);
+  const lang = i18n.resolvedLanguage || i18n.language || "vi";
+  const locale = lang === "vi" ? "vi-VN" : "en-US";
+  const fileNamePrefix = lang === "vi" ? "bao-cao-petpulse" : "petpulse-report";
+  const rangeLabel = range === "Tuần" ? t("admin.dashboard.revenue.week") : range === "Tháng" ? t("admin.dashboard.revenue.month") : t("admin.dashboard.revenue.quarter");
+
   const statsData = getAdminStats(range as keyof typeof MOCK_AI_USAGE);
   
   const stats = [
     { icon: <Users size={18} />, l: t("admin.dashboard.stats.totalUsers"), v: statsData.totalUsers.toLocaleString(), sub: t("admin.dashboard.stats.usersDesc"), ic: "text-primary bg-primary/10" },
     { icon: <Crown size={18} />, l: t("admin.dashboard.stats.premiumUsers"), v: statsData.premiumUsers.toLocaleString(), sub: t("admin.dashboard.stats.conversionRate", { rate: statsData.conversionRate.toFixed(1) }), ic: "text-warning bg-warning-surface" },
     { icon: <PawPrint size={18} />, l: t("admin.dashboard.stats.totalPets"), v: statsData.totalPets.toLocaleString(), sub: t("admin.dashboard.stats.petsDesc"), ic: "text-success bg-success-surface" },
-    { icon: <Bot size={18} />, l: t("admin.dashboard.stats.aiUsage"), v: statsData.aiUsage.toLocaleString(), sub: t("admin.dashboard.stats.aiUsageDesc", { range: range === "Tháng" ? t("admin.dashboard.revenue.month").toLowerCase() : range === "Tuần" ? t("admin.dashboard.revenue.week").toLowerCase() : t("admin.dashboard.revenue.quarter").toLowerCase() }), ic: "text-info bg-info-surface" },
+    { icon: <Bot size={18} />, l: t("admin.dashboard.stats.aiUsage"), v: statsData.aiUsage.toLocaleString(), sub: t("admin.dashboard.stats.aiUsageDesc", { range: rangeLabel.toLowerCase() }), ic: "text-info bg-info-surface" },
   ];
   
   const revenueData = useMemo(() => {
@@ -42,7 +47,7 @@ export function AdminDashboard() {
   }, [range, rangeYear, weekOffset]);
 
   const handleExport = () => {
-    const d = new Date(); const now = d.toLocaleDateString("vi-VN");
+    const d = new Date(); const now = d.toLocaleDateString(locale);
     const aiData = MOCK_AI_USAGE[range as keyof typeof MOCK_AI_USAGE];
     const u = getAdminUsers(); const p = getAdminPets();
     const freeU = u.filter(x => x.plan === "Free").length;
@@ -58,48 +63,49 @@ export function AdminDashboard() {
       else tiers[t("admin.dashboard.tiers.poor")]++; 
     });
     const topUsers = [...u].sort((a, b) => b.petCount - a.petCount).slice(0, 5);
-    const html = `<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><title>Báo cáo PetPulse</title>
+    const html = `<!DOCTYPE html><html lang="${lang}"><head><meta charset="UTF-8"><title>${t("admin.dashboard.report.title")}</title>
 <style>${reportPrintCss}</style></head><body>
-<div class="no-print" style="text-align:right;margin-bottom:16px"><button class="btn-print" onclick="window.print()">🖨 In / Lưu PDF</button></div>
-<div class="header"><h1>PetPulse</h1><p>Báo cáo thống kê hệ thống • ${now}</p></div>
+<div class="no-print" style="text-align:right;margin-bottom:16px"><button class="btn-print" onclick="window.print()">🖨 ${t("admin.dashboard.report.printBtn")}</button></div>
+<div class="header"><h1>PetPulse</h1><p>${t("admin.dashboard.report.subtitle")} • ${now}</p></div>
 
 <div class="grid2">${stats.map(s => `<div class="card"><div class="label">${s.l}</div><div class="value">${s.v}</div><div class="sub">${s.sub}</div></div>`).join("")}</div>
 
 <div class="grid4">
 <div class="card">
-  <h2>👥 Người dùng</h2>
-  <div class="stat-row"><span class="lbl">Tổng người dùng</span><span class="val">${u.length}</span></div>
-  <div class="stat-row"><span class="lbl">Free</span><span class="val">${freeU}</span></div>
-  <div class="stat-row"><span class="lbl">Premium</span><span class="val">${u.length - freeU}</span></div>
-  <div class="stat-row"><span class="lbl">Tỷ lệ chuyển đổi</span><span class="val">${statsData.conversionRate.toFixed(1)}%</span></div>
-  <div class="stat-row"><span class="lbl">Đang hoạt động</span><span class="val">${activeU}</span></div>
-  <div class="stat-row"><span class="lbl">Tạm khóa</span><span class="val">${suspendedU}</span></div>
+  <h2>👥 ${t("admin.dashboard.report.users")}</h2>
+  <div class="stat-row"><span class="lbl">${t("admin.dashboard.report.totalUsers")}</span><span class="val">${u.length}</span></div>
+  <div class="stat-row"><span class="lbl">${t("admin.dashboard.report.free")}</span><span class="val">${freeU}</span></div>
+  <div class="stat-row"><span class="lbl">${t("admin.dashboard.report.premium")}</span><span class="val">${u.length - freeU}</span></div>
+  <div class="stat-row"><span class="lbl">${t("admin.dashboard.report.conversionRate")}</span><span class="val">${statsData.conversionRate.toFixed(1)}%</span></div>
+  <div class="stat-row"><span class="lbl">${t("admin.dashboard.report.active")}</span><span class="val">${activeU}</span></div>
+  <div class="stat-row"><span class="lbl">${t("admin.dashboard.report.suspended")}</span><span class="val">${suspendedU}</span></div>
 </div>
 <div class="card">
-  <h2>🐾 Thú cưng</h2>
-  <div class="stat-row"><span class="lbl">Tổng số thú cưng</span><span class="val">${p.length}</span></div>
+  <h2>🐾 ${t("admin.dashboard.report.pets")}</h2>
+  <div class="stat-row"><span class="lbl">${t("admin.dashboard.report.totalPets")}</span><span class="val">${p.length}</span></div>
   ${Object.entries(species).map(([s, n]) => `<div class="stat-row"><span class="lbl">${s}</span><span class="val">${n}</span></div>`).join("\n")}
 </div>
 <div class="card">
-  <h2>🏥 Phân bố sức khỏe</h2>
-  ${Object.entries(tiers).map(([t, n]) => `<div class="stat-row"><span class="lbl">${t}</span><span class="val">${n} (${(n / p.length * 100).toFixed(0)}%)</span></div>`).join("\n")}
+  <h2>🏥 ${t("admin.dashboard.report.healthDistribution")}</h2>
+  ${Object.entries(tiers).map(([tier, n]) => `<div class="stat-row"><span class="lbl">${tier}</span><span class="val">${n} (${(n / p.length * 100).toFixed(0)}%)</span></div>`).join("\n")}
 </div>
 <div class="card">
-  <h2>⭐ Top chủ nuôi</h2>
-  <table><thead><tr><th>Người dùng</th><th>Gói</th><th>Số pet</th></tr></thead><tbody>${topUsers.map(u2 => `<tr><td style="font-weight:500">${u2.name}</td><td>${u2.plan}</td><td>${u2.petCount}</td></tr>`).join("")}</tbody></table>
+  <h2>⭐ ${t("admin.dashboard.report.topOwners")}</h2>
+  <table><thead><tr><th>${t("admin.dashboard.report.user")}</th><th>${t("admin.dashboard.report.plan")}</th><th>${t("admin.dashboard.report.petCount")}</th></tr></thead><tbody>${topUsers.map(u2 => `<tr><td style="font-weight:500">${u2.name}</td><td>${u2.plan}</td><td>${u2.petCount}</td></tr>`).join("")}</tbody></table>
 </div>
 </div>
 
-<section><h2>📊 Doanh thu (${range})</h2>
-<table><thead><tr><th>Kỳ</th><th>Giá trị (triệu đồng)</th></tr></thead><tbody>${revenueData.map(d => `<tr><td style="font-weight:500">${d.label}</td><td>${d.value.toLocaleString("vi-VN")}</td></tr>`).join("")}</tbody></table></section>
+<section><h2>📊 ${t("admin.dashboard.report.revenue")} (${rangeLabel})</h2>
+<table><thead><tr><th>${t("admin.dashboard.report.period")}</th><th>${t("admin.dashboard.report.value")} ${t("admin.dashboard.report.revenueUnit")}</th></tr></thead><tbody>${revenueData.map(d => `<tr><td style="font-weight:500">${d.label}</td><td>${d.value.toLocaleString(locale)}</td></tr>`).join("")}</tbody></table></section>
 
-<section><h2>📈 AI Usage (${range})</h2>
-<table><thead><tr><th>Kỳ</th><th>Lượt tư vấn</th></tr></thead><tbody>${aiData.map(d => `<tr><td style="font-weight:500">${d.label}</td><td>${d.value.toLocaleString("vi-VN")}</td></tr>`).join("")}</tbody></table></section>
+<section><h2>📈 ${t("admin.dashboard.report.aiUsage")} (${rangeLabel})</h2>
+<table><thead><tr><th>${t("admin.dashboard.report.period")}</th><th>${t("admin.dashboard.report.aiUsageUnit")}</th></tr></thead><tbody>${aiData.map(d => `<tr><td style="font-weight:500">${d.label}</td><td>${d.value.toLocaleString(locale)}</td></tr>`).join("")}</tbody></table></section>
 
-<div class="footer">PetPulse &bull; Báo cáo được tạo lúc ${d.toLocaleTimeString("vi-VN")} &bull; Dữ liệu mô phỏng</div>
+<div class="footer">PetPulse &bull; ${t("admin.dashboard.report.footer", { time: d.toLocaleTimeString(locale) })}</div>
 </body></html>`;
     const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
-    a.download = `bao-cao-petpulse-${now.replace(/\//g, "-")}.html`; a.click(); URL.revokeObjectURL(a.href);
+    const dateStr = now.replace(/[\\/]/g, "-");
+    a.download = `${fileNamePrefix}-${dateStr}.html`; a.click(); URL.revokeObjectURL(a.href);
   };
   return (
     <div className="space-y-6">
