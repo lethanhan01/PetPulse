@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export function SplashScreen({ onComplete }: { onComplete: () => void }) {
   const { t } = useTranslation();
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -11,10 +12,19 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
     };
   }, []);
 
+  const handleClick = () => {
+    if (isExiting) return;
+    setIsExiting(true);
+    setTimeout(() => {
+      onComplete();
+    }, 800);
+  };
+
   return (
     <div
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-start pt-[10vh] bg-black cursor-pointer overflow-hidden"
-      onClick={onComplete}
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-start pt-[10vh] cursor-pointer overflow-hidden transition-all duration-[800ms] ease-in-out ${isExiting ? 'opacity-0 scale-[1.15]' : 'opacity-100 scale-100'}`}
+      style={{ background: "var(--gradient-page)" }}
+      onClick={handleClick}
     >
       <video
         src="/meoboi.mp4"
@@ -23,6 +33,12 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
         muted
         playsInline
         className="absolute top-1/2 left-1/2 min-w-[100vh] min-h-[100vw] -translate-x-1/2 -translate-y-1/2 rotate-90 object-cover pointer-events-none"
+      />
+
+      {/* Gradient overlay to blend with landing page */}
+      <div 
+        className="absolute inset-0 pointer-events-none z-[5]" 
+        style={{ background: "var(--gradient-page)", opacity: 0.25 }} 
       />
 
       <div className="relative z-10 p-4 mix-blend-overlay">
