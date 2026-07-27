@@ -8,6 +8,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import { useEffect, useState } from "react";
 import { LanguageSwitcher } from "@/components/Navbar/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+import { SplashScreen } from "@/components/common/SplashScreen";
 
 const FEATURES = [
   { icon: <Activity size={20} />, id: "timeline" },
@@ -41,6 +42,13 @@ export function Landing() {
   const { t } = useTranslation();
   const isDark = theme === "dark";
   const [activeSection, setActiveSection] = useState("");
+  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("splashSeen"));
+
+  const handleSplashComplete = () => {
+    sessionStorage.setItem("splashSeen", "true");
+    setShowSplash(false);
+  };
+
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   useEffect(() => {
     const ids = NAV_LINKS.map(i => i.id);
@@ -53,8 +61,10 @@ export function Landing() {
     return () => observer.disconnect();
   }, []);
   return (
-    <div className="min-h-screen">
-      {/* Nav */}
+    <>
+      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      <div className="min-h-screen">
+        {/* Nav */}
       <header className="sticky top-0 z-40 h-20 flex items-center px-4 sm:px-8 border-b border-border bg-background/85 backdrop-blur-md">
         <Logo size={36} />
         <nav className="hidden md:flex items-center gap-1 ml-8">
@@ -275,5 +285,6 @@ export function Landing() {
         </div>
       </footer>
     </div>
+    </>
   );
 }
