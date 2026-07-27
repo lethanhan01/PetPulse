@@ -8,6 +8,11 @@ const images = [
   "https://images.unsplash.com/photo-1537204696486-967f1b7198c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
   "https://images.unsplash.com/photo-1615497001839-b0a0eac3274c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
 ];
+const coverImages = [
+  "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=1920&h=400",
+  "https://images.unsplash.com/photo-1516598540642-e8f40a0819ce?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=1920&h=400",
+  "https://images.unsplash.com/photo-1517849845537-4d257902454a?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=1920&h=400",
+];
 export const SPECIES_EMOJI: Record<string, string> = { Chó: "🐕", Mèo: "🐈", Thỏ: "🐰", Chim: "🐦", Cá: "🐟", Khác: "🐾" };
 export const PET_SPECIES = Object.keys(SPECIES_EMOJI);
 
@@ -58,7 +63,7 @@ function consults(id: string, petName: string, index: number): AIConsult[] {
 export const MOCK_PETS: Pet[] = demoRows.map(([name, species, breed, gender, age, weight], index) => {
   const id = `PET-2026-${String(1001 + index).padStart(6, "0")}`;
   const score = [92, 95, 76, 88, 68, 91, 84, 72, 64, 98][index];
-  return { id, name, species, emoji: SPECIES_EMOJI[species], breed, gender, age, weight: `${weight} kg`, color: ["#F59E0B", "#8B5CF6", "#10B981", "#EC4899"][index % 4], microchip: `9851410021${String(45879 + index).padStart(5, "0")}`, owner: "Nguyễn Văn An", image: images[index % images.length], chips: index % 2 ? ["Vaccinated", "Microchipped"] : ["Vaccinated", "Microchipped", "Insured"], health: health(id, weight, score, index, score < 70 ? "Cần theo dõi cân nặng" : undefined), events: events(id, index), consults: consults(id, name, index) };
+  return { id, name, species, emoji: SPECIES_EMOJI[species], breed, gender, age, weight: `${weight} kg`, color: ["#F59E0B", "#8B5CF6", "#10B981", "#EC4899"][index % 4], microchip: `9851410021${String(45879 + index).padStart(5, "0")}`, owner: "Nguyễn Văn An", image: images[index % images.length], coverImage: coverImages[index % coverImages.length], chips: index % 2 ? ["Vaccinated", "Microchipped"] : ["Vaccinated", "Microchipped", "Insured"], health: health(id, weight, score, index, score < 70 ? "Cần theo dõi cân nặng" : undefined), events: events(id, index), consults: consults(id, name, index) };
 });
 
 const speciesRows = ["Chó", "Mèo", "Thỏ", "Chim", "Cá"] as const;
@@ -75,7 +80,7 @@ export const MOCK_SYSTEM_PETS: Array<Pet & { ownerId: string }> = Array.from({ l
   const demoPet = MOCK_PETS[index];
   return demoPet ? { ...demoPet, ownerId: DEMO_USER_ACCOUNT_ID } : {
     id: `PET-2026-${String(2001 + index).padStart(6, "0")}`, name: ["Bông", "Đậu", "Gạo", "Sữa", "Mây", "Tép", "Na", "Bim"][index % 8] + ` ${index + 1}`,
-    species, emoji: SPECIES_EMOJI[species], breed: breeds[species][index % breeds[species].length], gender: index % 2 ? "Cái" : "Đực", age: `${(index % 8) + 1} tuổi`, weight: `${(index % 18) + 2} kg`, color: ["#F59E0B", "#8B5CF6", "#10B981", "#EC4899"][index % 4], microchip: `985141003${String(50000 + index).padStart(6, "0")}`, owner: owner.name, ownerId: owner.id, chips: ["Vaccinated", "Microchipped"], health: health(`PET-2026-${String(2001 + index).padStart(6, "0")}`, (index % 18) + 2, score, index, score < 70 ? "Cần theo dõi sức khỏe" : undefined), events: events(`PET-2026-${String(2001 + index).padStart(6, "0")}`, index), consults: consults(`PET-2026-${String(2001 + index).padStart(6, "0")}`, `Pet ${index + 1}`, index),
+    species, emoji: SPECIES_EMOJI[species], breed: breeds[species][index % breeds[species].length], gender: index % 2 ? "Cái" : "Đực", age: `${(index % 8) + 1} tuổi`, weight: `${(index % 18) + 2} kg`, color: ["#F59E0B", "#8B5CF6", "#10B981", "#EC4899"][index % 4], microchip: `985141003${String(50000 + index).padStart(6, "0")}`, owner: owner.name, ownerId: owner.id, coverImage: coverImages[index % coverImages.length], chips: ["Vaccinated", "Microchipped"], health: health(`PET-2026-${String(2001 + index).padStart(6, "0")}`, (index % 18) + 2, score, index, score < 70 ? "Cần theo dõi sức khỏe" : undefined), events: events(`PET-2026-${String(2001 + index).padStart(6, "0")}`, index), consults: consults(`PET-2026-${String(2001 + index).padStart(6, "0")}`, `Pet ${index + 1}`, index),
   };
 });
 

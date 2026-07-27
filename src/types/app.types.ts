@@ -22,7 +22,7 @@ export type AIConsult = {
 export type Pet = {
   id: string; name: string; species: string; emoji: string; breed: string;
   gender: "Đực" | "Cái"; age: string; weight: string; color: string;
-  microchip: string; image?: string; owner: string;
+  microchip: string; image?: string; coverImage?: string; owner: string;
   health: HealthEntry[]; events: CareEvent[]; consults: AIConsult[];
   chips: string[];
 };
