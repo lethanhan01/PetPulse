@@ -15,13 +15,62 @@
     "logout": "Đăng xuất"
   },
   "pets": {
+    "pageTitle": "Thú cưng của tôi",
+    "subtitleLimit": "Bạn đang quản lý {{count}}/{{limit}} hồ sơ Pet Passport",
+    "subtitleUnlimited": "Bạn đang quản lý {{count}} hồ sơ Pet Passport",
+    "addBtn": "Thêm thú cưng",
     "viewProfile": "Xem hồ sơ",
     "male": "Đực",
     "female": "Cái",
     "ageYears_one": "{{count}} tuổi",
     "ageYears_other": "{{count}} tuổi",
     "ageMonths_one": "{{count}} tháng",
-    "ageMonths_other": "{{count}} tháng"
+    "ageMonths_other": "{{count}} tháng",
+    "empty": {
+      "title": "Chưa có thú cưng nào",
+      "desc": "Thêm thú cưng đầu tiên để bắt đầu quản lý sức khỏe.",
+      "btnLimit": "Đã đạt giới hạn {{limit}} thú cưng",
+      "btnAdd": "Thêm thú cưng"
+    },
+    "modal": {
+      "addTitle": "Thêm thú cưng mới",
+      "editTitle": "Chỉnh sửa thú cưng",
+      "nameLabel": "Tên thú cưng",
+      "namePlaceholder": "VD: Mochi",
+      "speciesLabel": "Loài",
+      "genderLabel": "Giới tính",
+      "breedLabel": "Giống",
+      "breedPlaceholder": "VD: Golden Retriever",
+      "ageLabel": "Tuổi",
+      "agePlaceholder": "VD: 3 tuổi",
+      "weightLabel": "Cân nặng",
+      "weightPlaceholder": "VD: 28 kg",
+      "imageLabel": "Hình ảnh",
+      "imageBtn": "Chọn file ảnh",
+      "cancelBtn": "Hủy",
+      "saveBtn": "Lưu thay đổi",
+      "addBtn": "Thêm thú cưng",
+      "deleteTitle": "Xóa thú cưng",
+      "deleteConfirm": "Bạn có chắc muốn xóa hồ sơ của <1>{{name}}</1>? Hành động này không thể hoàn tác.",
+      "deleteCancelBtn": "Hủy",
+      "deleteBtn": "Xóa"
+    },
+    "toasts": {
+      "limitError": "Gói Free chỉ được tối đa {{limit}} thú cưng",
+      "limitUpgradeError": "Gói Free chỉ được tối đa {{limit}} thú cưng. Nâng cấp để thêm!",
+      "updateSuccess": "Đã cập nhật thú cưng thành công",
+      "addSuccess": "Đã thêm thú cưng mới",
+      "deleteSuccess": "Đã xóa \"{{name}}\""
+    },
+    "species": {
+      "dog": "Chó",
+      "cat": "Mèo",
+      "bird": "Chim",
+      "mouse": "Chuột",
+      "rabbit": "Thỏ",
+      "turtle": "Rùa",
+      "other": "Khác"
+    }
   },
   "auth": {
     "layout": {
@@ -312,6 +361,186 @@
     },
     "footer": {
       "copyright": "© 2026 PetPulse. Chăm sóc thú cưng bằng cả trái tim 🐾"
+    }
+  },
+  "profile": {
+    "pageTitle": "Hồ sơ cá nhân",
+    "adminTitle": "Hồ sơ Admin",
+    "header": {
+      "coverBtn": "Tải ảnh nền",
+      "avatarBtn": "Tải ảnh đại diện",
+      "defaultName": "Nguyễn Văn An",
+      "adminName": "Quản trị viên"
+    },
+    "badges": {
+      "admin": "Admin",
+      "premium": "Premium",
+      "free": "Free"
+    },
+    "stats": {
+      "users": "người dùng",
+      "pets": "thú cưng",
+      "plans": "gói đăng ký",
+      "years": "năm cùng PetPulse",
+      "records": "bản ghi sức khỏe"
+    },
+    "tabs": {
+      "info": "Thông tin",
+      "security": "Bảo mật",
+      "pets": "Thú cưng",
+      "posts": "Bài viết"
+    },
+    "info": {
+      "title": "Thông tin cá nhân",
+      "editBtn": "Sửa",
+      "nameLabel": "Họ và tên",
+      "emailLabel": "Email",
+      "phoneLabel": "Số điện thoại",
+      "birthDateLabel": "Ngày sinh",
+      "cityLabel": "Thành phố",
+      "genderLabel": "Giới tính",
+      "genderOptions": {
+        "Nam": "Nam",
+        "Nữ": "Nữ",
+        "Khác": "Khác"
+      },
+      "saveBtn": "Lưu thay đổi",
+      "cancelBtn": "Hủy",
+      "currentPlan": "Gói đăng ký hiện tại",
+      "emptyValue": "—"
+    },
+    "security": {
+      "title": "Bảo mật",
+      "pwdTitle": "Mật khẩu",
+      "pwdDesc": "Thay đổi mật khẩu bảo vệ tài khoản của bạn.",
+      "pwdChangeBtn": "Đổi",
+      "currentPwd": "Mật khẩu hiện tại",
+      "newPwd": "Mật khẩu mới",
+      "confirmPwd": "Xác nhận mật khẩu mới",
+      "updateBtn": "Cập nhật mật khẩu",
+      "cancelBtn": "Hủy"
+    },
+    "petsTab": {
+      "records": "bản ghi",
+      "emptyText": "Bạn chưa có thú cưng nào.",
+      "addBtn": "Thêm thú cưng",
+      "manageAllBtn": "Quản lý tất cả thú cưng"
+    }
+  },
+  "subscription": {
+    "pageTitle": "Nâng cấp gói dịch vụ",
+    "pageSubtitle": "Mở khóa toàn bộ sức mạnh của PetPulse",
+    "status": {
+      "currentBadge": "ĐANG SỬ DỤNG",
+      "currentBtn": "Gói hiện tại của bạn",
+      "freeBtn": "Miễn phí",
+      "upgradeBtn": "Nâng cấp {{plan}}"
+    },
+    "plans": {
+      "Free": {
+        "price": "0đ",
+        "period": "mãi mãi",
+        "features": {
+          "0": "3 thú cưng",
+          "1": "Health timeline cơ bản",
+          "2": "Lịch chăm sóc",
+          "3": "Cộng đồng thú cưng"
+        },
+        "missing": {
+          "0": "AI Symptom Checker",
+          "1": "Không giới hạn pet",
+          "2": "Thống kê nâng cao"
+        }
+      },
+      "Premium": {
+        "price": "99.000đ",
+        "period": "mỗi tháng",
+        "features": {
+          "0": "Không giới hạn thú cưng",
+          "1": "AI Symptom Checker không giới hạn",
+          "2": "Health Score nâng cao",
+          "3": "Thống kê & báo cáo chi tiết",
+          "4": "Ưu tiên hỗ trợ 24/7",
+          "5": "Xuất hồ sơ PDF"
+        },
+        "missing": {}
+      },
+      "Premium Năm": {
+        "price": "990.000đ",
+        "period": "năm",
+        "features": {
+          "0": "Toàn bộ Premium",
+          "1": "Ưu đãi 2 tháng",
+          "2": "Báo cáo năm"
+        },
+        "missing": {}
+      }
+    },
+    "checkout": {
+      "back": "Quay lại",
+      "title": "Thanh toán",
+      "planName": "Gói {{name}}",
+      "nameOnCard": "Tên trên thẻ",
+      "namePlaceholder": "NGUYEN VAN AN",
+      "cardNumber": "Số thẻ",
+      "expiry": "Hết hạn",
+      "cvv": "CVV",
+      "securityText": "Thông tin thanh toán được mã hóa & bảo mật.",
+      "payBtn": "Thanh toán {{price}}",
+      "successTitle": "Thanh toán thành công!",
+      "successDescPart1": "Tài khoản của bạn đã được nâng cấp lên ",
+      "successDescPart2": ". Mọi tính năng đã được mở khóa.",
+      "backToDashboard": "Về Dashboard"
+    }
+  },
+  "community": {
+    "pageTitle": "Cộng đồng thú cưng",
+    "pageSubtitle": "Chia sẻ khoảnh khắc & học hỏi mẹo chăm sóc từ cộng đồng.",
+    "composer": {
+      "placeholder": "Chia sẻ về thú cưng của bạn...",
+      "photoBtn": "Ảnh",
+      "postBtn": "Đăng bài"
+    },
+    "post": {
+      "pending": "Chờ duyệt",
+      "rejected": "Từ chối",
+      "share": "Chia sẻ",
+      "shared": "Đã chia sẻ",
+      "commentPlaceholder": "Viết bình luận..."
+    }
+  },
+  "notifications": {
+    "N-01": {
+      "title": "Nhắc lịch: Uống thuốc giun cho Mochi",
+      "subtitle": "Hôm nay 08:00"
+    },
+    "N-04": {
+      "title": "Khám định kỳ cho Bắp sắp đến hạn",
+      "subtitle": "Ngày mai 14:30"
+    },
+    "AN-01": {
+      "title": "Có bài viết mới cần kiểm duyệt",
+      "subtitle": "5 phút trước"
+    },
+    "AN-02": {
+      "title": "Người dùng mới đăng ký: Trần Thị B",
+      "subtitle": "1 giờ trước"
+    },
+    "AN-03": {
+      "title": "Doanh thu Premium tăng 15% so với tháng trước",
+      "subtitle": "Hôm qua"
+    },
+    "AN-04": {
+      "title": "Yêu cầu hỗ trợ từ Nguyễn Văn A",
+      "subtitle": "Hôm qua 15:30"
+    },
+    "AN-05": {
+      "title": "Báo cáo: 3 tài khoản vi phạm bị khóa",
+      "subtitle": "2 ngày trước"
+    },
+    "AN-06": {
+      "title": "Hệ thống đã sao lưu dữ liệu thành công",
+      "subtitle": "3 ngày trước"
     }
   }
 }

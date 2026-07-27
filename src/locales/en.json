@@ -15,13 +15,62 @@
     "logout": "Log out"
   },
   "pets": {
+    "pageTitle": "My Pets",
+    "subtitleLimit": "Managing {{count}}/{{limit}} Pet Passport profiles",
+    "subtitleUnlimited": "Managing {{count}} Pet Passport profiles",
+    "addBtn": "Add Pet",
     "viewProfile": "View Profile",
     "male": "Male",
     "female": "Female",
     "ageYears_one": "{{count}} year",
     "ageYears_other": "{{count}} years",
     "ageMonths_one": "{{count}} month",
-    "ageMonths_other": "{{count}} months"
+    "ageMonths_other": "{{count}} months",
+    "empty": {
+      "title": "No pets yet",
+      "desc": "Add your first pet to start managing their health.",
+      "btnLimit": "Reached limit of {{limit}} pets",
+      "btnAdd": "Add Pet"
+    },
+    "modal": {
+      "addTitle": "Add New Pet",
+      "editTitle": "Edit Pet",
+      "nameLabel": "Pet Name",
+      "namePlaceholder": "e.g., Mochi",
+      "speciesLabel": "Species",
+      "genderLabel": "Gender",
+      "breedLabel": "Breed",
+      "breedPlaceholder": "e.g., Golden Retriever",
+      "ageLabel": "Age",
+      "agePlaceholder": "e.g., 3 years",
+      "weightLabel": "Weight",
+      "weightPlaceholder": "e.g., 28 kg",
+      "imageLabel": "Image",
+      "imageBtn": "Choose Image",
+      "cancelBtn": "Cancel",
+      "saveBtn": "Save Changes",
+      "addBtn": "Add Pet",
+      "deleteTitle": "Delete Pet",
+      "deleteConfirm": "Are you sure you want to delete <1>{{name}}</1>'s profile? This action cannot be undone.",
+      "deleteCancelBtn": "Cancel",
+      "deleteBtn": "Delete"
+    },
+    "toasts": {
+      "limitError": "Free plan is limited to {{limit}} pets",
+      "limitUpgradeError": "Free plan is limited to {{limit}} pets. Upgrade to add more!",
+      "updateSuccess": "Pet updated successfully",
+      "addSuccess": "New pet added",
+      "deleteSuccess": "Deleted \"{{name}}\""
+    },
+    "species": {
+      "dog": "Dog",
+      "cat": "Cat",
+      "bird": "Bird",
+      "mouse": "Mouse",
+      "rabbit": "Rabbit",
+      "turtle": "Turtle",
+      "other": "Other"
+    }
   },
   "auth": {
     "layout": {
@@ -312,6 +361,186 @@
     },
     "footer": {
       "copyright": "© 2026 PetPulse. Caring for pets with all our heart 🐾"
+    }
+  },
+  "profile": {
+    "pageTitle": "Profile",
+    "adminTitle": "Admin Profile",
+    "header": {
+      "coverBtn": "Upload cover",
+      "avatarBtn": "Upload avatar",
+      "defaultName": "John Doe",
+      "adminName": "Administrator"
+    },
+    "badges": {
+      "admin": "Admin",
+      "premium": "Premium",
+      "free": "Free"
+    },
+    "stats": {
+      "users": "users",
+      "pets": "pets",
+      "plans": "subscriptions",
+      "years": "years with PetPulse",
+      "records": "health records"
+    },
+    "tabs": {
+      "info": "Information",
+      "security": "Security",
+      "pets": "Pets",
+      "posts": "Posts"
+    },
+    "info": {
+      "title": "Personal Information",
+      "editBtn": "Edit",
+      "nameLabel": "Full Name",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone Number",
+      "birthDateLabel": "Birth Date",
+      "cityLabel": "City",
+      "genderLabel": "Gender",
+      "genderOptions": {
+        "Nam": "Male",
+        "Nữ": "Female",
+        "Khác": "Other"
+      },
+      "saveBtn": "Save Changes",
+      "cancelBtn": "Cancel",
+      "currentPlan": "Current Plan",
+      "emptyValue": "—"
+    },
+    "security": {
+      "title": "Security",
+      "pwdTitle": "Password",
+      "pwdDesc": "Change your account password.",
+      "pwdChangeBtn": "Change",
+      "currentPwd": "Current Password",
+      "newPwd": "New Password",
+      "confirmPwd": "Confirm New Password",
+      "updateBtn": "Update Password",
+      "cancelBtn": "Cancel"
+    },
+    "petsTab": {
+      "records": "records",
+      "emptyText": "You don't have any pets yet.",
+      "addBtn": "Add Pet",
+      "manageAllBtn": "Manage all pets"
+    }
+  },
+  "subscription": {
+    "pageTitle": "Upgrade Plan",
+    "pageSubtitle": "Unlock the full power of PetPulse",
+    "status": {
+      "currentBadge": "CURRENT PLAN",
+      "currentBtn": "Your current plan",
+      "freeBtn": "Free",
+      "upgradeBtn": "Upgrade to {{plan}}"
+    },
+    "plans": {
+      "Free": {
+        "price": "$0",
+        "period": "forever",
+        "features": {
+          "0": "3 pets",
+          "1": "Basic health timeline",
+          "2": "Care schedule",
+          "3": "Pet community"
+        },
+        "missing": {
+          "0": "AI Symptom Checker",
+          "1": "Unlimited pets",
+          "2": "Advanced statistics"
+        }
+      },
+      "Premium": {
+        "price": "$4.99",
+        "period": "month",
+        "features": {
+          "0": "Unlimited pets",
+          "1": "Unlimited AI Symptom Checker",
+          "2": "Advanced Health Score",
+          "3": "Detailed statistics & reports",
+          "4": "Priority 24/7 support",
+          "5": "Export PDF records"
+        },
+        "missing": {}
+      },
+      "Premium Năm": {
+        "price": "$49.99",
+        "period": "year",
+        "features": {
+          "0": "Everything in Premium",
+          "1": "2 months free",
+          "2": "Yearly report"
+        },
+        "missing": {}
+      }
+    },
+    "checkout": {
+      "back": "Go back",
+      "title": "Checkout",
+      "planName": "Plan {{name}}",
+      "nameOnCard": "Name on card",
+      "namePlaceholder": "JOHN DOE",
+      "cardNumber": "Card number",
+      "expiry": "Expiry",
+      "cvv": "CVV",
+      "securityText": "Payment information is encrypted & secure.",
+      "payBtn": "Pay {{price}}",
+      "successTitle": "Payment successful!",
+      "successDescPart1": "Your account has been upgraded to ",
+      "successDescPart2": ". All features are now unlocked.",
+      "backToDashboard": "Back to Dashboard"
+    }
+  },
+  "community": {
+    "pageTitle": "Pet Community",
+    "pageSubtitle": "Share moments & learn care tips from the community.",
+    "composer": {
+      "placeholder": "Share about your pet...",
+      "photoBtn": "Photo",
+      "postBtn": "Post"
+    },
+    "post": {
+      "pending": "Pending",
+      "rejected": "Rejected",
+      "share": "Share",
+      "shared": "Shared",
+      "commentPlaceholder": "Write a comment..."
+    }
+  },
+  "notifications": {
+    "N-01": {
+      "title": "Reminder: Deworming for Mochi",
+      "subtitle": "Today 08:00"
+    },
+    "N-04": {
+      "title": "Routine checkup for Bắp is due soon",
+      "subtitle": "Tomorrow 14:30"
+    },
+    "AN-01": {
+      "title": "New post needs moderation",
+      "subtitle": "5 minutes ago"
+    },
+    "AN-02": {
+      "title": "New user registered: Trần Thị B",
+      "subtitle": "1 hour ago"
+    },
+    "AN-03": {
+      "title": "Premium revenue increased 15% vs last month",
+      "subtitle": "Yesterday"
+    },
+    "AN-04": {
+      "title": "Support request from Nguyễn Văn A",
+      "subtitle": "Yesterday 15:30"
+    },
+    "AN-05": {
+      "title": "Report: 3 violating accounts suspended",
+      "subtitle": "2 days ago"
+    },
+    "AN-06": {
+      "title": "System backup completed successfully",
+      "subtitle": "3 days ago"
     }
   }
 }

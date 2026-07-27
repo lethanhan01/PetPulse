@@ -6,10 +6,12 @@ import { useApp } from "@/stores/app.store";
 import { useCommunity } from "@/stores/community.store";
 import { Card, Btn, Badge, Textarea } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import { useTranslation } from "react-i18next";
 
 import { Heart, MessageCircle, Share2, Send, ImagePlus, PawPrint, Trash2 } from "lucide-react";
 
 function PostItem({ post }: { post: CommunityPost }) {
+  const { t } = useTranslation();
   const { activeAccount, updateAccount } = useApp();
   const { deletePost } = useCommunity();
   const navigate = useNavigate();
@@ -41,8 +43,8 @@ function PostItem({ post }: { post: CommunityPost }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <button onClick={() => navigate(`/profile/${post.authorId}`)} className="font-semibold text-foreground text-sm truncate hover:text-primary transition-colors">{authorName}</button>
-            {post.status === "pending" && <Badge v="warning">Chờ duyệt</Badge>}
-            {post.status === "rejected" && <><Badge v="danger">Từ chối</Badge><button onClick={() => deletePost(post.id)} className="ml-auto text-muted-foreground hover:text-destructive p-1 rounded"><Trash2 size={14} /></button></>}
+            {post.status === "pending" && <Badge v="warning">{t("community.post.pending")}</Badge>}
+            {post.status === "rejected" && <><Badge v="danger">{t("community.post.rejected")}</Badge><button onClick={() => deletePost(post.id)} className="ml-auto text-muted-foreground hover:text-destructive p-1 rounded"><Trash2 size={14} /></button></>}
           </div>
           <p className="text-xs text-muted-foreground truncate">{authorHandle} · {post.time}{post.pet ? ` · ${post.pet}` : ""}</p>
         </div>
@@ -61,7 +63,7 @@ function PostItem({ post }: { post: CommunityPost }) {
           <MessageCircle size={17} /> {comments.length}
         </button>
         <button onClick={handleShare} className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm hover:bg-secondary transition-colors ${isShared ? "text-primary" : "text-muted-foreground"}`}>
-          <Share2 size={17} /> {isShared ? "Đã chia sẻ" : "Chia sẻ"}
+          <Share2 size={17} /> {isShared ? t("community.post.shared") : t("community.post.share")}
         </button>
       </div>
       {showComments && (
@@ -73,7 +75,7 @@ function PostItem({ post }: { post: CommunityPost }) {
             </div>
           ))}
           <div className="flex gap-2 items-center">
-            <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Viết bình luận..." className="flex-1 px-3 py-2 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+            <input value={draft} onChange={e => setDraft(e.target.value)} placeholder={t("community.post.commentPlaceholder")} className="flex-1 px-3 py-2 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
             <button onClick={() => { if (draft.trim() && activeAccount) { setComments([...comments, createCommunityComment(activeAccount.id, activeAccount.name, draft)]); setDraft(""); } }} className="p-2.5 rounded-full bg-primary text-primary-foreground"><Send size={15} /></button>
           </div>
         </div>
@@ -83,6 +85,7 @@ function PostItem({ post }: { post: CommunityPost }) {
 }
 
 export function Community() {
+  const { t } = useTranslation();
   const { activeAccount } = useApp();
   const { posts, createPost } = useCommunity();
   const [draft, setDraft] = useState("");
@@ -114,8 +117,8 @@ export function Community() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="font-extrabold text-3xl text-foreground">Cộng đồng thú cưng</h1>
-        <p className="text-sm text-muted-foreground mt-1">Chia sẻ khoảnh khắc & học hỏi mẹo chăm sóc từ cộng đồng.</p>
+        <h1 className="font-extrabold text-3xl text-foreground">{t("community.pageTitle")}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{t("community.pageSubtitle")}</p>
       </div>
       <Card className="p-4" hover={false}>
         <div className="flex gap-3">
@@ -123,14 +126,14 @@ export function Community() {
             {formAvatar.startsWith("data:") ? <img src={formAvatar} alt="" className="w-full h-full object-cover" /> : formAvatar}
           </div>
           <div className="flex-1">
-            <Textarea value={draft} onChange={e => setDraft(e.target.value)} placeholder="Chia sẻ về thú cưng của bạn..." rows={2} />
+            <Textarea value={draft} onChange={e => setDraft(e.target.value)} placeholder={t("community.composer.placeholder")} rows={2} />
             {images.length > 0 && <div className="flex gap-2 mt-2 flex-wrap">
               {images.map((img, i) => <div key={i} className="relative inline-block"><img src={img} alt="preview" className="h-20 rounded-xl object-cover" /><button onClick={() => setImages(prev => prev.filter((_, j) => j !== i))} className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-destructive text-destructive-foreground text-xs flex items-center justify-center">×</button></div>)}
             </div>}
             <div className="flex items-center justify-between mt-2">
-              <button onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary px-2 py-1 rounded-lg"><ImagePlus size={16} /> Ảnh</button>
+              <button onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary px-2 py-1 rounded-lg"><ImagePlus size={16} /> {t("community.composer.photoBtn")}</button>
               <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={handleImagePick} />
-              <Btn size="sm" icon={<PawPrint size={15} />} disabled={!draft.trim()} onClick={handlePost}>Đăng bài</Btn>
+              <Btn size="sm" icon={<PawPrint size={15} />} disabled={!draft.trim()} onClick={handlePost}>{t("community.composer.postBtn")}</Btn>
             </div>
           </div>
         </div>
