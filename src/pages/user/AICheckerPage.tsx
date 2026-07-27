@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { AIConsult } from "@/types/app.types";
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 
 
 export function AIChecker() {
+  const { t } = useTranslation();
   const { pets, updatePet } = useApp();
   const navigate = useNavigate();
   const [petId, setPetId] = useState(pets[0]?.id || "");
@@ -33,7 +35,7 @@ export function AIChecker() {
     if (pet) {
       updatePet(pet.id, { consults: [result, ...pet.consults] });
       const name = pet.name;
-      toast.success(`Đã lưu kết quả tư vấn cho ${name}`, { style: { background: "var(--success)", color: "var(--primary-foreground)", border: "none" } });
+      toast.success(t("ai.result.toastSaved", { name }), { style: { background: "var(--success)", color: "var(--primary-foreground)", border: "none" } });
       navigate("/pets/" + pet.id + "?tab=consult");
     }
   };
@@ -42,21 +44,21 @@ export function AIChecker() {
 
   return (
     <div>
-      <PageTitle title="AI Symptom Checker" subtitle="Nhập triệu chứng, AI phân tích tình trạng bệnh của thú cưng." />
+      <PageTitle title={t("ai.page.title")} subtitle={t("ai.page.subtitle")} />
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Form */}
         <Card className="p-6" hover={false}>
           <div className="flex items-center gap-2 mb-4">
             <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><Bot size={18} /></div>
-            <h3 className="font-bold text-foreground">Mô tả triệu chứng</h3>
+            <h3 className="font-bold text-foreground">{t("ai.form.title")}</h3>
           </div>
           <div className="space-y-4">
-            <Select label="Chọn thú cưng" value={petId} onChange={e => setPetId(e.target.value)}>
+            <Select label={t("ai.form.selectPet")} value={petId} onChange={e => setPetId(e.target.value)}>
               {pets.map(p => <option key={p.id} value={p.id}>{p.emoji} {p.name} — {p.breed}</option>)}
             </Select>
-            <Textarea label="Triệu chứng bệnh" value={symptoms} onChange={e => setSymptoms(e.target.value)} rows={5} placeholder="VD: Bé bỏ ăn 2 ngày, thỉnh thoảng ho khan và có vẻ mệt mỏi..." />
+            <Textarea label={t("ai.form.symptomsLabel")} value={symptoms} onChange={e => setSymptoms(e.target.value)} rows={5} placeholder={t("ai.form.symptomsPlaceholder")} />
             <div>
-              <p className="text-xs text-muted-foreground mb-2">Triệu chứng phổ biến:</p>
+              <p className="text-xs text-muted-foreground mb-2">{t("ai.form.commonSymptoms")}</p>
               <div className="flex flex-wrap gap-2">
                 {SYMPTOM_TAGS.map(t => {
                   const selected = symptoms.split(",").map(s => s.trim().toLowerCase()).includes(t.toLowerCase());
@@ -71,8 +73,8 @@ export function AIChecker() {
                 })}
               </div>
             </div>
-            <Btn block size="lg" icon={<Sparkles size={17} />} loading={loading} onClick={run}>{loading ? "Đang phân tích..." : "Phân tích với AI"}</Btn>
-            <p className="text-xs text-muted-foreground text-center">⚠️ Kết quả AI chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ thú y.</p>
+            <Btn block size="lg" icon={<Sparkles size={17} />} loading={loading} onClick={run}>{loading ? t("ai.form.btnAnalyzing") : t("ai.form.btnAnalyze")}</Btn>
+            <p className="text-xs text-muted-foreground text-center">{t("ai.form.warning")}</p>
           </div>
         </Card>
 
@@ -81,32 +83,32 @@ export function AIChecker() {
           {loading && (
             <Card className="p-10 flex flex-col items-center justify-center text-center h-full" hover={false}>
               <Loader2 size={32} className="text-primary animate-spin mb-3" />
-              <p className="text-sm text-muted-foreground">AI đang phân tích triệu chứng...</p>
+              <p className="text-sm text-muted-foreground">{t("ai.result.loading")}</p>
             </Card>
           )}
           {!loading && !result && (
             <Card className="p-10 flex flex-col items-center justify-center text-center h-full" hover={false}>
               <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center mb-3"><Sparkles size={24} className="text-primary" /></div>
-              <p className="text-sm text-muted-foreground max-w-xs">Kết quả phân tích của AI sẽ hiển thị tại đây sau khi bạn nhập triệu chứng.</p>
+              <p className="text-sm text-muted-foreground max-w-xs">{t("ai.result.empty")}</p>
             </Card>
           )}
           {!loading && result && (
             <Card className="p-6" hover={false}>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-foreground">Kết quả phân tích</h3>
-                <Badge v={sevColor}><AlertTriangle size={11} /> Cảnh báo: {result.severity}</Badge>
+                <h3 className="font-bold text-foreground">{t("ai.result.title")}</h3>
+                <Badge v={sevColor}><AlertTriangle size={11} /> {t("ai.result.alert", { severity: result.severity })}</Badge>
               </div>
-              <Section icon={<Stethoscope size={15} />} title="Các bệnh có khả năng gặp">
+              <Section icon={<Stethoscope size={15} />} title={t("ai.result.conditions")}>
                 <ul className="space-y-1.5">{result.diseases.map(d => <li key={d} className="text-sm text-foreground flex gap-2"><span className="text-primary">•</span> {d}</li>)}</ul>
               </Section>
-              <Section icon={<HeartPulse size={15} />} title="Hướng dẫn sơ cứu ban đầu">
+              <Section icon={<HeartPulse size={15} />} title={t("ai.result.firstAid")}>
                 <ol className="space-y-1.5">{result.firstAid.map((d, i) => <li key={d} className="text-sm text-foreground flex gap-2"><span className="text-primary font-bold">{i + 1}.</span> {d}</li>)}</ol>
               </Section>
               <div className="rounded-xl bg-primary/5 border border-primary/15 p-3.5 mb-4">
-                <p className="text-xs font-semibold text-primary mb-1">Khuyến nghị thú y</p>
+                <p className="text-xs font-semibold text-primary mb-1">{t("ai.result.vetAdvice")}</p>
                 <p className="text-sm text-foreground">{result.vetAdvice}</p>
               </div>
-              <Btn block icon={<Save size={16} />} onClick={save}>Lưu vào hồ sơ thú cưng</Btn>
+              <Btn block icon={<Save size={16} />} onClick={save}>{t("ai.result.saveBtn")}</Btn>
             </Card>
           )}
         </div>

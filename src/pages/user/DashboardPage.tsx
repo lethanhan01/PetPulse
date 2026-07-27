@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useApp } from "@/stores/app.store";
 import { useNavigate } from "react-router";
 import { Card, Btn, TrendChart } from "@/components/common/kit";
@@ -11,6 +12,7 @@ const eventIcon = (type: string) =>
   type === "Uống thuốc" ? <Pill size={14} /> : type === "Khám" ? <Stethoscope size={14} /> : type === "Tiêm phòng" ? <Syringe size={14} /> : <Calendar size={14} />;
 
 export function Dashboard() {
+  const { t } = useTranslation();
   const { pets, activeAccount } = useApp();
   const navigate = useNavigate();
   const [selectedPetId, setSelectedPetId] = useState(pets[0]?.id ?? "");
@@ -18,22 +20,22 @@ export function Dashboard() {
   const overview = getUserDashboardStats(pets);
   const today = todayLocalDate();
   const stats = [
-    { icon: <PawPrint size={17} />, l: "Thú cưng", v: String(overview.petCount), sub: "Đang quản lý", ic: "text-primary bg-primary/10" },
-    { icon: <Syringe size={17} />, l: "Tiêm phòng", v: String(overview.completedVaccinations), sub: "Đã hoàn thành", ic: "text-success bg-success-surface bg-success-surface" },
-    { icon: <Calendar size={17} />, l: "Lịch sắp tới", v: String(overview.upcomingEvents), sub: "Chưa hoàn thành", ic: "text-info bg-info-surface bg-info-surface" },
-    { icon: <AlertTriangle size={17} />, l: "Cảnh báo", v: String(overview.alerts), sub: "Cần chú ý", ic: "text-warning bg-warning-surface" },
+    { icon: <PawPrint size={17} />, l: t("dashboard.stats.pets"), v: String(overview.petCount), sub: t("dashboard.stats.petsSub"), ic: "text-primary bg-primary/10" },
+    { icon: <Syringe size={17} />, l: t("dashboard.stats.vaccines"), v: String(overview.completedVaccinations), sub: t("dashboard.stats.vaccinesSub"), ic: "text-success bg-success-surface bg-success-surface" },
+    { icon: <Calendar size={17} />, l: t("dashboard.stats.upcoming"), v: String(overview.upcomingEvents), sub: t("dashboard.stats.upcomingSub"), ic: "text-info bg-info-surface bg-info-surface" },
+    { icon: <AlertTriangle size={17} />, l: t("dashboard.stats.alerts"), v: String(overview.alerts), sub: t("dashboard.stats.alertsSub"), ic: "text-warning bg-warning-surface" },
   ];
   return (
     <div className="space-y-8">
       {/* Welcome */}
       <div className="rounded-2xl p-6 sm:p-8 relative overflow-hidden text-white" style={{ background: "linear-gradient(135deg,var(--primary) 0%,var(--accent) 60%,var(--chart-3) 100%)" }}>
         <div className="relative z-10 max-w-lg">
-          <p className="text-white/85 text-sm mb-1 flex items-center gap-1.5"><Sun size={14} /> Chào buổi sáng</p>
-          <h1 className="font-extrabold text-3xl mb-2">{activeAccount?.name ?? "Nguyễn Văn An"}</h1>
-          <p className="text-white/90 mb-5">Các bé của bạn hôm nay đều khỏe mạnh. Đừng quên lịch uống thuốc của {pets[0]?.name ?? "bé cưng"} nhé!</p>
+          <p className="text-white/85 text-sm mb-1 flex items-center gap-1.5"><Sun size={14} /> {t("dashboard.welcome.greeting")}</p>
+          <h1 className="font-extrabold text-3xl mb-2">{activeAccount?.name ?? t("dashboard.welcome.defaultName")}</h1>
+          <p className="text-white/90 mb-5">{t("dashboard.welcome.message", { petName: pets[0]?.name ?? t("dashboard.welcome.defaultPet") })}</p>
           <div className="flex flex-wrap gap-3">
-            <Btn className="!bg-white !text-[var(--primary)] hover:!bg-white/90 !shadow-none" icon={<Sparkles size={16} />} onClick={() => navigate("/ai-checker")}>Hỏi AI về sức khỏe</Btn>
-            <Btn variant="outline" className="border-white/40 text-white hover:bg-white/10" icon={<PawPrint size={16} />} onClick={() => navigate("/pets")}>Xem thú cưng</Btn>
+            <Btn className="!bg-white !text-[var(--primary)] hover:!bg-white/90 !shadow-none" icon={<Sparkles size={16} />} onClick={() => navigate("/ai-checker")}>{t("dashboard.welcome.askAi")}</Btn>
+            <Btn variant="outline" className="border-white/40 text-white hover:bg-white/10" icon={<PawPrint size={16} />} onClick={() => navigate("/pets")}>{t("dashboard.welcome.viewPets")}</Btn>
           </div>
         </div>
         <PawPrint size={180} className="absolute -right-6 -bottom-8 text-white/10" />
@@ -55,8 +57,8 @@ export function Dashboard() {
         {/* Pets */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-bold text-xl text-foreground">Thú cưng của bạn</h2>
-            <button onClick={() => navigate("/pets")} className="text-sm text-primary hover:underline flex items-center gap-1">Xem tất cả <ArrowRight size={14} /></button>
+            <h2 className="font-bold text-xl text-foreground">{t("dashboard.petsList.title")}</h2>
+            <button onClick={() => navigate("/pets")} className="text-sm text-primary hover:underline flex items-center gap-1">{t("dashboard.petsList.viewAll")} <ArrowRight size={14} /></button>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {pets.slice(0, 4).map(p => {
@@ -89,7 +91,7 @@ export function Dashboard() {
           <Card className="p-5" hover={false}>
             <div className="flex items-center mb-3">
               <Activity size={17} className="text-primary flex-shrink-0" />
-              <h3 className="font-bold text-foreground mx-2">Xu hướng</h3>
+              <h3 className="font-bold text-foreground mx-2">{t("dashboard.widgets.trendTitle")}</h3>
               <div className="ml-auto" />
               {pets.length > 1 && (
                 <select value={selectedPetId} onChange={e => setSelectedPetId(e.target.value)}
@@ -102,13 +104,13 @@ export function Dashboard() {
             <div className="h-32">
               <TrendChart height={128} showArea data={[...(trendPet?.health ?? [])].reverse().map(h => ({ label: h.date, value: h.score }))} />
             </div>
-            <p className="text-xs text-muted-foreground text-center">Điểm sức khỏe của {trendPet?.name ?? "thú cưng"} 4 tháng qua</p>
+            <p className="text-xs text-muted-foreground text-center">{t("dashboard.widgets.trendDesc", { petName: trendPet?.name ?? t("dashboard.welcome.defaultPet") })}</p>
           </Card>
 
           <Card className="p-5" hover={false}>
             <div className="flex items-center gap-2 mb-3">
               <Bell size={17} className="text-primary" />
-              <h3 className="font-bold text-foreground">Lịch sắp tới</h3>
+              <h3 className="font-bold text-foreground">{t("dashboard.widgets.scheduleTitle")}</h3>
             </div>
             <div className="space-y-2.5">
               {(trendPet?.events ?? []).filter(e => !isEventCancelledOn(e, today) && !isEventCompletedOn(e, today)).slice(0, 3).map(e => (
@@ -117,7 +119,7 @@ export function Dashboard() {
                   <div className="flex-1 min-w-0"><p className="text-sm font-medium text-foreground truncate">{e.title}</p><p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5"><Clock size={11} /> {trendPet?.emoji} {trendPet?.name} · {e.date} · {e.time}</p></div>
                 </div>
               ))}
-              {(!trendPet || trendPet.events.filter(e => !isEventCancelledOn(e, today) && !isEventCompletedOn(e, today)).length === 0) && <p className="text-xs text-muted-foreground text-center py-4">Không có lịch nào sắp tới</p>}
+              {(!trendPet || trendPet.events.filter(e => !isEventCancelledOn(e, today) && !isEventCompletedOn(e, today)).length === 0) && <p className="text-xs text-muted-foreground text-center py-4">{t("dashboard.widgets.noSchedule")}</p>}
             </div>
           </Card>
         </div>

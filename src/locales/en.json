@@ -1,0 +1,655 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "myPets": "My Pets",
+    "aiChecker": "AI Symptom Checker",
+    "community": "Community",
+    "premium": "Upgrade to Premium",
+    "profile": "Profile",
+    "stats": "Statistics",
+    "manageUsers": "Manage Users",
+    "managePets": "Manage Pets",
+    "subscriptions": "Subscriptions",
+    "moderation": "Moderation",
+    "adminProfile": "Admin Profile",
+    "logout": "Log out"
+  },
+  "pets": {
+    "pageTitle": "My Pets",
+    "subtitleLimit": "Managing {{count}}/{{limit}} Pet Passport profiles",
+    "subtitleUnlimited": "Managing {{count}} Pet Passport profiles",
+    "addBtn": "Add Pet",
+    "viewProfile": "View Profile",
+    "male": "Male",
+    "female": "Female",
+    "ageYears_one": "{{count}} year",
+    "ageYears_other": "{{count}} years",
+    "ageMonths_one": "{{count}} month",
+    "ageMonths_other": "{{count}} months",
+    "empty": {
+      "title": "No pets yet",
+      "desc": "Add your first pet to start managing their health.",
+      "btnLimit": "Reached limit of {{limit}} pets",
+      "btnAdd": "Add Pet"
+    },
+    "modal": {
+      "addTitle": "Add New Pet",
+      "editTitle": "Edit Pet",
+      "nameLabel": "Pet Name",
+      "namePlaceholder": "e.g., Mochi",
+      "speciesLabel": "Species",
+      "genderLabel": "Gender",
+      "breedLabel": "Breed",
+      "breedPlaceholder": "e.g., Golden Retriever",
+      "ageLabel": "Age",
+      "agePlaceholder": "e.g., 3 years",
+      "weightLabel": "Weight",
+      "weightPlaceholder": "e.g., 28 kg",
+      "imageLabel": "Image",
+      "imageBtn": "Choose Image",
+      "cancelBtn": "Cancel",
+      "saveBtn": "Save Changes",
+      "addBtn": "Add Pet",
+      "deleteTitle": "Delete Pet",
+      "deleteConfirm": "Are you sure you want to delete <1>{{name}}</1>'s profile? This action cannot be undone.",
+      "deleteCancelBtn": "Cancel",
+      "deleteBtn": "Delete"
+    },
+    "toasts": {
+      "limitError": "Free plan is limited to {{limit}} pets",
+      "limitUpgradeError": "Free plan is limited to {{limit}} pets. Upgrade to add more!",
+      "updateSuccess": "Pet updated successfully",
+      "addSuccess": "New pet added",
+      "deleteSuccess": "Deleted \"{{name}}\""
+    },
+    "species": {
+      "dog": "Dog",
+      "cat": "Cat",
+      "bird": "Bird",
+      "mouse": "Mouse",
+      "rabbit": "Rabbit",
+      "turtle": "Turtle",
+      "other": "Other"
+    }
+  },
+  "auth": {
+    "layout": {
+      "backHome": "Back to home",
+      "welcome": "Welcome to PetPulse",
+      "desc": "Digital health passport & smart pet care for young pet lovers.",
+      "features": {
+        "timeline": "Health timeline & Health Score",
+        "ai": "AI Symptom Checker",
+        "community": "Pet community"
+      }
+    },
+    "login": {
+      "title": "Log In",
+      "subtitle": "Enter your email & password to continue.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "errorMsg": "Invalid email/password or account is locked.",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "submitBtn": "Log In",
+      "quickAccess": "Quick Access",
+      "demoUser": "Demo User",
+      "demoAdmin": "Demo Admin",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign Up"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitlePart1": "Sign up for free — default to",
+      "subtitlePart2": "plan.",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "John Doe",
+      "terms": "I agree to PetPulse's Terms of Service & Privacy Policy.",
+      "submitBtn": "Sign Up",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Log In"
+    },
+    "forgot": {
+      "back": "Back",
+      "title": "Forgot Password?",
+      "subtitle": "Enter email to receive recovery OTP.",
+      "sendOtp": "Send OTP",
+      "otpSentTitle": "OTP Sent",
+      "otpSentDesc": "Check your inbox and enter the 6-digit code to reset your password.",
+      "confirmBtn": "Confirm & Log In"
+    }
+  },
+  "dashboard": {
+    "stats": {
+      "pets": "Pets",
+      "petsSub": "Managing",
+      "vaccines": "Vaccinations",
+      "vaccinesSub": "Completed",
+      "upcoming": "Upcoming",
+      "upcomingSub": "Pending",
+      "alerts": "Alerts",
+      "alertsSub": "Needs attention"
+    },
+    "welcome": {
+      "greeting": "Good morning",
+      "defaultName": "Nguyễn Văn An",
+      "message": "Your pets are healthy today. Don't forget {{petName}}'s medication schedule!",
+      "defaultPet": "your pet",
+      "askAi": "Ask AI about health",
+      "viewPets": "View pets"
+    },
+    "petsList": {
+      "title": "Your pets",
+      "viewAll": "View all"
+    },
+    "widgets": {
+      "trendTitle": "Trend",
+      "trendDesc": "Health score of {{petName}} in the last 4 months",
+      "scheduleTitle": "Upcoming schedule",
+      "noSchedule": "No upcoming schedule"
+    }
+  },
+  "layout": {
+    "notifications": "Notifications",
+    "sidebar": {
+      "expand": "Expand sidebar",
+      "collapse": "Collapse sidebar",
+      "adjustWidth": "Adjust sidebar width",
+      "plan": "Plan {{plan}}",
+      "premiumUnlocked": "Unlocked all features 🎉",
+      "freeUpgrade": "Upgrade to unlock unlimited AI",
+      "upgradeBtn": "Upgrade"
+    }
+  },
+  "ai": {
+    "page": {
+      "title": "AI Symptom Checker",
+      "subtitle": "Enter symptoms, AI analyzes your pet's condition."
+    },
+    "form": {
+      "title": "Describe symptoms",
+      "selectPet": "Select pet",
+      "symptomsLabel": "Symptoms",
+      "symptomsPlaceholder": "e.g., Pet stopped eating for 2 days, occasional dry cough and seems tired...",
+      "commonSymptoms": "Common symptoms:",
+      "btnAnalyzing": "Analyzing...",
+      "btnAnalyze": "Analyze with AI",
+      "warning": "⚠️ AI results are for reference only and do not replace a vet's diagnosis."
+    },
+    "result": {
+      "loading": "AI is analyzing symptoms...",
+      "empty": "AI analysis results will appear here after you enter symptoms.",
+      "title": "Analysis result",
+      "alert": "Alert: {{severity}}",
+      "conditions": "Possible conditions",
+      "firstAid": "First aid instructions",
+      "vetAdvice": "Vet recommendation",
+      "saveBtn": "Save to pet profile",
+      "toastSaved": "Saved consultation for {{name}}"
+    }
+  },
+  "home": {
+    "nav": {
+      "features": "Features",
+      "community-preview": "Community",
+      "cta": "Pricing",
+      "about": "About Us",
+      "faq": "FAQ"
+    },
+    "hero": {
+      "badge": "Smart Pet Care Platform",
+      "title1": "Digital",
+      "titleHighlight": "Health Passport",
+      "title2": "for your pet",
+      "desc": "PetPulse helps you manage records, track health timelines, schedule care, and consult with AI — all in one place.",
+      "loginBtn": "Log In",
+      "stats": {
+        "pets": "Pets",
+        "users": "Users",
+        "satisfaction": "Satisfaction"
+      },
+      "card": {
+        "title": "Digital Pet Passport",
+        "subtitle": "Your pet's health records, anywhere",
+        "score": "Health Score",
+        "calendar": "Care Schedule",
+        "ai": "AI Consult"
+      },
+      "floating": {
+        "vaccine": "Vaccine Tracking",
+        "vaccineSub": "Automatic reminders",
+        "notification": "Smart Notifications",
+        "notificationSub": "Never miss a visit"
+      }
+    },
+    "features": {
+      "sectionTitle": "Everything your pet needs, in one platform",
+      "sectionDesc": "From digital records to AI consults, PetPulse accompanies your pet's healthy journey.",
+      "timeline": {
+        "title": "Health Timeline",
+        "desc": "Track weight, nutrition & health status over time."
+      },
+      "ai": {
+        "title": "AI Symptom Checker",
+        "desc": "Enter symptoms, AI analyzes alert levels and provides first aid guidance."
+      },
+      "calendar": {
+        "title": "Care Schedule",
+        "desc": "Reminders for check-ups, medication, and vaccines via in-app notifications."
+      },
+      "passport": {
+        "title": "Pet Passport",
+        "desc": "Comprehensive digital records: breed, microchip, vaccines, health score."
+      },
+      "community": {
+        "title": "Pet Community",
+        "desc": "Share moments, learn care tips from a community of pet lovers."
+      },
+      "score": {
+        "title": "Health Score",
+        "desc": "Standardized health score with personalized care recommendations."
+      }
+    },
+    "community": {
+      "sectionTitle": "Pet Lovers Community",
+      "sectionDesc": "Thousands of owners share moments and care tips every day.",
+      "review1": "Vaccine reminders are so convenient, I never forget them anymore!",
+      "review2": "Health Score helps me track my pet's weight clearly.",
+      "review3": "AI detected disease signs early, allowing for timely vet visits. Amazing!"
+    },
+    "pricing": {
+      "badge": "Pricing",
+      "sectionTitle": "Choose the right plan for you",
+      "sectionDesc": "Start for free, upgrade to Premium anytime to unlock all features.",
+      "popular": "MOST POPULAR",
+      "perMonth": "month",
+      "perYear": "year",
+      "forever": "forever",
+      "startFree": "Start for free",
+      "tryPlan": "Try {{planName}}",
+      "plans": {
+        "Free": {
+          "tagline": "Start caring for your pet for free",
+          "price": "$0",
+          "features": {
+            "0": "3 pets",
+            "1": "Basic health timeline",
+            "2": "Care schedule",
+            "3": "Pet community"
+          },
+          "missing": {
+            "0": "AI Symptom Checker",
+            "1": "Unlimited pets",
+            "2": "Advanced statistics"
+          }
+        },
+        "Premium": {
+          "tagline": "Unlock the full power of PetPulse",
+          "price": "$4.99",
+          "features": {
+            "0": "Unlimited pets",
+            "1": "Unlimited AI Symptom Checker",
+            "2": "Advanced Health Score",
+            "3": "Detailed statistics & reports",
+            "4": "Priority 24/7 support",
+            "5": "Export PDF records"
+          },
+          "missing": {}
+        },
+        "Premium Năm": {
+          "tagline": "",
+          "price": "$49.99",
+          "features": {
+            "0": "Everything in Premium",
+            "1": "2 months free",
+            "2": "Yearly report"
+          },
+          "missing": {}
+        }
+      }
+    },
+    "about": {
+      "badge": "About Us",
+      "title": "PetPulse's Mission",
+      "desc": "PetPulse was born with the belief that every pet deserves comprehensive and scientific health care. We digitize health records and integrate AI technology to make tracking and caring for pets easier than ever.",
+      "stats": {
+        "founded": "Founded",
+        "pets": "Pets",
+        "partners": "Vet Partners"
+      },
+      "points": {
+        "0": "International data security standards",
+        "1": "Experienced veterinary advisors",
+        "2": "Commitment to accompany your pet's life"
+      }
+    },
+    "faq": {
+      "sectionTitle": "Frequently Asked Questions",
+      "sectionDesc": "Common questions about PetPulse",
+      "items": {
+        "free": {
+          "q": "Is PetPulse free?",
+          "a": "Yes! You can start with the forever free plan, managing up to 3 pets. When you need to unlock all features, you can upgrade to Premium anytime."
+        },
+        "multiplePets": {
+          "q": "Can I manage multiple pets?",
+          "a": "Yes. The Free plan allows up to 3 pets. If you have more, the Premium plan supports unlimited pets, along with advanced features like AI Symptom Checker."
+        },
+        "aiAccuracy": {
+          "q": "Is the AI Symptom Checker accurate?",
+          "a": "The AI uses large language models to analyze symptoms based on veterinary databases. Results are for reference only and do not replace a vet's diagnosis."
+        },
+        "security": {
+          "q": "Is my data secure?",
+          "a": "Absolutely. We apply top-tier security standards: end-to-end encryption, multi-factor authentication, and compliance with privacy regulations."
+        },
+        "cancel": {
+          "q": "Can I cancel Premium anytime?",
+          "a": "Yes. You can cancel Premium anytime without additional fees. Benefits will remain until the end of the current billing cycle."
+        },
+        "supportedPets": {
+          "q": "What pets does PetPulse support?",
+          "a": "We support Dogs, Cats, Birds, Fish, Hamsters, and many other common pets."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to take better care of your pet?",
+      "desc": "Create a free account today. Upgrade to Premium anytime.",
+      "btn": "Create Free Account"
+    },
+    "footer": {
+      "copyright": "© 2026 PetPulse. Caring for pets with all our heart 🐾"
+    }
+  },
+  "profile": {
+    "pageTitle": "Profile",
+    "adminTitle": "Admin Profile",
+    "header": {
+      "coverBtn": "Upload cover",
+      "avatarBtn": "Upload avatar",
+      "defaultName": "John Doe",
+      "adminName": "Administrator"
+    },
+    "badges": {
+      "admin": "Admin",
+      "premium": "Premium",
+      "free": "Free"
+    },
+    "stats": {
+      "users": "users",
+      "pets": "pets",
+      "plans": "subscriptions",
+      "years": "years with PetPulse",
+      "records": "health records"
+    },
+    "tabs": {
+      "info": "Information",
+      "security": "Security",
+      "pets": "Pets",
+      "posts": "Posts"
+    },
+    "info": {
+      "title": "Personal Information",
+      "editBtn": "Edit",
+      "nameLabel": "Full Name",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone Number",
+      "birthDateLabel": "Birth Date",
+      "cityLabel": "City",
+      "genderLabel": "Gender",
+      "genderOptions": {
+        "Nam": "Male",
+        "Nữ": "Female",
+        "Khác": "Other"
+      },
+      "saveBtn": "Save Changes",
+      "cancelBtn": "Cancel",
+      "currentPlan": "Current Plan",
+      "emptyValue": "—"
+    },
+    "security": {
+      "title": "Security",
+      "pwdTitle": "Password",
+      "pwdDesc": "Change your account password.",
+      "pwdChangeBtn": "Change",
+      "currentPwd": "Current Password",
+      "newPwd": "New Password",
+      "confirmPwd": "Confirm New Password",
+      "updateBtn": "Update Password",
+      "cancelBtn": "Cancel"
+    },
+    "petsTab": {
+      "records": "records",
+      "emptyText": "You don't have any pets yet.",
+      "addBtn": "Add Pet",
+      "manageAllBtn": "Manage all pets"
+    }
+  },
+  "subscription": {
+    "pageTitle": "Upgrade Plan",
+    "pageSubtitle": "Unlock the full power of PetPulse",
+    "status": {
+      "currentBadge": "CURRENT PLAN",
+      "currentBtn": "Your current plan",
+      "freeBtn": "Free",
+      "upgradeBtn": "Upgrade to {{plan}}"
+    },
+    "plans": {
+      "Free": {
+        "price": "$0",
+        "period": "forever",
+        "features": {
+          "0": "3 pets",
+          "1": "Basic health timeline",
+          "2": "Care schedule",
+          "3": "Pet community"
+        },
+        "missing": {
+          "0": "AI Symptom Checker",
+          "1": "Unlimited pets",
+          "2": "Advanced statistics"
+        }
+      },
+      "Premium": {
+        "price": "$4.99",
+        "period": "month",
+        "features": {
+          "0": "Unlimited pets",
+          "1": "Unlimited AI Symptom Checker",
+          "2": "Advanced Health Score",
+          "3": "Detailed statistics & reports",
+          "4": "Priority 24/7 support",
+          "5": "Export PDF records"
+        },
+        "missing": {}
+      },
+      "Premium Năm": {
+        "price": "$49.99",
+        "period": "year",
+        "features": {
+          "0": "Everything in Premium",
+          "1": "2 months free",
+          "2": "Yearly report"
+        },
+        "missing": {}
+      }
+    },
+    "checkout": {
+      "back": "Go back",
+      "title": "Checkout",
+      "planName": "Plan {{name}}",
+      "nameOnCard": "Name on card",
+      "namePlaceholder": "JOHN DOE",
+      "cardNumber": "Card number",
+      "expiry": "Expiry",
+      "cvv": "CVV",
+      "securityText": "Payment information is encrypted & secure.",
+      "payBtn": "Pay {{price}}",
+      "successTitle": "Payment successful!",
+      "successDescPart1": "Your account has been upgraded to ",
+      "successDescPart2": ". All features are now unlocked.",
+      "backToDashboard": "Back to Dashboard"
+    }
+  },
+  "community": {
+    "pageTitle": "Pet Community",
+    "pageSubtitle": "Share moments & learn care tips from the community.",
+    "composer": {
+      "placeholder": "Share about your pet...",
+      "photoBtn": "Photo",
+      "postBtn": "Post"
+    },
+    "post": {
+      "pending": "Pending",
+      "rejected": "Rejected",
+      "share": "Share",
+      "shared": "Shared",
+      "commentPlaceholder": "Write a comment..."
+    }
+  },
+  "notifications": {
+    "N-01": {
+      "title": "Reminder: Deworming for Mochi",
+      "subtitle": "Today 08:00"
+    },
+    "N-04": {
+      "title": "Routine checkup for Bắp is due soon",
+      "subtitle": "Tomorrow 14:30"
+    },
+    "AN-01": {
+      "title": "New post needs moderation",
+      "subtitle": "5 minutes ago"
+    },
+    "AN-02": {
+      "title": "New user registered: Trần Thị B",
+      "subtitle": "1 hour ago"
+    },
+    "AN-03": {
+      "title": "Premium revenue increased 15% vs last month",
+      "subtitle": "Yesterday"
+    },
+    "AN-04": {
+      "title": "Support request from Nguyễn Văn A",
+      "subtitle": "Yesterday 15:30"
+    },
+    "AN-05": {
+      "title": "Report: 3 violating accounts suspended",
+      "subtitle": "2 days ago"
+    },
+    "AN-06": {
+      "title": "System backup completed successfully",
+      "subtitle": "3 days ago"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "System Statistics",
+      "subtitle": "PetPulse metrics overview",
+      "exportReport": "Export Report",
+      "stats": {
+        "totalUsers": "Total Users",
+        "usersDesc": "User accounts",
+        "premiumUsers": "Premium Users",
+        "conversionRate": "{{rate}}% conversion",
+        "totalPets": "Total Pets",
+        "petsDesc": "Pets in system",
+        "aiUsage": "AI Usage",
+        "aiUsageDesc": "Consultations per {{range}}"
+      },
+      "revenue": {
+        "title": "Revenue",
+        "unit": "(million VND)",
+        "week": "Week",
+        "month": "Month",
+        "quarter": "Quarter",
+        "lastWeek": "(last week)",
+        "thisWeek": "(this week)"
+      },
+      "aiUsageChart": "AI Usage (requests/month)",
+      "tiers": {
+        "excellent": "Excellent (90+)",
+        "good": "Good (75-89)",
+        "average": "Average (60-74)",
+        "poor": "Poor (<60)"
+      }
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "{{count}} / {{total}} users",
+      "searchPlaceholder": "Search...",
+      "all": "All",
+      "empty": "No users found for this plan",
+      "table": {
+        "id": "ID",
+        "name": "Name",
+        "email": "Email",
+        "plan": "Plan",
+        "petCount": "Pets",
+        "status": "Status"
+      }
+    },
+    "pets": {
+      "title": "Pet Management",
+      "subtitle": "{{count}} / {{total}} pets",
+      "allHealth": "All",
+      "allSpecies": "All Species",
+      "allOwners": "All Owners",
+      "empty": "No pets found",
+      "table": {
+        "id": "ID",
+        "name": "Name",
+        "species": "Species",
+        "breed": "Breed",
+        "owner": "Owner",
+        "health": "Health"
+      },
+      "healthValues": {
+        "good": "Good",
+        "normal": "Normal",
+        "attention": "Needs Attention"
+      }
+    },
+    "subs": {
+      "title": "Subscription Management",
+      "subtitle": "Service subscription plans",
+      "addBtn": "Add Plan",
+      "table": {
+        "plan": "Plan",
+        "price": "Price",
+        "features": "Features",
+        "subscribers": "Subscribers"
+      },
+      "modal": {
+        "title": "Add Subscription Plan",
+        "nameLabel": "Plan Name",
+        "namePlaceholder": "E.g. Premium Plus",
+        "priceLabel": "Price",
+        "pricePlaceholder": "E.g. 149,000VND/month",
+        "featuresLabel": "Features",
+        "featuresPlaceholder": "Feature description...",
+        "cancel": "Cancel",
+        "submit": "Add Plan"
+      }
+    },
+    "moderation": {
+      "title": "Community Moderation",
+      "subtitle": "Moderate pet social network posts",
+      "status": {
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "pending": "Pending"
+      },
+      "deleteTooltip": "Delete Post",
+      "approveBtn": "Approve",
+      "rejectBtn": "Reject"
+    }
+  },
+  "common": {
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next"
+    }
+  }
+}
