@@ -6,7 +6,7 @@ import { createCareEvent, createHealthEntry } from "@/mocks";
 import { Card, Btn, Badge, Field, Textarea, Select, Modal, TrendChart } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { PieChart, Pie, Cell, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { analyzeNutrition } from "@/utils/nutrition-calculator";
 import { cancelEventOccurrence, eventsForDate, isEventCompletedOn, monthCalendarDays, toggleEventCompletion } from "@/utils/care-calendar";
 import { useTranslation } from "react-i18next";

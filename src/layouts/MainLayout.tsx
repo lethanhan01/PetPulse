@@ -73,6 +73,7 @@ export function MainLayout() {
       timersRef.current.push(timer);
     });
     return () => { timersRef.current.forEach(clearTimeout); timersRef.current = []; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const logOut = () => { logout(); navigate("/"); };
   const { collapsed, width } = sidebarSettings;
