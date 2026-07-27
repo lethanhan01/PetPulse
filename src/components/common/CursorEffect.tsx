@@ -23,7 +23,7 @@ export function CursorEffect() {
     }
 
     // Disable on touch devices
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(pointer: coarse)").matches) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       const currentPos = { x: e.clientX, y: e.clientY };

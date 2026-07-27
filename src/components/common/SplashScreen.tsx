@@ -15,9 +15,12 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
     audioRef.current = audio;
     
     // Play with catch for autoplay policy
-    audio.play().catch(error => {
-      console.warn("Autoplay blocked by browser policy:", error);
-    });
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        console.warn("Autoplay blocked by browser policy:", error);
+      });
+    }
 
     return () => {
       document.body.style.overflow = "auto";

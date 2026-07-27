@@ -189,15 +189,15 @@ export function Profile() {
 
           {/* Display Options */}
           <Card className="p-6 mt-4" hover={false}>
-            <h3 className="font-bold text-foreground mb-4">Tùy chọn hiển thị</h3>
+            <h3 className="font-bold text-foreground mb-4">{t("profile.displayOptions.title")}</h3>
             <div className="flex items-center justify-between p-4 rounded-xl bg-secondary/50 border border-border">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg text-primary">
                   <MousePointer2 size={18} />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-foreground">Hiệu ứng con trỏ chuột</p>
-                  <p className="text-xs text-muted-foreground">Hiển thị dấu chân chó chạy theo con trỏ chuột</p>
+                  <p className="text-sm font-medium text-foreground">{t("profile.displayOptions.cursorEffect.title")}</p>
+                  <p className="text-xs text-muted-foreground">{t("profile.displayOptions.cursorEffect.desc")}</p>
                 </div>
               </div>
               <Switch checked={cursorEffectEnabled} onCheckedChange={toggleCursorEffect} />

@@ -441,6 +441,13 @@
       "emptyText": "You don't have any pets yet.",
       "addBtn": "Add Pet",
       "manageAllBtn": "Manage all pets"
+    },
+    "displayOptions": {
+      "title": "Display Options",
+      "cursorEffect": {
+        "title": "Cursor Effect",
+        "desc": "Show dog footprints following the mouse cursor"
+      }
     }
   },
   "subscription": {

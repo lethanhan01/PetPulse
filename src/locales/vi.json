@@ -441,6 +441,13 @@
       "emptyText": "Bạn chưa có thú cưng nào.",
       "addBtn": "Thêm thú cưng",
       "manageAllBtn": "Quản lý tất cả thú cưng"
+    },
+    "displayOptions": {
+      "title": "Tùy chọn hiển thị",
+      "cursorEffect": {
+        "title": "Hiệu ứng con trỏ chuột",
+        "desc": "Hiển thị dấu chân chó chạy theo con trỏ chuột"
+      }
     }
   },
   "subscription": {

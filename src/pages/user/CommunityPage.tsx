@@ -159,7 +159,7 @@ export function Community() {
       c.width = 540; c.height = 960;
       const ctx = c.getContext("2d")!;
       const g = ctx.createLinearGradient(0, 0, 0, 960);
-      g.addColorStop(0, "#667eea"); g.addColorStop(1, "#764ba2");
+      g.addColorStop(0, "rgb(102, 126, 234)"); g.addColorStop(1, "rgb(118, 75, 162)");
       ctx.fillStyle = g; ctx.fillRect(0, 0, 540, 960);
       storyGradientRef.current = c.toDataURL("image/jpeg", 0.9);
     }
@@ -252,7 +252,7 @@ export function Community() {
       c.width = 540; c.height = 960;
       const ctx = c.getContext("2d")!;
       const grad = ctx.createLinearGradient(0, 0, 0, 960);
-      grad.addColorStop(0, "#667eea"); grad.addColorStop(1, "#764ba2");
+      grad.addColorStop(0, "rgb(102, 126, 234)"); grad.addColorStop(1, "rgb(118, 75, 162)");
       ctx.fillStyle = grad; ctx.fillRect(0, 0, 540, 960);
       overlays.forEach(o => {
         const px = (o.x / 100) * 540; const py = (o.y / 100) * 960;
