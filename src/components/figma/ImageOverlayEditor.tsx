@@ -6,7 +6,7 @@ interface Overlay {
   id: string; text: string; x: number; y: number; color: string; fontSize: number;
 }
 
-const COLORS = ["#FFFFFF", "#000000", "#FF3B30", "#007AFF", "#34C759", "#FF9500", "#AF52DE"];
+const COLORS = ["rgb(255, 255, 255)", "rgb(0, 0, 0)", "rgb(255, 59, 48)", "rgb(0, 122, 255)", "rgb(52, 199, 89)", "rgb(255, 149, 0)", "rgb(175, 82, 222)"];
 
 export type OverlayEditorHandle = { renderDataUrl: () => Promise<string>; getOverlays: () => Overlay[] };
 
@@ -52,11 +52,12 @@ export const ImageOverlayEditor = forwardRef<OverlayEditorHandle, {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, editingId, overlays]);
 
   const addOverlay = () => {
     const id = `ov-${++uidRef.current}`;
-    setOverlays(p => [...p, { id, text: t("community.composer.overlayDefault"), x: 50, y: 50, color: "#FFFFFF", fontSize: 36 }]);
+    setOverlays(p => [...p, { id, text: t("community.composer.overlayDefault"), x: 50, y: 50, color: "rgb(255, 255, 255)", fontSize: 36 }]);
     setEditingId(id); setEditText(t("community.composer.overlayDefault")); setSelectedId(id);
   };
 
@@ -201,7 +202,7 @@ export const ImageOverlayEditor = forwardRef<OverlayEditorHandle, {
         {active && (
           <div className="absolute top-2 right-2 z-10 flex flex-col items-center gap-1.5">
             <button type="button" onClick={() => remove(active.id)}
-              className="w-7 h-7 flex items-center justify-center rounded-full bg-black/50 text-white/70 hover:text-red-400 hover:bg-black/70 transition-colors shadow">
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-black/50 text-white/70 hover:text-destructive hover:bg-black/70 transition-colors shadow">
               <X size={14} />
             </button>
             <div className="flex flex-col gap-1 bg-black/50 rounded-lg p-1.5 shadow">

@@ -3,8 +3,9 @@ import { PUBLIC_SUBSCRIPTIONS } from "@/mocks";
 import { useNavigate } from "react-router";
 import { Btn, Logo, Card } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
-import { Sun, Moon, Activity, Sparkles, Calendar, Users, ShieldCheck, Heart, ArrowRight, Stethoscope, Bell, PawPrint, CheckCircle2, Crown, X, Star } from "lucide-react";
+import { Sun, Moon, Activity, Sparkles, Calendar, Users, ShieldCheck, Heart, ArrowRight, Stethoscope, Bell, PawPrint, CheckCircle2, Crown, X, Star, Menu } from "lucide-react";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useEffect, useState } from "react";
 import { LanguageSwitcher } from "@/components/Navbar/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
@@ -71,18 +72,69 @@ export function Landing() {
         {/* Nav */}
       <header className="sticky top-0 z-40 h-20 flex items-center px-4 sm:px-8 border-b border-border bg-background/85 backdrop-blur-md">
         <Logo size={36} />
+        
+        {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1 ml-8">
           {NAV_LINKS.map(i => (
             <button key={i.id} onClick={() => scrollTo(i.id)} className={`px-3.5 py-1.5 rounded-xl text-sm font-medium transition-colors border border-border ${activeSection === i.id ? "bg-secondary text-foreground font-semibold" : "text-foreground/85 hover:text-foreground hover:bg-secondary"}`}>{t(`home.nav.${i.id}`)}</button>
           ))}
         </nav>
+
         <div className="ml-auto flex items-center gap-2">
-          <LanguageSwitcher />
-          <button onClick={toggleTheme} className="p-2 rounded-full border border-border hover:bg-secondary transition-colors" aria-label="Toggle theme">
-            {isDark ? <Sun size={16} className="text-accent" /> : <Moon size={16} className="text-primary" />}
-          </button>
-          <Btn variant="ghost" size="sm" className="border border-border" onClick={() => navigate("/login")}>{t('auth.login.submitBtn')}</Btn>
+          {/* Desktop Utils */}
+          <div className="hidden md:flex items-center gap-2">
+            <LanguageSwitcher />
+            <button onClick={toggleTheme} className="p-2 rounded-full border border-border hover:bg-secondary transition-colors" aria-label="Toggle theme">
+              {isDark ? <Sun size={16} className="text-accent" /> : <Moon size={16} className="text-primary" />}
+            </button>
+          </div>
+          
+          <Btn variant="ghost" size="sm" className="border border-border hidden sm:flex" onClick={() => navigate("/login")}>{t('auth.login.submitBtn')}</Btn>
           <Btn size="sm" onClick={() => navigate("/register")}>{t('auth.register.submitBtn')}</Btn>
+
+          {/* Mobile Nav */}
+          <div className="md:hidden flex items-center ml-1">
+            <Sheet>
+              <SheetTrigger asChild>
+                <button className="p-2 -mr-2 rounded-xl border border-transparent hover:bg-secondary transition-colors">
+                  <Menu size={24} className="text-foreground" />
+                </button>
+              </SheetTrigger>
+              <SheetContent className="w-[300px] sm:w-[350px] p-6 pt-12 flex flex-col gap-6 overflow-y-auto">
+                <nav className="flex flex-col gap-3">
+                  {NAV_LINKS.map(i => (
+                    <button 
+                      key={i.id} 
+                      onClick={() => {
+                        scrollTo(i.id);
+                        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+                      }} 
+                      className={`text-left px-4 py-3 rounded-xl text-base font-medium transition-colors border border-border ${activeSection === i.id ? "bg-secondary text-foreground font-semibold" : "text-foreground/85 hover:text-foreground hover:bg-secondary"}`}
+                    >
+                      {t(`home.nav.${i.id}`)}
+                    </button>
+                  ))}
+                </nav>
+                
+                <div className="mt-auto flex flex-col gap-4 border-t border-border pt-6">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">{t('settings.language')}</span>
+                    <LanguageSwitcher />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">{t('settings.theme')}</span>
+                    <button onClick={toggleTheme} className="p-2 rounded-full border border-border hover:bg-secondary transition-colors" aria-label="Toggle theme">
+                      {isDark ? <Sun size={16} className="text-accent" /> : <Moon size={16} className="text-primary" />}
+                    </button>
+                  </div>
+                  <Btn variant="ghost" className="w-full sm:hidden border border-border justify-center mt-2" onClick={() => {
+                    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+                    navigate("/login");
+                  }}>{t('auth.login.submitBtn')}</Btn>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </header>
 

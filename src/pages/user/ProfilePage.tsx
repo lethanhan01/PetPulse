@@ -2,7 +2,8 @@ import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useApp } from "@/stores/app.store";
 import { useNavigate } from "react-router";
 import { Card, Btn, Field, Select, Badge, PageTitle } from "@/components/common/kit";
-import { PawPrint, Calendar, Heart, ShieldCheck, Crown, Lock, Pencil, Plus, ChevronRight, X, Check, Users, CreditCard, Sparkles, Camera } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { PawPrint, Calendar, Heart, ShieldCheck, Crown, Lock, Pencil, Plus, ChevronRight, X, Check, Users, CreditCard, Sparkles, Camera, MousePointer2 } from "lucide-react";
 import type { MockAccount } from "@/mocks/types";
 import { MyPostsContent } from "./MyPostsPage";
 import { useTranslation } from "react-i18next";
@@ -20,7 +21,7 @@ function StatChip({ icon, value, label }: { icon: ReactNode; value: string; labe
 
 export function Profile() {
   const { t } = useTranslation();
-  const { pets, plan, role, activeAccount, updateAccount } = useApp();
+  const { pets, plan, role, activeAccount, updateAccount, cursorEffectEnabled, toggleCursorEffect } = useApp();
   const navigate = useNavigate();
   const isAdmin = role === "admin";
   const joined = activeAccount?.joined ? new Date(activeAccount.joined) : new Date();
@@ -140,50 +141,69 @@ export function Profile() {
 
       {/* ── Info Tab ── */}
       {tab === "info" && (
-        <Card className="p-6" hover={false}>
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-bold text-foreground">{t("profile.info.title")}</h3>
-            {!editing && <Btn size="sm" variant="ghost" icon={<Pencil size={14} />} onClick={() => setEditing(true)}>{t("profile.info.editBtn")}</Btn>}
-          </div>
-          {editing ? (
-            <form className="space-y-4" onSubmit={e => { e.preventDefault(); updateAccount(form); setEditing(false); }}>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <Field label={t("profile.info.nameLabel")} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-                <Field label={t("profile.info.emailLabel")} type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
-                <Field label={t("profile.info.phoneLabel")} value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
-                <Field label={t("profile.info.birthDateLabel")} type="date" value={form.birthDate} onChange={e => setForm(f => ({ ...f, birthDate: e.target.value }))} />
-                <Field label={t("profile.info.cityLabel")} value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))} />
-                <Select label={t("profile.info.genderLabel")} value={form.gender} onChange={e => setForm(f => ({ ...f, gender: e.target.value as MockAccount["gender"] }))}>
-                  <option value="Nam">{t("profile.info.genderOptions.Nam")}</option>
-                  <option value="Nữ">{t("profile.info.genderOptions.Nữ")}</option>
-                  <option value="Khác">{t("profile.info.genderOptions.Khác")}</option>
-                </Select>
-              </div>
-              <div className="flex gap-3 pt-2">
-                <Btn icon={<Check size={15} />} type="submit">{t("profile.info.saveBtn")}</Btn>
-                <Btn variant="outline" icon={<X size={15} />} type="button"
-                  onClick={() => { if (activeAccount) setForm({ name: activeAccount.name, email: activeAccount.email, phone: activeAccount.phone, birthDate: activeAccount.birthDate, city: activeAccount.city, gender: activeAccount.gender }); setEditing(false); }}>{t("profile.info.cancelBtn")}</Btn>
-              </div>
-            </form>
-          ) : (
-            <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
-              {[
-                { l: t("profile.info.nameLabel"), v: activeAccount?.name },
-                { l: t("profile.info.emailLabel"), v: activeAccount?.email },
-                { l: t("profile.info.phoneLabel"), v: activeAccount?.phone },
-                { l: t("profile.info.birthDateLabel"), v: activeAccount?.birthDate },
-                { l: t("profile.info.cityLabel"), v: activeAccount?.city },
-                { l: t("profile.info.genderLabel"), v: activeAccount?.gender ? t(`profile.info.genderOptions.${activeAccount.gender}`) : undefined },
-                ...(!isAdmin ? [{ l: t("profile.info.currentPlan"), v: plan }] : []),
-              ].map(fieldItem => (
-                <div key={fieldItem.l} className="bg-muted/50 rounded-xl px-4 py-3">
-                  <p className="text-xs text-muted-foreground mb-0.5">{fieldItem.l}</p>
-                  <p className="text-sm font-medium text-foreground">{fieldItem.v || t("profile.info.emptyValue")}</p>
-                </div>
-              ))}
+        <>
+          <Card className="p-6" hover={false}>
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="font-bold text-foreground">{t("profile.info.title")}</h3>
+              {!editing && <Btn size="sm" variant="ghost" icon={<Pencil size={14} />} onClick={() => setEditing(true)}>{t("profile.info.editBtn")}</Btn>}
             </div>
-          )}
-        </Card>
+            {editing ? (
+              <form className="space-y-4" onSubmit={e => { e.preventDefault(); updateAccount(form); setEditing(false); }}>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <Field label={t("profile.info.nameLabel")} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+                  <Field label={t("profile.info.emailLabel")} type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+                  <Field label={t("profile.info.phoneLabel")} value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
+                  <Field label={t("profile.info.birthDateLabel")} type="date" value={form.birthDate} onChange={e => setForm(f => ({ ...f, birthDate: e.target.value }))} />
+                  <Field label={t("profile.info.cityLabel")} value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))} />
+                  <Select label={t("profile.info.genderLabel")} value={form.gender} onChange={e => setForm(f => ({ ...f, gender: e.target.value as MockAccount["gender"] }))}>
+                    <option value="Nam">{t("profile.info.genderOptions.Nam")}</option>
+                    <option value="Nữ">{t("profile.info.genderOptions.Nữ")}</option>
+                    <option value="Khác">{t("profile.info.genderOptions.Khác")}</option>
+                  </Select>
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <Btn icon={<Check size={15} />} type="submit">{t("profile.info.saveBtn")}</Btn>
+                  <Btn variant="outline" icon={<X size={15} />} type="button"
+                    onClick={() => { if (activeAccount) setForm({ name: activeAccount.name, email: activeAccount.email, phone: activeAccount.phone, birthDate: activeAccount.birthDate, city: activeAccount.city, gender: activeAccount.gender }); setEditing(false); }}>{t("profile.info.cancelBtn")}</Btn>
+                </div>
+              </form>
+            ) : (
+              <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
+                {[
+                  { l: t("profile.info.nameLabel"), v: activeAccount?.name },
+                  { l: t("profile.info.emailLabel"), v: activeAccount?.email },
+                  { l: t("profile.info.phoneLabel"), v: activeAccount?.phone },
+                  { l: t("profile.info.birthDateLabel"), v: activeAccount?.birthDate },
+                  { l: t("profile.info.cityLabel"), v: activeAccount?.city },
+                  { l: t("profile.info.genderLabel"), v: activeAccount?.gender ? t(`profile.info.genderOptions.${activeAccount.gender}`) : undefined },
+                  ...(!isAdmin ? [{ l: t("profile.info.currentPlan"), v: plan }] : []),
+                ].map(fieldItem => (
+                  <div key={fieldItem.l} className="bg-muted/50 rounded-xl px-4 py-3">
+                    <p className="text-xs text-muted-foreground mb-0.5">{fieldItem.l}</p>
+                    <p className="text-sm font-medium text-foreground">{fieldItem.v || t("profile.info.emptyValue")}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+
+          {/* Display Options */}
+          <Card className="p-6 mt-4" hover={false}>
+            <h3 className="font-bold text-foreground mb-4">{t("profile.displayOptions.title")}</h3>
+            <div className="flex items-center justify-between p-4 rounded-xl bg-secondary/50 border border-border">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                  <MousePointer2 size={18} />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">{t("profile.displayOptions.cursorEffect.title")}</p>
+                  <p className="text-xs text-muted-foreground">{t("profile.displayOptions.cursorEffect.desc")}</p>
+                </div>
+              </div>
+              <Switch checked={cursorEffectEnabled} onCheckedChange={toggleCursorEffect} />
+            </div>
+          </Card>
+        </>
       )}
 
       {/* ── Security Tab ── */}
