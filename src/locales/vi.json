@@ -664,6 +664,9 @@
     },
     "overview": {
       "healthScore": "Health Score",
+      "nutritionComposition": "Cơ cấu dinh dưỡng",
+      "nutritionBalance": "Cân bằng dinh dưỡng",
+      "balance": "Cân bằng",
       "recommendation": "Khuyến nghị: Duy trì chế độ vận động, bổ sung dinh dưỡng cân bằng và khám răng định kỳ.",
       "latestStats": "Chỉ số sức khỏe gần nhất",
       "weight": "Cân nặng",
@@ -717,6 +720,8 @@
     "modals": {
       "health": {
         "title": "Cập nhật Health Timeline",
+        "mealDetailsLabel": "Chi tiết bữa ăn hôm nay (vd: 100g thịt gà, 50g cơm)",
+        "mealDetailsPlaceholder": "Nhập chi tiết các món ăn và định lượng...",
         "weightLabel": "Cân nặng (kg)",
         "weightPlaceholder": "VD: 28",
         "conditionLabel": "Tình trạng sức khỏe",
@@ -747,6 +752,28 @@
         "cancelSeriesBtn": "Hủy tất cả sự kiện lặp lại",
         "keepBtn": "Giữ lại"
       }
+    },
+    "nutrition": {
+      "protein": "Protein",
+      "fat": "Chất béo",
+      "carbs": "Carbs",
+      "fiber": "Chất xơ",
+      "vitamins": "Vitamin",
+      "recommendation": {
+        "default": "Vui lòng nhập chi tiết thành phần bữa ăn (vd: 100g thịt gà, cơm) để hệ thống phân tích dinh dưỡng chính xác hơn.",
+        "good": "Bữa ăn có độ cân bằng khá tốt.",
+        "missingProtein": "Bữa ăn đang thiếu Protein, hãy bổ sung thêm thịt hoặc cá.",
+        "missingFiber": "Bữa ăn thiếu chất xơ, hãy thêm rau củ để hỗ trợ tiêu hóa.",
+        "highFat": "Lượng chất béo hơi cao, cân nhắc giảm bớt để tránh thừa cân.",
+        "excellent": "Tuyệt vời! Bữa ăn rất giàu dinh dưỡng và cân bằng."
+      }
+    },
+    "quickFoods": {
+      "pate": { "label": "Pate", "value": "1 hộp Pate" },
+      "kibble": { "label": "Hạt", "value": "100g Hạt" },
+      "chicken": { "label": "Gà xé", "value": "50g Gà xé" },
+      "rice": { "label": "Cơm", "value": "1 bát Cơm" },
+      "veggies": { "label": "Rau", "value": "1 ít Rau" }
     },
     "dynamic": {
       "condition": {

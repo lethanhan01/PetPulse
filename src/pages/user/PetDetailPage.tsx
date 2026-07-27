@@ -64,7 +64,13 @@ export function PetDetail() {
   const latest = pet.health[0];
   const level = scoreLevel(latest.score);
   
-  const latestNutrition = analyzeNutrition(latest?.nutrition || "");
+  const rawNutrition = analyzeNutrition(latest?.nutrition || "");
+  const latestNutrition = {
+    ...rawNutrition,
+    composition: rawNutrition.composition.map(item => ({ ...item, name: t(item.name) })),
+    balance: rawNutrition.balance.map(item => ({ ...item, subject: t(item.subject) })),
+    recommendation: t(rawNutrition.recommendation),
+  };
   const nutritionLevel = scoreLevel(latestNutrition.score);
   const pieColors = ["var(--primary)", "var(--success)", "var(--warning)", "var(--destructive)"];
 
@@ -139,7 +145,7 @@ export function PetDetail() {
 
           <Card className="p-6 text-center flex flex-col" hover={false}>
             <div className="relative overflow-hidden rounded-xl -m-6 -mt-6 mb-0 p-6" style={{ background: "linear-gradient(135deg,var(--success),var(--accent))" }}>
-              <p className="text-sm text-white/80 mb-2">Cơ cấu dinh dưỡng</p>
+              <p className="text-sm text-white/80 mb-2">{t("petDetail.overview.nutritionComposition")}</p>
               <div className="relative w-40 h-40 mx-auto mb-3">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -165,13 +171,13 @@ export function PetDetail() {
 
           <Card className="p-6 text-center flex flex-col" hover={false}>
             <div className="relative overflow-hidden rounded-xl -m-6 -mt-6 mb-0 p-6" style={{ background: "linear-gradient(135deg,var(--warning),var(--accent))" }}>
-              <p className="text-sm text-white/80 mb-2">Cân bằng dinh dưỡng</p>
+              <p className="text-sm text-white/80 mb-2">{t("petDetail.overview.nutritionBalance")}</p>
               <div className="relative w-40 h-40 mx-auto mb-3">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart cx="50%" cy="50%" outerRadius={48} data={latestNutrition.balance}>
                     <PolarGrid stroke="rgba(255,255,255,0.3)" />
                     <PolarAngleAxis dataKey="subject" tick={{ fill: "rgba(255,255,255,0.9)", fontSize: 10 }} />
-                    <Radar name="Balance" dataKey="A" stroke="white" fill="white" fillOpacity={0.5} />
+                    <Radar name={t("petDetail.overview.balance")} dataKey="A" stroke="white" fill="white" fillOpacity={0.5} />
                     <Tooltip contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)", zIndex: 100 }} itemStyle={{ fontSize: "12px", fontWeight: "bold", color: "var(--foreground)" }} />
                   </RadarChart>
                 </ResponsiveContainer>
@@ -393,16 +399,17 @@ function Toggle({ defaultOn }: { defaultOn?: boolean }) {
   );
 }
 
-const QUICK_FOODS = [
-  { icon: "🥩", label: "Pate", value: "1 hộp Pate" },
-  { icon: "🥣", label: "Hạt", value: "100g Hạt" },
-  { icon: "🍗", label: "Gà xé", value: "50g Gà xé" },
-  { icon: "🍚", label: "Cơm", value: "1 bát Cơm" },
-  { icon: "🥦", label: "Rau", value: "1 ít Rau" },
-];
-
 function HealthFormModal({ open, onClose, onSave }: { open: boolean; onClose: () => void; onSave: (h: HealthEntry) => void }) {
   const { t } = useTranslation();
+  
+  const QUICK_FOODS = [
+    { icon: "🥩", label: t("petDetail.quickFoods.pate.label"), value: t("petDetail.quickFoods.pate.value") },
+    { icon: "🥣", label: t("petDetail.quickFoods.kibble.label"), value: t("petDetail.quickFoods.kibble.value") },
+    { icon: "🍗", label: t("petDetail.quickFoods.chicken.label"), value: t("petDetail.quickFoods.chicken.value") },
+    { icon: "🍚", label: t("petDetail.quickFoods.rice.label"), value: t("petDetail.quickFoods.rice.value") },
+    { icon: "🥦", label: t("petDetail.quickFoods.veggies.label"), value: t("petDetail.quickFoods.veggies.value") },
+  ];
+
   const [f, setF] = useState({ weight: "", condition: "Tốt", nutrition: "Cân bằng", illness: "" });
   
   const save = (e: React.FormEvent) => {
@@ -428,7 +435,7 @@ function HealthFormModal({ open, onClose, onSave }: { open: boolean; onClose: ()
           <option value="Tốt">{t("petDetail.dynamic.condition.tốt")}</option><option value="Bình thường">{t("petDetail.dynamic.condition.bình thường")}</option><option value="Cần chú ý">{t("petDetail.dynamic.condition.cần chú ý")}</option>
         </Select>
         <div>
-          <Textarea label="Chi tiết bữa ăn hôm nay (vd: 100g thịt gà, 50g cơm)" value={f.nutrition} onChange={e => setF(p => ({ ...p, nutrition: e.target.value }))} placeholder="Nhập chi tiết các món ăn và định lượng..." rows={3} required />
+          <Textarea label={t("petDetail.modals.health.mealDetailsLabel")} value={f.nutrition} onChange={e => setF(p => ({ ...p, nutrition: e.target.value }))} placeholder={t("petDetail.modals.health.mealDetailsPlaceholder")} rows={3} required />
           <div className="flex flex-wrap gap-2 mt-2">
             {QUICK_FOODS.map(food => (
               <button 

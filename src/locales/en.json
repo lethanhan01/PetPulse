@@ -664,6 +664,9 @@
     },
     "overview": {
       "healthScore": "Health Score",
+      "nutritionComposition": "Nutrition Composition",
+      "nutritionBalance": "Nutrition Balance",
+      "balance": "Balance",
       "recommendation": "Recommendation: Maintain exercise routine, provide balanced nutrition, and schedule regular dental checkups.",
       "latestStats": "Latest Health Stats",
       "weight": "Weight",
@@ -717,6 +720,8 @@
     "modals": {
       "health": {
         "title": "Update Health Timeline",
+        "mealDetailsLabel": "Today's meal details (e.g., 100g chicken, 50g rice)",
+        "mealDetailsPlaceholder": "Enter details and quantities of the food...",
         "weightLabel": "Weight (kg)",
         "weightPlaceholder": "Ex: 28",
         "conditionLabel": "Health Condition",
@@ -747,6 +752,28 @@
         "cancelSeriesBtn": "Cancel all recurring events",
         "keepBtn": "Keep"
       }
+    },
+    "nutrition": {
+      "protein": "Protein",
+      "fat": "Fat",
+      "carbs": "Carbs",
+      "fiber": "Fiber",
+      "vitamins": "Vitamins",
+      "recommendation": {
+        "default": "Please enter detailed meal components (e.g., 100g chicken, rice) for accurate nutrition analysis.",
+        "good": "The meal is fairly well balanced.",
+        "missingProtein": "The meal lacks Protein, please add meat or fish.",
+        "missingFiber": "The meal lacks fiber, please add vegetables to support digestion.",
+        "highFat": "The fat content is slightly high, consider reducing it to prevent overweight.",
+        "excellent": "Excellent! The meal is highly nutritious and well-balanced."
+      }
+    },
+    "quickFoods": {
+      "pate": { "label": "Pate", "value": "1 can of Pate" },
+      "kibble": { "label": "Kibble", "value": "100g Kibble" },
+      "chicken": { "label": "Shredded Chicken", "value": "50g Shredded Chicken" },
+      "rice": { "label": "Rice", "value": "1 bowl of Rice" },
+      "veggies": { "label": "Veggies", "value": "A portion of Veggies" }
     },
     "dynamic": {
       "condition": {
