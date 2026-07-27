@@ -3,31 +3,24 @@ import { useNavigate, useParams, useSearchParams } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { CareEvent, HealthEntry } from "@/types/app.types";
 import { createCareEvent, createHealthEntry } from "@/mocks";
-import { Card, Btn, Badge, Field, Select, Modal, TrendChart } from "@/components/common/kit";
+import { Card, Btn, Badge, Field, Textarea, Select, Modal, TrendChart } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { PieChart, Pie, Cell, Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { analyzeNutrition } from "@/utils/nutrition-calculator";
 import { cancelEventOccurrence, eventsForDate, isEventCompletedOn, monthCalendarDays, toggleEventCompletion } from "@/utils/care-calendar";
+import { useTranslation } from "react-i18next";
 import {
   ArrowLeft, Activity, Calendar, Sparkles, Settings, Plus, Weight, Syringe,
   Stethoscope, Pill, Bell, ShieldCheck, TrendingUp, CheckCircle2, Clock, Trash2, Lightbulb, AlertTriangle, ChevronLeft, ChevronRight,
 } from "lucide-react";
-
-const TABS = [
-  { k: "overview", l: "Tổng quan", icon: <Activity size={15} /> },
-  { k: "timeline", l: "Health Timeline", icon: <TrendingUp size={15} /> },
-  { k: "calendar", l: "Lịch chăm sóc", icon: <Calendar size={15} /> },
-  { k: "consult", l: "Lịch sử tư vấn AI", icon: <Sparkles size={15} /> },
-  { k: "settings", l: "Cài đặt", icon: <Settings size={15} /> },
-];
-
-const scoreLevel = (s: number) => s >= 90 ? { l: "Xuất sắc", v: "success" as const } : s >= 75 ? { l: "Tốt", v: "info" as const } : s >= 60 ? { l: "Khá", v: "warning" as const } : { l: "Cần chú ý", v: "danger" as const };
-const WEEKDAYS = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "CN"];
 
 function eventIcon(type: string, size = 16) {
   return type === "Uống thuốc" ? <Pill size={size} /> : type === "Khám" ? <Stethoscope size={size} /> : type === "Tiêm phòng" ? <Syringe size={size} /> : <Calendar size={size} />;
 }
 
 export function PetDetail() {
+  const { t } = useTranslation();
   const { pets, updatePet } = useApp();
   const navigate = useNavigate();
   const { petId } = useParams();
@@ -42,9 +35,44 @@ export function PetDetail() {
     return { year: now.getFullYear(), month: now.getMonth() + 1 };
   });
 
-  if (!pet) return <div className="py-16 text-center"><p className="text-5xl font-extrabold text-primary">404</p><h1 className="mt-4 text-2xl font-bold text-foreground">Không tìm thấy thú cưng</h1></div>;
+  const TABS = [
+    { k: "overview", l: t("petDetail.tabs.overview"), icon: <Activity size={15} /> },
+    { k: "timeline", l: t("petDetail.tabs.timeline"), icon: <TrendingUp size={15} /> },
+    { k: "calendar", l: t("petDetail.tabs.calendar"), icon: <Calendar size={15} /> },
+    { k: "consult", l: t("petDetail.tabs.consult"), icon: <Sparkles size={15} /> },
+    { k: "settings", l: t("petDetail.tabs.settings"), icon: <Settings size={15} /> },
+  ];
+  
+  const WEEKDAYS = [
+    t("petDetail.calendar.weekdays.mon"), t("petDetail.calendar.weekdays.tue"), t("petDetail.calendar.weekdays.wed"), 
+    t("petDetail.calendar.weekdays.thu"), t("petDetail.calendar.weekdays.fri"), t("petDetail.calendar.weekdays.sat"), 
+    t("petDetail.calendar.weekdays.sun")
+  ];
+
+  const scoreLevel = (s: number) => 
+    s >= 90 ? { l: t("petDetail.scoreLevel.excellent"), v: "success" as const } : 
+    s >= 75 ? { l: t("petDetail.scoreLevel.good"), v: "info" as const } : 
+    s >= 60 ? { l: t("petDetail.scoreLevel.fair"), v: "warning" as const } : 
+    { l: t("petDetail.scoreLevel.attention"), v: "danger" as const };
+
+  const getDynamic = (category: string, value: string) => {
+    const key = value.toLowerCase();
+    return t(`petDetail.dynamic.${category}.${key}`, value);
+  };
+
+  if (!pet) return <div className="py-16 text-center"><p className="text-5xl font-extrabold text-primary">404</p><h1 className="mt-4 text-2xl font-bold text-foreground">{t("petDetail.notFound")}</h1></div>;
   const latest = pet.health[0];
   const level = scoreLevel(latest.score);
+  
+  const rawNutrition = analyzeNutrition(latest?.nutrition || "");
+  const latestNutrition = {
+    ...rawNutrition,
+    composition: rawNutrition.composition.map(item => ({ ...item, name: t(item.name) })),
+    balance: rawNutrition.balance.map(item => ({ ...item, subject: t(item.subject) })),
+    recommendation: t(rawNutrition.recommendation),
+  };
+  const nutritionLevel = scoreLevel(latestNutrition.score);
+  const pieColors = ["var(--primary)", "var(--success)", "var(--warning)", "var(--destructive)"];
 
   const addHealth = (h: HealthEntry) => updatePet(pet.id, { health: [h, ...pet.health] });
   const addEvent = (ev: CareEvent) => updatePet(pet.id, { events: [ev, ...pet.events] });
@@ -61,7 +89,7 @@ export function PetDetail() {
 
   return (
     <div className="space-y-6">
-      <button onClick={() => navigate("/pets")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft size={15} /> Danh sách thú cưng</button>
+      <button onClick={() => navigate("/pets")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft size={15} /> {t("petDetail.backToList")}</button>
 
       {/* Passport header */}
       <Card className="overflow-hidden" hover={false}>
@@ -96,10 +124,10 @@ export function PetDetail() {
       {/* OVERVIEW */}
       {tab === "overview" && (
         <div className="grid lg:grid-cols-3 gap-6">
-          <Card className="p-6 lg:col-span-1 text-center" hover={false}>
+          <Card className="p-6 text-center flex flex-col" hover={false}>
             <div className="relative overflow-hidden rounded-xl -m-6 -mt-6 mb-0 p-6" style={{ background: "linear-gradient(135deg,var(--primary),var(--accent))" }}>
-              <p className="text-sm text-white/80 mb-2">Health Score</p>
-              <div className="relative w-28 h-28 mx-auto mb-3">
+              <p className="text-sm text-white/80 mb-2">{t("petDetail.overview.healthScore")}</p>
+              <div className="relative w-40 h-40 mx-auto mb-3">
                 <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
                   <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="8" />
                   <circle cx="50" cy="50" r="42" fill="none" stroke="white" strokeWidth="8" strokeLinecap="round"
@@ -112,17 +140,61 @@ export function PetDetail() {
               </div>
             </div>
             <div className="mt-4"><Badge v={level.v}>{level.l}</Badge></div>
-            <p className="text-xs text-muted-foreground mt-4 leading-relaxed">Khuyến nghị: Duy trì chế độ vận động, bổ sung dinh dưỡng cân bằng và khám răng định kỳ.</p>
+            <p className="text-xs text-muted-foreground mt-4 leading-relaxed">{t("petDetail.overview.recommendation")}</p>
           </Card>
 
-          <Card className="p-5 lg:col-span-2" hover={false}>
-            <h3 className="font-bold text-foreground mb-4">Chỉ số sức khỏe gần nhất</h3>
+          <Card className="p-6 text-center flex flex-col" hover={false}>
+            <div className="relative overflow-hidden rounded-xl -m-6 -mt-6 mb-0 p-6" style={{ background: "linear-gradient(135deg,var(--success),var(--accent))" }}>
+              <p className="text-sm text-white/80 mb-2">{t("petDetail.overview.nutritionComposition")}</p>
+              <div className="relative w-40 h-40 mx-auto mb-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={latestNutrition.composition} innerRadius={32} outerRadius={60} dataKey="value" stroke="none">
+                      {latestNutrition.composition.map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)", zIndex: 100 }} itemStyle={{ fontSize: "12px", fontWeight: "bold", color: "var(--foreground)" }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2">
+              {latestNutrition.composition.map((item, index) => (
+                <div key={item.name} className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: pieColors[index % pieColors.length] }} />
+                  <span className="text-xs text-muted-foreground">{item.name}</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="p-6 text-center flex flex-col" hover={false}>
+            <div className="relative overflow-hidden rounded-xl -m-6 -mt-6 mb-0 p-6" style={{ background: "linear-gradient(135deg,var(--warning),var(--accent))" }}>
+              <p className="text-sm text-white/80 mb-2">{t("petDetail.overview.nutritionBalance")}</p>
+              <div className="relative w-40 h-40 mx-auto mb-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart cx="50%" cy="50%" outerRadius={48} data={latestNutrition.balance}>
+                    <PolarGrid stroke="rgba(255,255,255,0.3)" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: "rgba(255,255,255,0.9)", fontSize: 10 }} />
+                    <Radar name={t("petDetail.overview.balance")} dataKey="A" stroke="white" fill="white" fillOpacity={0.5} />
+                    <Tooltip contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)", zIndex: 100 }} itemStyle={{ fontSize: "12px", fontWeight: "bold", color: "var(--foreground)" }} />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            <div className="mt-4"><Badge v={nutritionLevel.v}>{latestNutrition.score}/100 - {nutritionLevel.l}</Badge></div>
+            <p className="text-xs text-muted-foreground mt-4 leading-relaxed">{latestNutrition.recommendation}</p>
+          </Card>
+
+          <Card className="p-5 lg:col-span-3" hover={false}>
+            <h3 className="font-bold text-foreground mb-4">{t("petDetail.overview.latestStats")}</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
               {[
-                { icon: <Weight size={16} />, bg: "bg-info-surface bg-info-surface text-info", l: "Cân nặng", v: `${latest.weight}kg` },
-                { icon: <Stethoscope size={16} />, bg: "bg-info-surface bg-info-surface text-info", l: "Tình trạng", v: latest.condition },
-                { icon: <Activity size={16} />, bg: "bg-success-surface bg-success-surface text-success", l: "Dinh dưỡng", v: latest.nutrition },
-                { icon: <Syringe size={16} />, bg: "bg-warning-surface text-warning", l: "Bệnh", v: latest.illness || "Không" },
+                { icon: <Weight size={16} />, bg: "bg-info-surface bg-info-surface text-info", l: t("petDetail.overview.weight"), v: `${latest.weight}kg` },
+                { icon: <Stethoscope size={16} />, bg: "bg-info-surface bg-info-surface text-info", l: t("petDetail.overview.condition"), v: getDynamic("condition", latest.condition) },
+                { icon: <Activity size={16} />, bg: "bg-success-surface bg-success-surface text-success", l: t("petDetail.overview.nutrition"), v: getDynamic("nutrition", latest.nutrition) },
+                { icon: <Syringe size={16} />, bg: "bg-warning-surface text-warning", l: t("petDetail.overview.illness"), v: latest.illness ? latest.illness : t("petDetail.overview.none") },
               ].map(m => (
                 <div key={m.l} className="bg-muted rounded-xl p-3">
                   <div className={`${m.bg} w-8 h-8 rounded-lg flex items-center justify-center mb-2`}>{m.icon}</div>
@@ -145,8 +217,8 @@ export function PetDetail() {
       {tab === "timeline" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-lg text-foreground">Health Timeline</h3>
-            <Btn size="sm" icon={<Plus size={15} />} onClick={() => setHealthModal(true)}>Cập nhật sức khỏe</Btn>
+            <h3 className="font-bold text-lg text-foreground">{t("petDetail.timeline.title")}</h3>
+            <Btn size="sm" icon={<Plus size={15} />} onClick={() => setHealthModal(true)}>{t("petDetail.timeline.updateBtn")}</Btn>
           </div>
           <div className="relative pl-8">
             <div className="absolute left-[15px] top-2 bottom-2 w-0.5 bg-border" />
@@ -159,10 +231,15 @@ export function PetDetail() {
                     <div className="p-4">
                       <div className="flex items-center justify-between mb-3">
                         <code className="text-xs text-muted-foreground">{h.date}</code>
-                        <Badge v={lv.v}>Score {h.score}</Badge>
+                        <Badge v={lv.v}>{t("petDetail.timeline.score")} {h.score}</Badge>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {[{ icon: <Weight size={12} />, l: h.weight + "kg" }, { icon: <Stethoscope size={12} />, l: h.condition }, { icon: <Activity size={12} />, l: h.nutrition }, { icon: <Syringe size={12} />, l: h.illness || "Không" }].map((s, j) => (
+                        {[
+                          { icon: <Weight size={12} />, l: h.weight + "kg" }, 
+                          { icon: <Stethoscope size={12} />, l: getDynamic("condition", h.condition) }, 
+                          { icon: <Activity size={12} />, l: getDynamic("nutrition", h.nutrition) }, 
+                          { icon: <Syringe size={12} />, l: h.illness ? h.illness : t("petDetail.overview.none") }
+                        ].map((s, j) => (
                           <span key={j} className="inline-flex items-center gap-1 px-2 py-1 bg-muted rounded-md text-xs text-foreground">{s.icon}{s.l}</span>
                         ))}
                       </div>
@@ -179,21 +256,21 @@ export function PetDetail() {
       {tab === "calendar" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
-            <h3 className="font-bold text-lg text-foreground">Lịch chăm sóc sức khỏe</h3>
-            <Btn size="sm" icon={<Plus size={15} />} onClick={() => setEventModal(true)}>Thêm sự kiện</Btn>
+            <h3 className="font-bold text-lg text-foreground">{t("petDetail.calendar.title")}</h3>
+            <Btn size="sm" icon={<Plus size={15} />} onClick={() => setEventModal(true)}>{t("petDetail.calendar.addBtn")}</Btn>
           </div>
           <div className="flex items-start gap-3 p-3.5 rounded-xl bg-primary/5 border border-primary/10 text-primary">
             <Bell size={16} className="mt-0.5 flex-shrink-0" />
-            <p className="text-sm">Hệ thống sẽ gửi in-app notification nhắc bạn trước mỗi sự kiện.</p>
+            <p className="text-sm">{t("petDetail.calendar.notificationMsg")}</p>
           </div>
           <Card className="p-3 sm:p-5" hover={false}>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm mb-4">
-              <span className="inline-flex items-center gap-2 text-muted-foreground"><span className="w-2.5 h-2.5 rounded-full bg-primary" /> Đã lên lịch</span>
-              <span className="inline-flex items-center gap-2 text-muted-foreground"><span className="w-2.5 h-2.5 rounded-full bg-success" /> Hoàn thành</span>
+              <span className="inline-flex items-center gap-2 text-muted-foreground"><span className="w-2.5 h-2.5 rounded-full bg-primary" /> {t("petDetail.calendar.scheduled")}</span>
+              <span className="inline-flex items-center gap-2 text-muted-foreground"><span className="w-2.5 h-2.5 rounded-full bg-success" /> {t("petDetail.calendar.completed")}</span>
             </div>
             <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 mb-4">
               <button type="button" aria-label="Tháng trước" onClick={() => setCalendarMonth(current => current.month === 1 ? { year: current.year - 1, month: 12 } : { ...current, month: current.month - 1 })} className="p-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"><ChevronLeft size={18} /></button>
-              <h4 className="text-center font-bold text-foreground">Tháng {calendarMonth.month} năm {calendarMonth.year}</h4>
+              <h4 className="text-center font-bold text-foreground">{t("petDetail.calendar.month", { month: calendarMonth.month, year: calendarMonth.year })}</h4>
               <button type="button" aria-label="Tháng sau" onClick={() => setCalendarMonth(current => current.month === 12 ? { year: current.year + 1, month: 1 } : { ...current, month: current.month + 1 })} className="p-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"><ChevronRight size={18} /></button>
             </div>
             <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
@@ -218,8 +295,8 @@ export function PetDetail() {
                               <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${done ? "bg-success-surface text-success" : "bg-primary/10 text-primary"}`}>{eventIcon(event.type)}</div>
                               <div className="min-w-0 flex-1"><p className={`font-semibold text-sm ${done ? "line-through text-muted-foreground" : "text-foreground"}`}>{event.title}</p><p className="mt-1 text-xs text-muted-foreground flex items-center gap-1.5"><Clock size={12} /> {day.date} · {event.time}</p></div>
                             </div>
-                            <div className="mt-3 flex items-center justify-between gap-2"><Badge v="neutral">{event.type}</Badge><span className="text-xs text-muted-foreground">{event.repeat}</span></div>
-                            <div className="mt-4 flex gap-2"><Btn size="sm" variant="outline" className="flex-1" icon={<CheckCircle2 size={14} />} onClick={() => toggleEvent(event.id, day.date)}>{done ? "Khôi phục" : "Hoàn thành"}</Btn><Btn size="sm" variant="danger" aria-label={`Hủy sự kiện ${event.title}`} icon={<Trash2 size={14} />} onClick={() => requestDelete(event, day.date)} /></div>
+                            <div className="mt-3 flex items-center justify-between gap-2"><Badge v="neutral">{getDynamic("eventType", event.type)}</Badge><span className="text-xs text-muted-foreground">{getDynamic("repeat", event.repeat)}</span></div>
+                            <div className="mt-4 flex gap-2"><Btn size="sm" variant="outline" className="flex-1" icon={<CheckCircle2 size={14} />} onClick={() => toggleEvent(event.id, day.date)}>{done ? t("petDetail.calendar.restore") : t("petDetail.calendar.completeBtn")}</Btn><Btn size="sm" variant="danger" aria-label={`Hủy sự kiện ${event.title}`} icon={<Trash2 size={14} />} onClick={() => requestDelete(event, day.date)} /></div>
                           </PopoverContent>
                             </>;
                           })()}
@@ -238,10 +315,10 @@ export function PetDetail() {
       {tab === "consult" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-lg text-foreground">Lịch sử tư vấn AI</h3>
-            <Btn size="sm" icon={<Sparkles size={15} />} onClick={() => navigate("/ai-checker")}>Tư vấn mới</Btn>
+            <h3 className="font-bold text-lg text-foreground">{t("petDetail.consult.title")}</h3>
+            <Btn size="sm" icon={<Sparkles size={15} />} onClick={() => navigate("/ai-checker")}>{t("petDetail.consult.newBtn")}</Btn>
           </div>
-          {pet.consults.length === 0 && <Card className="p-8 text-center text-sm text-muted-foreground" hover={false}>Chưa có lịch sử tư vấn. Dùng AI Symptom Checker để kiểm tra sức khỏe.</Card>}
+          {pet.consults.length === 0 && <Card className="p-8 text-center text-sm text-muted-foreground" hover={false}>{t("petDetail.consult.emptyMsg")}</Card>}
           {pet.consults.map(c => {
             const sv = c.severity === "Cao" ? { v: "danger" as const, c: "border-destructive/40 bg-destructive/10" } : c.severity === "Trung bình" ? { v: "warning" as const, c: "border-warning-border bg-warning-surface/50" } : { v: "success" as const, c: "border-success-border bg-success-surface/50" };
             return (
@@ -249,19 +326,19 @@ export function PetDetail() {
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-3">
                     <code className="text-xs text-muted-foreground">{c.date}</code>
-                    <Badge v={sv.v}><AlertTriangle size={11} /> Cảnh báo: {c.severity}</Badge>
+                    <Badge v={sv.v}><AlertTriangle size={11} /> {t("petDetail.consult.alert")}: {getDynamic("severity", c.severity)}</Badge>
                   </div>
                   <div className="flex items-start gap-2 mb-4 p-3 bg-background/80 rounded-xl text-sm text-foreground">
                     <Activity size={15} className="mt-0.5 text-primary flex-shrink-0" />
-                    <span><b>Triệu chứng:</b> {c.symptoms}</span>
+                    <span><b>{t("petDetail.consult.symptoms")}:</b> {c.symptoms}</span>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4 text-sm mb-4">
                     <div>
-                      <p className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1.5"><Stethoscope size={12} /> Bệnh có thể gặp</p>
+                      <p className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1.5"><Stethoscope size={12} /> {t("petDetail.consult.possibleDiseases")}</p>
                       <div className="flex flex-wrap gap-1.5">{c.diseases.map(d => <span key={d} className="px-2.5 py-1 bg-destructive/10 text-destructive text-xs rounded-full">{d}</span>)}</div>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1.5"><Pill size={12} /> Sơ cứu</p>
+                      <p className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1.5"><Pill size={12} /> {t("petDetail.consult.firstAid")}</p>
                       <div className="flex flex-wrap gap-1.5">{c.firstAid.map(d => <span key={d} className="px-2.5 py-1 bg-primary/10 text-primary text-xs rounded-full">{d}</span>)}</div>
                     </div>
                   </div>
@@ -279,13 +356,13 @@ export function PetDetail() {
       {/* SETTINGS */}
       {tab === "settings" && (
         <div className="max-w-lg space-y-4">
-          <h3 className="font-bold text-lg text-foreground">Cài đặt hồ sơ {pet.name}</h3>
+          <h3 className="font-bold text-lg text-foreground">{t("petDetail.settings.title", { name: pet.name })}</h3>
           <Card className="divide-y divide-border" hover={false}>
             {[
-              { icon: <ShieldCheck size={17} />, l: "Hiển thị hồ sơ công khai", d: "Cho phép cộng đồng xem passport" },
-              { icon: <Bell size={17} />, l: "Nhắc lịch qua thông báo", d: "In-app notification trước sự kiện" },
-              { icon: <Activity size={17} />, l: "Tự động tính Health Score", d: "Sau mỗi lần cập nhật timeline" },
-              { icon: <Sparkles size={17} />, l: "Lưu kết quả tư vấn AI", d: "Đồng bộ vào hồ sơ pet" },
+              { icon: <ShieldCheck size={17} />, l: t("petDetail.settings.items.publicProfile.title"), d: t("petDetail.settings.items.publicProfile.desc") },
+              { icon: <Bell size={17} />, l: t("petDetail.settings.items.notifications.title"), d: t("petDetail.settings.items.notifications.desc") },
+              { icon: <Activity size={17} />, l: t("petDetail.settings.items.autoScore.title"), d: t("petDetail.settings.items.autoScore.desc") },
+              { icon: <Sparkles size={17} />, l: t("petDetail.settings.items.syncAI.title"), d: t("petDetail.settings.items.syncAI.desc") },
             ].map((s, i) => (
               <div key={s.l} className="flex items-center gap-3 px-5 py-4 first:pt-5 last:pb-5">
                 <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">{s.icon}</div>
@@ -323,29 +400,65 @@ function Toggle({ defaultOn }: { defaultOn?: boolean }) {
 }
 
 function HealthFormModal({ open, onClose, onSave }: { open: boolean; onClose: () => void; onSave: (h: HealthEntry) => void }) {
+  const { t } = useTranslation();
+  
+  const QUICK_FOODS = [
+    { icon: "🥩", label: t("petDetail.quickFoods.pate.label"), value: t("petDetail.quickFoods.pate.value") },
+    { icon: "🥣", label: t("petDetail.quickFoods.kibble.label"), value: t("petDetail.quickFoods.kibble.value") },
+    { icon: "🍗", label: t("petDetail.quickFoods.chicken.label"), value: t("petDetail.quickFoods.chicken.value") },
+    { icon: "🍚", label: t("petDetail.quickFoods.rice.label"), value: t("petDetail.quickFoods.rice.value") },
+    { icon: "🥦", label: t("petDetail.quickFoods.veggies.label"), value: t("petDetail.quickFoods.veggies.value") },
+  ];
+
   const [f, setF] = useState({ weight: "", condition: "Tốt", nutrition: "Cân bằng", illness: "" });
+  
   const save = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(createHealthEntry({ weight: parseFloat(f.weight) || 0, condition: f.condition as HealthEntry["condition"], nutrition: f.nutrition, illness: f.illness || undefined }));
     setF({ weight: "", condition: "Tốt", nutrition: "Cân bằng", illness: "" });
     onClose();
   };
+
+  const appendFood = (foodValue: string) => {
+    setF(p => {
+      const current = p.nutrition.trim();
+      const newNutrition = current && current !== "Cân bằng" ? `${current}, ${foodValue}` : foodValue;
+      return { ...p, nutrition: newNutrition };
+    });
+  };
+
   return (
-    <Modal open={open} onClose={onClose} title="Cập nhật Health Timeline">
+    <Modal open={open} onClose={onClose} title={t("petDetail.modals.health.title")}>
       <form onSubmit={save} className="space-y-4">
-        <Field label="Cân nặng (kg)" type="number" step="0.1" value={f.weight} onChange={e => setF(p => ({ ...p, weight: e.target.value }))} placeholder="VD: 28" required />
-        <Select label="Tình trạng sức khỏe" value={f.condition} onChange={e => setF(p => ({ ...p, condition: e.target.value }))}>
-          <option>Tốt</option><option>Bình thường</option><option>Cần chú ý</option>
+        <Field label={t("petDetail.modals.health.weightLabel")} type="number" step="0.1" value={f.weight} onChange={e => setF(p => ({ ...p, weight: e.target.value }))} placeholder={t("petDetail.modals.health.weightPlaceholder")} required />
+        <Select label={t("petDetail.modals.health.conditionLabel")} value={f.condition} onChange={e => setF(p => ({ ...p, condition: e.target.value }))}>
+          <option value="Tốt">{t("petDetail.dynamic.condition.tốt")}</option><option value="Bình thường">{t("petDetail.dynamic.condition.bình thường")}</option><option value="Cần chú ý">{t("petDetail.dynamic.condition.cần chú ý")}</option>
         </Select>
-        <Field label="Tình trạng dinh dưỡng" value={f.nutrition} onChange={e => setF(p => ({ ...p, nutrition: e.target.value }))} placeholder="VD: Cân bằng" />
-        <Field label="Tình trạng bệnh (nếu có)" value={f.illness} onChange={e => setF(p => ({ ...p, illness: e.target.value }))} placeholder="Để trống nếu khỏe mạnh" />
-        <div className="flex gap-3 pt-1"><Btn variant="outline" block type="button" onClick={onClose}>Hủy</Btn><Btn block type="submit">Lưu & tính điểm</Btn></div>
+        <div>
+          <Textarea label={t("petDetail.modals.health.mealDetailsLabel")} value={f.nutrition} onChange={e => setF(p => ({ ...p, nutrition: e.target.value }))} placeholder={t("petDetail.modals.health.mealDetailsPlaceholder")} rows={3} required />
+          <div className="flex flex-wrap gap-2 mt-2">
+            {QUICK_FOODS.map(food => (
+              <button 
+                key={food.label} 
+                type="button" 
+                onClick={() => appendFood(food.value)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary text-secondary-foreground text-xs font-medium hover:bg-primary/10 hover:text-primary transition-colors border border-transparent hover:border-primary/20"
+              >
+                <span>{food.icon}</span>
+                {food.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <Field label={t("petDetail.modals.health.illnessLabel")} value={f.illness} onChange={e => setF(p => ({ ...p, illness: e.target.value }))} placeholder={t("petDetail.modals.health.illnessPlaceholder")} />
+        <div className="flex gap-3 pt-1"><Btn variant="outline" block type="button" onClick={onClose}>{t("petDetail.modals.health.cancelBtn")}</Btn><Btn block type="submit">{t("petDetail.modals.health.saveBtn")}</Btn></div>
       </form>
     </Modal>
   );
 }
 
 function EventFormModal({ open, onClose, onSave }: { open: boolean; onClose: () => void; onSave: (e: CareEvent) => void }) {
+  const { t } = useTranslation();
   const [f, setF] = useState({ title: "", date: "", time: "", repeat: "Không lặp", type: "Khám", customType: "" });
   const isOther = f.type === "Khác";
   const save = (e: React.FormEvent) => {
@@ -355,25 +468,25 @@ function EventFormModal({ open, onClose, onSave }: { open: boolean; onClose: () 
     onClose();
   };
   return (
-    <Modal open={open} onClose={onClose} title="Thêm sự kiện chăm sóc">
+    <Modal open={open} onClose={onClose} title={t("petDetail.modals.event.title")}>
       <form onSubmit={save} className="space-y-4">
-        <Field label="Tên sự kiện" value={f.title} onChange={e => setF(p => ({ ...p, title: e.target.value }))} placeholder="VD: Khám định kỳ" required />
+        <Field label={t("petDetail.modals.event.nameLabel")} value={f.title} onChange={e => setF(p => ({ ...p, title: e.target.value }))} placeholder={t("petDetail.modals.event.namePlaceholder")} required />
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Ngày" type="date" value={f.date} onChange={e => setF(p => ({ ...p, date: e.target.value }))} required />
-          <Field label="Giờ" type="time" value={f.time} onChange={e => setF(p => ({ ...p, time: e.target.value }))} required />
+          <Field label={t("petDetail.modals.event.dateLabel")} type="date" value={f.date} onChange={e => setF(p => ({ ...p, date: e.target.value }))} required />
+          <Field label={t("petDetail.modals.event.timeLabel")} type="time" value={f.time} onChange={e => setF(p => ({ ...p, time: e.target.value }))} required />
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <Select label="Lặp lại" value={f.repeat} onChange={e => setF(p => ({ ...p, repeat: e.target.value }))}>
-            <option>Không lặp</option><option>Hằng ngày</option><option>Hằng tuần</option>
+          <Select label={t("petDetail.modals.event.repeatLabel")} value={f.repeat} onChange={e => setF(p => ({ ...p, repeat: e.target.value }))}>
+            <option value="Không lặp">{t("petDetail.dynamic.repeat.không lặp")}</option><option value="Hằng ngày">{t("petDetail.dynamic.repeat.hằng ngày")}</option><option value="Hằng tuần">{t("petDetail.dynamic.repeat.hằng tuần")}</option>
           </Select>
-          <Select label="Loại sự kiện" value={f.type} onChange={e => setF(p => ({ ...p, type: e.target.value, customType: "" }))}>
-            <option>Khám</option><option>Uống thuốc</option><option>Tiêm phòng</option><option>Khác</option>
+          <Select label={t("petDetail.modals.event.typeLabel")} value={f.type} onChange={e => setF(p => ({ ...p, type: e.target.value, customType: "" }))}>
+            <option value="Khám">{t("petDetail.dynamic.eventType.khám")}</option><option value="Uống thuốc">{t("petDetail.dynamic.eventType.uống thuốc")}</option><option value="Tiêm phòng">{t("petDetail.dynamic.eventType.tiêm phòng")}</option><option value="Khác">{t("petDetail.dynamic.eventType.khác")}</option>
           </Select>
         </div>
         {isOther && (
-          <Field label="Nhập loại sự kiện khác" value={f.customType} onChange={e => setF(p => ({ ...p, customType: e.target.value }))} placeholder="VD: Tắm, cắt móng..." required />
+          <Field label={t("petDetail.modals.event.customTypeLabel")} value={f.customType} onChange={e => setF(p => ({ ...p, customType: e.target.value }))} placeholder={t("petDetail.modals.event.customTypePlaceholder")} required />
         )}
-        <div className="flex gap-3 pt-1"><Btn variant="outline" block type="button" onClick={onClose}>Hủy</Btn><Btn block type="submit">Thêm vào lịch</Btn></div>
+        <div className="flex gap-3 pt-1"><Btn variant="outline" block type="button" onClick={onClose}>{t("petDetail.modals.event.cancelBtn")}</Btn><Btn block type="submit">{t("petDetail.modals.event.saveBtn")}</Btn></div>
       </form>
     </Modal>
   );
@@ -382,14 +495,15 @@ function EventFormModal({ open, onClose, onSave }: { open: boolean; onClose: () 
 function CancelRecurringEventModal({ target, onClose, onCancelOccurrence, onCancelSeries }: {
   target: { title: string; date: string } | null; onClose: () => void; onCancelOccurrence: () => void; onCancelSeries: () => void;
 }) {
+  const { t } = useTranslation();
   return (
-    <Modal open={!!target} onClose={onClose} title="Hủy sự kiện lặp lại">
+    <Modal open={!!target} onClose={onClose} title={t("petDetail.modals.cancelEvent.title")}>
       <div className="space-y-4">
-        <p className="text-sm text-muted-foreground">Bạn muốn hủy <span className="font-semibold text-foreground">{target?.title}</span> như thế nào?</p>
+        <p className="text-sm text-muted-foreground">{t("petDetail.modals.cancelEvent.desc")} <span className="font-semibold text-foreground">{target?.title}</span>?</p>
         <div className="space-y-2">
-          <Btn variant="outline" block className="!border-destructive/30 !text-destructive hover:!bg-destructive/10" onClick={onCancelOccurrence}>Hủy sự kiện ngày {target?.date}</Btn>
-          <Btn variant="danger" block onClick={onCancelSeries}>Hủy tất cả sự kiện lặp lại</Btn>
-          <Btn variant="ghost" block onClick={onClose}>Giữ lại</Btn>
+          <Btn variant="outline" block className="!border-destructive/30 !text-destructive hover:!bg-destructive/10" onClick={onCancelOccurrence}>{t("petDetail.modals.cancelEvent.cancelOccurrenceBtn", { date: target?.date })}</Btn>
+          <Btn variant="danger" block onClick={onCancelSeries}>{t("petDetail.modals.cancelEvent.cancelSeriesBtn")}</Btn>
+          <Btn variant="ghost" block onClick={onClose}>{t("petDetail.modals.cancelEvent.keepBtn")}</Btn>
         </div>
       </div>
     </Modal>

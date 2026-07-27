@@ -646,6 +646,163 @@
       "rejectBtn": "Từ chối"
     }
   },
+  "petDetail": {
+    "notFound": "Không tìm thấy thú cưng",
+    "backToList": "Danh sách thú cưng",
+    "scoreLevel": {
+      "excellent": "Xuất sắc",
+      "good": "Tốt",
+      "fair": "Khá",
+      "attention": "Cần chú ý"
+    },
+    "tabs": {
+      "overview": "Tổng quan",
+      "timeline": "Health Timeline",
+      "calendar": "Lịch chăm sóc",
+      "consult": "Lịch sử tư vấn AI",
+      "settings": "Cài đặt"
+    },
+    "overview": {
+      "healthScore": "Health Score",
+      "nutritionComposition": "Cơ cấu dinh dưỡng",
+      "nutritionBalance": "Cân bằng dinh dưỡng",
+      "balance": "Cân bằng",
+      "recommendation": "Khuyến nghị: Duy trì chế độ vận động, bổ sung dinh dưỡng cân bằng và khám răng định kỳ.",
+      "latestStats": "Chỉ số sức khỏe gần nhất",
+      "weight": "Cân nặng",
+      "condition": "Tình trạng",
+      "nutrition": "Dinh dưỡng",
+      "illness": "Bệnh",
+      "none": "Không"
+    },
+    "timeline": {
+      "title": "Health Timeline",
+      "updateBtn": "Cập nhật sức khỏe",
+      "score": "Score"
+    },
+    "calendar": {
+      "title": "Lịch chăm sóc sức khỏe",
+      "addBtn": "Thêm sự kiện",
+      "notificationMsg": "Hệ thống sẽ gửi in-app notification nhắc bạn trước mỗi sự kiện.",
+      "scheduled": "Đã lên lịch",
+      "completed": "Hoàn thành",
+      "month": "Tháng {{month}} năm {{year}}",
+      "weekdays": {
+        "mon": "Thứ 2",
+        "tue": "Thứ 3",
+        "wed": "Thứ 4",
+        "thu": "Thứ 5",
+        "fri": "Thứ 6",
+        "sat": "Thứ 7",
+        "sun": "CN"
+      },
+      "restore": "Khôi phục",
+      "completeBtn": "Hoàn thành"
+    },
+    "consult": {
+      "title": "Lịch sử tư vấn AI",
+      "newBtn": "Tư vấn mới",
+      "emptyMsg": "Chưa có lịch sử tư vấn. Dùng AI Symptom Checker để kiểm tra sức khỏe.",
+      "alert": "Cảnh báo",
+      "symptoms": "Triệu chứng",
+      "possibleDiseases": "Bệnh có thể gặp",
+      "firstAid": "Sơ cứu"
+    },
+    "settings": {
+      "title": "Cài đặt hồ sơ {{name}}",
+      "items": {
+        "publicProfile": { "title": "Hiển thị hồ sơ công khai", "desc": "Cho phép cộng đồng xem passport" },
+        "notifications": { "title": "Nhắc lịch qua thông báo", "desc": "In-app notification trước sự kiện" },
+        "autoScore": { "title": "Tự động tính Health Score", "desc": "Sau mỗi lần cập nhật timeline" },
+        "syncAI": { "title": "Lưu kết quả tư vấn AI", "desc": "Đồng bộ vào hồ sơ pet" }
+      }
+    },
+    "modals": {
+      "health": {
+        "title": "Cập nhật Health Timeline",
+        "mealDetailsLabel": "Chi tiết bữa ăn hôm nay (vd: 100g thịt gà, 50g cơm)",
+        "mealDetailsPlaceholder": "Nhập chi tiết các món ăn và định lượng...",
+        "weightLabel": "Cân nặng (kg)",
+        "weightPlaceholder": "VD: 28",
+        "conditionLabel": "Tình trạng sức khỏe",
+        "nutritionLabel": "Tình trạng dinh dưỡng",
+        "nutritionPlaceholder": "VD: Cân bằng",
+        "illnessLabel": "Tình trạng bệnh (nếu có)",
+        "illnessPlaceholder": "Để trống nếu khỏe mạnh",
+        "cancelBtn": "Hủy",
+        "saveBtn": "Lưu & tính điểm"
+      },
+      "event": {
+        "title": "Thêm sự kiện chăm sóc",
+        "nameLabel": "Tên sự kiện",
+        "namePlaceholder": "VD: Khám định kỳ",
+        "dateLabel": "Ngày",
+        "timeLabel": "Giờ",
+        "repeatLabel": "Lặp lại",
+        "typeLabel": "Loại sự kiện",
+        "customTypeLabel": "Nhập loại sự kiện khác",
+        "customTypePlaceholder": "VD: Tắm, cắt móng...",
+        "cancelBtn": "Hủy",
+        "saveBtn": "Thêm vào lịch"
+      },
+      "cancelEvent": {
+        "title": "Hủy sự kiện lặp lại",
+        "desc": "Bạn muốn hủy ",
+        "cancelOccurrenceBtn": "Hủy sự kiện ngày {{date}}",
+        "cancelSeriesBtn": "Hủy tất cả sự kiện lặp lại",
+        "keepBtn": "Giữ lại"
+      }
+    },
+    "nutrition": {
+      "protein": "Protein",
+      "fat": "Chất béo",
+      "carbs": "Carbs",
+      "fiber": "Chất xơ",
+      "vitamins": "Vitamin",
+      "recommendation": {
+        "default": "Vui lòng nhập chi tiết thành phần bữa ăn (vd: 100g thịt gà, cơm) để hệ thống phân tích dinh dưỡng chính xác hơn.",
+        "good": "Bữa ăn có độ cân bằng khá tốt.",
+        "missingProtein": "Bữa ăn đang thiếu Protein, hãy bổ sung thêm thịt hoặc cá.",
+        "missingFiber": "Bữa ăn thiếu chất xơ, hãy thêm rau củ để hỗ trợ tiêu hóa.",
+        "highFat": "Lượng chất béo hơi cao, cân nhắc giảm bớt để tránh thừa cân.",
+        "excellent": "Tuyệt vời! Bữa ăn rất giàu dinh dưỡng và cân bằng."
+      }
+    },
+    "quickFoods": {
+      "pate": { "label": "Pate", "value": "1 hộp Pate" },
+      "kibble": { "label": "Hạt", "value": "100g Hạt" },
+      "chicken": { "label": "Gà xé", "value": "50g Gà xé" },
+      "rice": { "label": "Cơm", "value": "1 bát Cơm" },
+      "veggies": { "label": "Rau", "value": "1 ít Rau" }
+    },
+    "dynamic": {
+      "condition": {
+        "tốt": "Tốt",
+        "bình thường": "Bình thường",
+        "cần chú ý": "Cần chú ý"
+      },
+      "nutrition": {
+        "cân bằng": "Cân bằng",
+        "kém": "Kém"
+      },
+      "eventType": {
+        "khám": "Khám",
+        "uống thuốc": "Uống thuốc",
+        "tiêm phòng": "Tiêm phòng",
+        "khác": "Khác"
+      },
+      "repeat": {
+        "không lặp": "Không lặp",
+        "hằng ngày": "Hằng ngày",
+        "hằng tuần": "Hằng tuần"
+      },
+      "severity": {
+        "cao": "Cao",
+        "trung bình": "Trung bình",
+        "thấp": "Thấp"
+      }
+    }
+  },
   "common": {
     "pagination": {
       "prev": "Trước",
