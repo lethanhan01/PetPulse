@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { CareEvent, HealthEntry } from "@/types/app.types";
@@ -12,7 +12,7 @@ import { cancelEventOccurrence, eventsForDate, isEventCompletedOn, monthCalendar
 import { useTranslation } from "react-i18next";
 import {
   ArrowLeft, Activity, Calendar, Sparkles, Settings, Plus, Weight, Syringe,
-  Stethoscope, Pill, Bell, ShieldCheck, TrendingUp, CheckCircle2, Clock, Trash2, Lightbulb, AlertTriangle, ChevronLeft, ChevronRight,
+  Stethoscope, Pill, Bell, ShieldCheck, TrendingUp, CheckCircle2, Clock, Trash2, Lightbulb, AlertTriangle, ChevronLeft, ChevronRight, Camera,
 } from "lucide-react";
 
 function eventIcon(type: string, size = 16) {
@@ -34,6 +34,8 @@ export function PetDetail() {
     const now = new Date();
     return { year: now.getFullYear(), month: now.getMonth() + 1 };
   });
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const coverInputRef = useRef<HTMLInputElement>(null);
 
   const TABS = [
     { k: "overview", l: t("petDetail.tabs.overview"), icon: <Activity size={15} /> },
@@ -86,6 +88,14 @@ export function PetDetail() {
     if (event.repeat === "Không lặp") deleteEvent(event.id);
     else setCancelTarget({ id: event.id, title: event.title, date });
   };
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) updatePet(pet.id, { image: URL.createObjectURL(file) });
+  };
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) updatePet(pet.id, { coverImage: URL.createObjectURL(file) });
+  };
 
   return (
     <div className="space-y-6">
@@ -93,12 +103,20 @@ export function PetDetail() {
 
       {/* Passport header */}
       <Card className="overflow-hidden" hover={false}>
-        <div className="h-28 relative" style={{ background: "linear-gradient(135deg,var(--primary),var(--accent))" }}>
+        <div className="h-28 relative group cursor-pointer" style={{ background: pet.coverImage ? `url("${pet.coverImage}") center/cover no-repeat` : "linear-gradient(135deg,var(--primary),var(--accent))" }} onClick={() => coverInputRef.current?.click()}>
           <ShieldCheck size={120} className="absolute -right-4 -top-4 text-white/10" />
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <Camera className="text-white w-8 h-8" />
+          </div>
+          <input type="file" hidden accept="image/*" ref={coverInputRef} onChange={handleCoverChange} />
         </div>
         <div className="px-5 pb-5 relative">
-          <div className="w-24 h-24 rounded-3xl border-4 border-card overflow-hidden bg-secondary flex items-center justify-center text-4xl flex-shrink-0 -mt-12">
+          <div className="w-24 h-24 rounded-3xl border-4 border-card overflow-hidden bg-secondary flex items-center justify-center text-4xl flex-shrink-0 -mt-12 relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
             {pet.image ? <ImageWithFallback src={pet.image} alt={pet.name} className="w-full h-full object-cover" /> : pet.emoji}
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <Camera className="text-white w-6 h-6" />
+            </div>
+            <input type="file" hidden accept="image/*" ref={avatarInputRef} onChange={handleAvatarChange} />
           </div>
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mt-3">
             <div className="min-w-0">
