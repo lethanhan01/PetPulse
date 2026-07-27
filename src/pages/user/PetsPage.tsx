@@ -7,6 +7,7 @@ import { Card, Btn, Badge, Field, Select, Modal, PageTitle } from "@/components/
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Plus, ChevronRight, Pencil, Trash2, ShieldCheck, Upload, PawPrint } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export function AddPetModal({ open, onClose, edit, petLimit }: { open: boolean; onClose: () => void; edit?: Pet; petLimit: number }) {
   const { addPet, updatePet, activeAccount, pets } = useApp();
@@ -91,6 +92,7 @@ export function AddPetModal({ open, onClose, edit, petLimit }: { open: boolean; 
 }
 
 export function Pets() {
+  const { t } = useTranslation();
   const { pets, removePet, plan } = useApp();
   const navigate = useNavigate();
   const petLimit = plan === "Premium" ? Infinity : 3;
@@ -116,6 +118,20 @@ export function Pets() {
           {pets.map(p => {
             const latest = p.health[0];
             const sv = latest.score >= 80 ? "success" as const : latest.score >= 60 ? "info" as const : latest.score >= 40 ? "warning" as const : "danger" as const;
+            
+            let translatedGender = p.gender;
+            if (p.gender === "Đực") translatedGender = t("pets.male");
+            if (p.gender === "Cái") translatedGender = t("pets.female");
+            
+            let translatedAge = p.age;
+            const ageMatch = p.age?.match(/(\d+)\s*(tuổi|tháng)/);
+            if (ageMatch) {
+              const num = parseInt(ageMatch[1], 10);
+              const unit = ageMatch[2];
+              if (unit === "tuổi") translatedAge = t("pets.ageYears", { count: num });
+              if (unit === "tháng") translatedAge = t("pets.ageMonths", { count: num });
+            }
+            
             return (
               <Card key={p.id} className="overflow-hidden group border-l-4 border-l-primary">
                 <div className="h-32 relative">
@@ -131,9 +147,9 @@ export function Pets() {
                     <h3 className="font-bold text-lg text-foreground">{p.emoji} {p.name}</h3>
                     <Badge v={sv}><ShieldCheck size={11} /> {latest.score}</Badge>
                   </div>
-                  <p className="text-xs text-muted-foreground mb-2">{p.breed} · {p.age} · {p.gender}</p>
+                  <p className="text-xs text-muted-foreground mb-2">{p.breed} · {translatedAge} · {translatedGender}</p>
                   <code className="inline-block text-[11px] text-primary bg-secondary px-2 py-0.5 rounded-full mb-3">{p.id}</code>
-                  <Btn variant="outline" block size="sm" icon={<ChevronRight size={15} />} iconRight onClick={() => navigate(`/pets/${p.id}`)}>Xem hồ sơ</Btn>
+                  <Btn variant="outline" block size="sm" icon={<ChevronRight size={15} />} iconRight onClick={() => navigate(`/pets/${p.id}`)}>{t("pets.viewProfile")}</Btn>
                 </div>
               </Card>
             );

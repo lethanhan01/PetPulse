@@ -13,5 +13,226 @@
     "moderation": "Moderation",
     "adminProfile": "Admin Profile",
     "logout": "Log out"
+  },
+  "pets": {
+    "viewProfile": "View Profile",
+    "male": "Male",
+    "female": "Female",
+    "ageYears_one": "{{count}} year",
+    "ageYears_other": "{{count}} years",
+    "ageMonths_one": "{{count}} month",
+    "ageMonths_other": "{{count}} months"
+  },
+  "auth": {
+    "login": {
+      "title": "Log In",
+      "subtitle": "Enter your email & password to continue.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "errorMsg": "Invalid email/password or account is locked.",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "submitBtn": "Log In",
+      "quickAccess": "Quick Access",
+      "demoUser": "Demo User",
+      "demoAdmin": "Demo Admin",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign Up"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitlePart1": "Sign up for free — default to",
+      "subtitlePart2": "plan.",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "John Doe",
+      "terms": "I agree to PetPulse's Terms of Service & Privacy Policy.",
+      "submitBtn": "Sign Up",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Log In"
+    },
+    "forgot": {
+      "back": "Back",
+      "title": "Forgot Password?",
+      "subtitle": "Enter email to receive recovery OTP.",
+      "sendOtp": "Send OTP",
+      "otpSentTitle": "OTP Sent",
+      "otpSentDesc": "Check your inbox and enter the 6-digit code to reset your password.",
+      "confirmBtn": "Confirm & Log In"
+    }
+  },
+  "home": {
+    "nav": {
+      "features": "Features",
+      "community-preview": "Community",
+      "cta": "Pricing",
+      "about": "About Us",
+      "faq": "FAQ"
+    },
+    "hero": {
+      "badge": "Smart Pet Care Platform",
+      "title1": "Digital",
+      "titleHighlight": "Health Passport",
+      "title2": "for your pet",
+      "desc": "PetPulse helps you manage records, track health timelines, schedule care, and consult with AI — all in one place.",
+      "loginBtn": "Log In",
+      "stats": {
+        "pets": "Pets",
+        "users": "Users",
+        "satisfaction": "Satisfaction"
+      },
+      "card": {
+        "title": "Digital Pet Passport",
+        "subtitle": "Your pet's health records, anywhere",
+        "score": "Health Score",
+        "calendar": "Care Schedule",
+        "ai": "AI Consult"
+      },
+      "floating": {
+        "vaccine": "Vaccine Tracking",
+        "vaccineSub": "Automatic reminders",
+        "notification": "Smart Notifications",
+        "notificationSub": "Never miss a visit"
+      }
+    },
+    "features": {
+      "sectionTitle": "Everything your pet needs, in one platform",
+      "sectionDesc": "From digital records to AI consults, PetPulse accompanies your pet's healthy journey.",
+      "timeline": {
+        "title": "Health Timeline",
+        "desc": "Track weight, nutrition & health status over time."
+      },
+      "ai": {
+        "title": "AI Symptom Checker",
+        "desc": "Enter symptoms, AI analyzes alert levels and provides first aid guidance."
+      },
+      "calendar": {
+        "title": "Care Schedule",
+        "desc": "Reminders for check-ups, medication, and vaccines via in-app notifications."
+      },
+      "passport": {
+        "title": "Pet Passport",
+        "desc": "Comprehensive digital records: breed, microchip, vaccines, health score."
+      },
+      "community": {
+        "title": "Pet Community",
+        "desc": "Share moments, learn care tips from a community of pet lovers."
+      },
+      "score": {
+        "title": "Health Score",
+        "desc": "Standardized health score with personalized care recommendations."
+      }
+    },
+    "community": {
+      "sectionTitle": "Pet Lovers Community",
+      "sectionDesc": "Thousands of owners share moments and care tips every day.",
+      "review1": "Vaccine reminders are so convenient, I never forget them anymore!",
+      "review2": "Health Score helps me track my pet's weight clearly.",
+      "review3": "AI detected disease signs early, allowing for timely vet visits. Amazing!"
+    },
+    "pricing": {
+      "badge": "Pricing",
+      "sectionTitle": "Choose the right plan for you",
+      "sectionDesc": "Start for free, upgrade to Premium anytime to unlock all features.",
+      "popular": "MOST POPULAR",
+      "perMonth": "month",
+      "perYear": "year",
+      "forever": "forever",
+      "startFree": "Start for free",
+      "tryPlan": "Try {{planName}}",
+      "plans": {
+        "Free": {
+          "tagline": "Start caring for your pet for free",
+          "price": "$0",
+          "features": {
+            "0": "3 pets",
+            "1": "Basic health timeline",
+            "2": "Care schedule",
+            "3": "Pet community"
+          },
+          "missing": {
+            "0": "AI Symptom Checker",
+            "1": "Unlimited pets",
+            "2": "Advanced statistics"
+          }
+        },
+        "Premium": {
+          "tagline": "Unlock the full power of PetPulse",
+          "price": "$4.99",
+          "features": {
+            "0": "Unlimited pets",
+            "1": "Unlimited AI Symptom Checker",
+            "2": "Advanced Health Score",
+            "3": "Detailed statistics & reports",
+            "4": "Priority 24/7 support",
+            "5": "Export PDF records"
+          },
+          "missing": {}
+        },
+        "Premium Năm": {
+          "tagline": "",
+          "price": "$49.99",
+          "features": {
+            "0": "Everything in Premium",
+            "1": "2 months free",
+            "2": "Yearly report"
+          },
+          "missing": {}
+        }
+      }
+    },
+    "about": {
+      "badge": "About Us",
+      "title": "PetPulse's Mission",
+      "desc": "PetPulse was born with the belief that every pet deserves comprehensive and scientific health care. We digitize health records and integrate AI technology to make tracking and caring for pets easier than ever.",
+      "stats": {
+        "founded": "Founded",
+        "pets": "Pets",
+        "partners": "Vet Partners"
+      },
+      "points": {
+        "0": "International data security standards",
+        "1": "Experienced veterinary advisors",
+        "2": "Commitment to accompany your pet's life"
+      }
+    },
+    "faq": {
+      "sectionTitle": "Frequently Asked Questions",
+      "sectionDesc": "Common questions about PetPulse",
+      "items": {
+        "free": {
+          "q": "Is PetPulse free?",
+          "a": "Yes! You can start with the forever free plan, managing up to 3 pets. When you need to unlock all features, you can upgrade to Premium anytime."
+        },
+        "multiplePets": {
+          "q": "Can I manage multiple pets?",
+          "a": "Yes. The Free plan allows up to 3 pets. If you have more, the Premium plan supports unlimited pets, along with advanced features like AI Symptom Checker."
+        },
+        "aiAccuracy": {
+          "q": "Is the AI Symptom Checker accurate?",
+          "a": "The AI uses large language models to analyze symptoms based on veterinary databases. Results are for reference only and do not replace a vet's diagnosis."
+        },
+        "security": {
+          "q": "Is my data secure?",
+          "a": "Absolutely. We apply top-tier security standards: end-to-end encryption, multi-factor authentication, and compliance with privacy regulations."
+        },
+        "cancel": {
+          "q": "Can I cancel Premium anytime?",
+          "a": "Yes. You can cancel Premium anytime without additional fees. Benefits will remain until the end of the current billing cycle."
+        },
+        "supportedPets": {
+          "q": "What pets does PetPulse support?",
+          "a": "We support Dogs, Cats, Birds, Fish, Hamsters, and many other common pets."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to take better care of your pet?",
+      "desc": "Create a free account today. Upgrade to Premium anytime.",
+      "btn": "Create Free Account"
+    },
+    "footer": {
+      "copyright": "© 2026 PetPulse. Caring for pets with all our heart 🐾"
+    }
   }
 }

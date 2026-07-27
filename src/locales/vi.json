@@ -13,5 +13,226 @@
     "moderation": "Kiểm duyệt",
     "adminProfile": "Hồ sơ Admin",
     "logout": "Đăng xuất"
+  },
+  "pets": {
+    "viewProfile": "Xem hồ sơ",
+    "male": "Đực",
+    "female": "Cái",
+    "ageYears_one": "{{count}} tuổi",
+    "ageYears_other": "{{count}} tuổi",
+    "ageMonths_one": "{{count}} tháng",
+    "ageMonths_other": "{{count}} tháng"
+  },
+  "auth": {
+    "login": {
+      "title": "Đăng nhập",
+      "subtitle": "Nhập email & mật khẩu để tiếp tục.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Mật khẩu",
+      "errorMsg": "Email, mật khẩu không đúng hoặc tài khoản đã bị tạm khóa.",
+      "rememberMe": "Ghi nhớ",
+      "forgotPassword": "Quên mật khẩu?",
+      "submitBtn": "Đăng nhập",
+      "quickAccess": "Truy cập nhanh",
+      "demoUser": "Demo User",
+      "demoAdmin": "Demo Admin",
+      "noAccount": "Chưa có tài khoản?",
+      "registerLink": "Đăng ký"
+    },
+    "register": {
+      "title": "Tạo tài khoản",
+      "subtitlePart1": "Đăng ký miễn phí — mặc định gói",
+      "subtitlePart2": ".",
+      "nameLabel": "Họ và tên",
+      "namePlaceholder": "Nguyễn Văn An",
+      "terms": "Tôi đồng ý với Điều khoản dịch vụ & Chính sách bảo mật của PetPulse.",
+      "submitBtn": "Đăng ký",
+      "hasAccount": "Đã có tài khoản?",
+      "loginLink": "Đăng nhập"
+    },
+    "forgot": {
+      "back": "Quay lại",
+      "title": "Quên mật khẩu?",
+      "subtitle": "Nhập email để nhận mã OTP khôi phục tài khoản.",
+      "sendOtp": "Gửi mã OTP",
+      "otpSentTitle": "Đã gửi mã OTP",
+      "otpSentDesc": "Kiểm tra hộp thư của bạn và nhập mã 6 số để đặt lại mật khẩu.",
+      "confirmBtn": "Xác nhận & Đăng nhập"
+    }
+  },
+  "home": {
+    "nav": {
+      "features": "Tính năng",
+      "community-preview": "Cộng đồng",
+      "cta": "Bảng giá",
+      "about": "Về chúng tôi",
+      "faq": "FAQ"
+    },
+    "hero": {
+      "badge": "Nền tảng chăm sóc thú cưng thông minh",
+      "title1": "Hộ chiếu sức khỏe",
+      "titleHighlight": "điện tử",
+      "title2": "cho thú cưng của bạn",
+      "desc": "PetPulse giúp bạn quản lý hồ sơ, theo dõi health timeline, đặt lịch chăm sóc và tư vấn sức khỏe bằng AI — tất cả trong một nơi.",
+      "loginBtn": "Đăng nhập",
+      "stats": {
+        "pets": "Thú cưng",
+        "users": "Người dùng",
+        "satisfaction": "Hài lòng"
+      },
+      "card": {
+        "title": "Pet Passport điện tử",
+        "subtitle": "Hồ sơ sức khỏe của bé, mọi lúc mọi nơi",
+        "score": "Health Score",
+        "calendar": "Lịch chăm sóc",
+        "ai": "Tư vấn AI"
+      },
+      "floating": {
+        "vaccine": "Theo dõi tiêm phòng",
+        "vaccineSub": "Nhắc lịch tự động",
+        "notification": "Thông báo thông minh",
+        "notificationSub": "Không bỏ lỡ lịch khám"
+      }
+    },
+    "features": {
+      "sectionTitle": "Mọi thứ thú cưng cần, trong một nền tảng",
+      "sectionDesc": "Từ hồ sơ điện tử đến tư vấn AI, PetPulse đồng hành cùng hành trình khỏe mạnh của bé.",
+      "timeline": {
+        "title": "Health Timeline",
+        "desc": "Theo dõi cân nặng, dinh dưỡng & tình trạng sức khỏe theo trục thời gian."
+      },
+      "ai": {
+        "title": "AI Symptom Checker",
+        "desc": "Nhập triệu chứng, AI phân tích mức độ cảnh báo và hướng dẫn sơ cứu."
+      },
+      "calendar": {
+        "title": "Lịch chăm sóc",
+        "desc": "Nhắc lịch khám, uống thuốc, tiêm phòng qua in-app notification."
+      },
+      "passport": {
+        "title": "Pet Passport",
+        "desc": "Hồ sơ điện tử đầy đủ: giống, microchip, tiêm phòng, health score."
+      },
+      "community": {
+        "title": "Cộng đồng thú cưng",
+        "desc": "Chia sẻ khoảnh khắc, học hỏi mẹo chăm sóc từ cộng đồng yêu pet."
+      },
+      "score": {
+        "title": "Health Score",
+        "desc": "Điểm sức khỏe chuẩn hóa cùng khuyến nghị chăm sóc cá nhân hóa."
+      }
+    },
+    "community": {
+      "sectionTitle": "Cộng đồng yêu thú cưng",
+      "sectionDesc": "Hàng nghìn người nuôi chia sẻ khoảnh khắc và mẹo chăm sóc mỗi ngày.",
+      "review1": "Nhắc lịch tiêm phòng cực tiện, mình không còn quên nữa!",
+      "review2": "Health Score giúp mình theo dõi cân nặng của bé rõ ràng.",
+      "review3": "AI phát hiện sớm dấu hiệu bệnh, đi khám kịp thời. Tuyệt vời!"
+    },
+    "pricing": {
+      "badge": "Bảng giá",
+      "sectionTitle": "Chọn gói phù hợp với bạn",
+      "sectionDesc": "Bắt đầu miễn phí với Free, nâng cấp Premium bất cứ lúc nào để mở khóa toàn bộ tính năng.",
+      "popular": "PHỔ BIẾN NHẤT",
+      "perMonth": "mỗi tháng",
+      "perYear": "năm",
+      "forever": "mãi mãi",
+      "startFree": "Bắt đầu miễn phí",
+      "tryPlan": "Dùng thử {{planName}}",
+      "plans": {
+        "Free": {
+          "tagline": "Bắt đầu chăm sóc bé yêu miễn phí",
+          "price": "0đ",
+          "features": {
+            "0": "3 thú cưng",
+            "1": "Health timeline cơ bản",
+            "2": "Lịch chăm sóc",
+            "3": "Cộng đồng thú cưng"
+          },
+          "missing": {
+            "0": "AI Symptom Checker",
+            "1": "Không giới hạn pet",
+            "2": "Thống kê nâng cao"
+          }
+        },
+        "Premium": {
+          "tagline": "Mở khóa toàn bộ sức mạnh của PetPulse",
+          "price": "99.000đ",
+          "features": {
+            "0": "Không giới hạn thú cưng",
+            "1": "AI Symptom Checker không giới hạn",
+            "2": "Health Score nâng cao",
+            "3": "Thống kê & báo cáo chi tiết",
+            "4": "Ưu tiên hỗ trợ 24/7",
+            "5": "Xuất hồ sơ PDF"
+          },
+          "missing": {}
+        },
+        "Premium Năm": {
+          "tagline": "",
+          "price": "990.000đ",
+          "features": {
+            "0": "Toàn bộ Premium",
+            "1": "Ưu đãi 2 tháng",
+            "2": "Báo cáo năm"
+          },
+          "missing": {}
+        }
+      }
+    },
+    "about": {
+      "badge": "Về chúng tôi",
+      "title": "Sứ mệnh của PetPulse",
+      "desc": "PetPulse ra đời với niềm tin rằng mỗi thú cưng đều xứng đáng được chăm sóc sức khỏe một cách khoa học và trọn vẹn. Chúng tôi số hóa toàn bộ hồ sơ sức khỏe, kết hợp công nghệ AI để giúp người nuôi trẻ theo dõi và chăm sóc bé yêu dễ dàng hơn bao giờ hết.",
+      "stats": {
+        "founded": "Thành lập",
+        "pets": "Thú cưng",
+        "partners": "Đối tác thú y"
+      },
+      "points": {
+        "0": "Bảo mật dữ liệu chuẩn quốc tế",
+        "1": "Đội ngũ cố vấn thú y giàu kinh nghiệm",
+        "2": "Cam kết đồng hành suốt vòng đời thú cưng"
+      }
+    },
+    "faq": {
+      "sectionTitle": "Câu hỏi thường gặp",
+      "sectionDesc": "Những thắc mắc phổ biến về PetPulse",
+      "items": {
+        "free": {
+          "q": "PetPulse có miễn phí không?",
+          "a": "Có! Bạn có thể bắt đầu với gói Free miễn phí vĩnh viễn, quản lý tối đa 3 thú cưng. Khi cần mở khóa toàn bộ tính năng, bạn có thể nâng cấp lên Premium hoặc Premium Pro bất cứ lúc nào."
+        },
+        "multiplePets": {
+          "q": "Tôi có thể quản lý nhiều thú cưng không?",
+          "a": "Có. Gói Free cho phép quản lý tối đa 3 thú cưng. Nếu bạn có nhiều hơn, gói Premium hỗ trợ không giới hạn số lượng thú cưng, kèm theo các tính năng nâng cao như AI Symptom Checker và Lịch chăm sóc thông minh."
+        },
+        "aiAccuracy": {
+          "q": "AI Symptom Checker có chính xác không?",
+          "a": "AI Symptom Checker sử dụng mô hình ngôn ngữ lớn (LLM) phân tích triệu chứng bạn nhập vào, dựa trên cơ sở dữ liệu thú y. Kết quả chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ thú y. Chúng tôi luôn khuyến nghị bạn đưa thú cưng đến phòng khám khi có dấu hiệu bất thường."
+        },
+        "security": {
+          "q": "Dữ liệu của tôi có được bảo mật không?",
+          "a": "Tuyệt đối. PetPulse áp dụng các tiêu chuẩn bảo mật hàng đầu: mã hóa dữ liệu đầu cuối, xác thực đa lớp, và tuân thủ quy định bảo vệ dữ liệu cá nhân. Hồ sơ sức khỏe thú cưng của bạn được lưu trữ an toàn và chỉ bạn mới có quyền truy cập."
+        },
+        "cancel": {
+          "q": "Tôi có thể hủy gói Premium bất cứ lúc nào không?",
+          "a": "Có. Bạn có thể hủy gói Premium hoặc Premium Pro bất cứ lúc nào mà không mất thêm phí. Sau khi hủy, quyền lợi Premium vẫn được duy trì đến hết chu kỳ thanh toán hiện tại, sau đó tài khoản sẽ tự động chuyển về gói Free."
+        },
+        "supportedPets": {
+          "q": "PetPulse có hỗ trợ những loài thú cưng nào?",
+          "a": "PetPulse hỗ trợ Chó, Mèo, Chim, Cá, Hamster và nhiều loài thú cưng phổ biến khác. Bạn có thể thêm thú cưng với đầy đủ thông tin: giống, tuổi, cân nặng, microchip và lịch sử tiêm phòng."
+        }
+      }
+    },
+    "cta": {
+      "title": "Sẵn sàng chăm sóc bé yêu tốt hơn?",
+      "desc": "Tạo tài khoản Free miễn phí ngay hôm nay. Nâng cấp Premium bất cứ lúc nào.",
+      "btn": "Tạo tài khoản miễn phí"
+    },
+    "footer": {
+      "copyright": "© 2026 PetPulse. Chăm sóc thú cưng bằng cả trái tim 🐾"
+    }
   }
 }
