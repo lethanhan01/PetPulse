@@ -646,6 +646,136 @@
       "rejectBtn": "Reject"
     }
   },
+  "petDetail": {
+    "notFound": "Pet not found",
+    "backToList": "Pet List",
+    "scoreLevel": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "fair": "Fair",
+      "attention": "Needs Attention"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "timeline": "Health Timeline",
+      "calendar": "Care Calendar",
+      "consult": "AI Consult History",
+      "settings": "Settings"
+    },
+    "overview": {
+      "healthScore": "Health Score",
+      "recommendation": "Recommendation: Maintain exercise routine, provide balanced nutrition, and schedule regular dental checkups.",
+      "latestStats": "Latest Health Stats",
+      "weight": "Weight",
+      "condition": "Condition",
+      "nutrition": "Nutrition",
+      "illness": "Illness",
+      "none": "None"
+    },
+    "timeline": {
+      "title": "Health Timeline",
+      "updateBtn": "Update Health",
+      "score": "Score"
+    },
+    "calendar": {
+      "title": "Health Care Calendar",
+      "addBtn": "Add Event",
+      "notificationMsg": "The system will send an in-app notification before each event.",
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "month": "Month {{month}} Year {{year}}",
+      "weekdays": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      },
+      "restore": "Restore",
+      "completeBtn": "Complete"
+    },
+    "consult": {
+      "title": "AI Consult History",
+      "newBtn": "New Consult",
+      "emptyMsg": "No consult history yet. Use AI Symptom Checker to check health.",
+      "alert": "Alert",
+      "symptoms": "Symptoms",
+      "possibleDiseases": "Possible Diseases",
+      "firstAid": "First Aid"
+    },
+    "settings": {
+      "title": "{{name}}'s Profile Settings",
+      "items": {
+        "publicProfile": { "title": "Public Profile", "desc": "Allow community to view passport" },
+        "notifications": { "title": "Notification Reminders", "desc": "In-app notification before events" },
+        "autoScore": { "title": "Auto Calculate Health Score", "desc": "After each timeline update" },
+        "syncAI": { "title": "Save AI Consult Results", "desc": "Sync to pet profile" }
+      }
+    },
+    "modals": {
+      "health": {
+        "title": "Update Health Timeline",
+        "weightLabel": "Weight (kg)",
+        "weightPlaceholder": "Ex: 28",
+        "conditionLabel": "Health Condition",
+        "nutritionLabel": "Nutrition Status",
+        "nutritionPlaceholder": "Ex: Balanced",
+        "illnessLabel": "Illness Status (if any)",
+        "illnessPlaceholder": "Leave blank if healthy",
+        "cancelBtn": "Cancel",
+        "saveBtn": "Save & Calculate Score"
+      },
+      "event": {
+        "title": "Add Care Event",
+        "nameLabel": "Event Name",
+        "namePlaceholder": "Ex: Regular Checkup",
+        "dateLabel": "Date",
+        "timeLabel": "Time",
+        "repeatLabel": "Repeat",
+        "typeLabel": "Event Type",
+        "customTypeLabel": "Enter custom event type",
+        "customTypePlaceholder": "Ex: Bathing, nail trimming...",
+        "cancelBtn": "Cancel",
+        "saveBtn": "Add to Calendar"
+      },
+      "cancelEvent": {
+        "title": "Cancel Recurring Event",
+        "desc": "How do you want to cancel ",
+        "cancelOccurrenceBtn": "Cancel event on {{date}}",
+        "cancelSeriesBtn": "Cancel all recurring events",
+        "keepBtn": "Keep"
+      }
+    },
+    "dynamic": {
+      "condition": {
+        "tốt": "Good",
+        "bình thường": "Normal",
+        "cần chú ý": "Needs Attention"
+      },
+      "nutrition": {
+        "cân bằng": "Balanced",
+        "kém": "Poor"
+      },
+      "eventType": {
+        "khám": "Checkup",
+        "uống thuốc": "Medication",
+        "tiêm phòng": "Vaccination",
+        "khác": "Other"
+      },
+      "repeat": {
+        "không lặp": "No repeat",
+        "hằng ngày": "Daily",
+        "hằng tuần": "Weekly"
+      },
+      "severity": {
+        "cao": "High",
+        "trung bình": "Medium",
+        "thấp": "Low"
+      }
+    }
+  },
   "common": {
     "pagination": {
       "prev": "Previous",
