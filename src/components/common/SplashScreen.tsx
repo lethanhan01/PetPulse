@@ -1,20 +1,55 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 export function SplashScreen({ onComplete }: { onComplete: () => void }) {
   const { t } = useTranslation();
   const [isExiting, setIsExiting] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+
+    // Initialize and play audio
+    const audio = new Audio('/water.wav');
+    audio.loop = true;
+    audioRef.current = audio;
+    
+    // Play with catch for autoplay policy
+    audio.play().catch(error => {
+      console.warn("Autoplay blocked by browser policy:", error);
+    });
+
     return () => {
       document.body.style.overflow = "auto";
+      // Cleanup audio
+      audio.pause();
+      audio.src = '';
     };
   }, []);
 
   const handleClick = () => {
     if (isExiting) return;
     setIsExiting(true);
+
+    // Fade out audio over 800ms
+    if (audioRef.current) {
+      const audio = audioRef.current;
+      const fadeDuration = 800; // ms
+      const fadeSteps = 20;
+      const fadeInterval = fadeDuration / fadeSteps;
+      const volumeStep = audio.volume / fadeSteps;
+
+      const fadeTimer = setInterval(() => {
+        if (audio.volume > volumeStep) {
+          audio.volume -= volumeStep;
+        } else {
+          audio.volume = 0;
+          audio.pause();
+          clearInterval(fadeTimer);
+        }
+      }, fadeInterval);
+    }
+
     setTimeout(() => {
       onComplete();
     }, 800);
