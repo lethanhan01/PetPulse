@@ -1,0 +1,17 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "myPets": "My Pets",
+    "aiChecker": "AI Symptom Checker",
+    "community": "Community",
+    "premium": "Upgrade to Premium",
+    "profile": "Profile",
+    "stats": "Statistics",
+    "manageUsers": "Manage Users",
+    "managePets": "Manage Pets",
+    "subscriptions": "Subscriptions",
+    "moderation": "Moderation",
+    "adminProfile": "Admin Profile",
+    "logout": "Log out"
+  }
+}

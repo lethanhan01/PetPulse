@@ -1,0 +1,17 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "myPets": "Thú cưng của tôi",
+    "aiChecker": "AI Symptom Checker",
+    "community": "Cộng đồng",
+    "premium": "Nâng cấp Premium",
+    "profile": "Hồ sơ cá nhân",
+    "stats": "Thống kê",
+    "manageUsers": "Quản lý User",
+    "managePets": "Quản lý Pet",
+    "subscriptions": "Subscription",
+    "moderation": "Kiểm duyệt",
+    "adminProfile": "Hồ sơ Admin",
+    "logout": "Đăng xuất"
+  }
+}
