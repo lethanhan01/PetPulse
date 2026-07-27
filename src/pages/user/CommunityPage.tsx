@@ -48,7 +48,13 @@ function PostItem({ post, onViewStory }: { post: CommunityPost; onViewStory?: (a
       <div className="p-4 flex items-center gap-3">
         {hasStory ? (
           <div className="relative flex-shrink-0">
-            <button onClick={() => setMenuOpen(true)} className="p-[2px] rounded-full bg-gradient-to-tr from-yellow-400 via-rose-500 to-violet-600 hover:brightness-110 transition-all">
+            <button onClick={() => {
+              if (activeAccount?.id === post.authorId) {
+                onViewStory?.(post.authorId);
+              } else {
+                setMenuOpen(true);
+              }
+            }} className="p-[2px] rounded-full bg-gradient-to-tr from-yellow-400 via-rose-500 to-violet-600 hover:brightness-110 transition-all">
               <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center overflow-hidden text-sm font-bold text-primary">
                 {isImageUrl(authorAvatar) ? <img src={authorAvatar} alt="" className="w-full h-full object-cover" /> : authorAvatar}
               </div>
