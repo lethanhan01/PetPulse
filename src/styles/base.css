@@ -2,6 +2,25 @@
   cursor: url("/cursor-paw.png") 16 16, auto !important;
 }
 
+@layer components {
+  .flip-card { perspective: 1000px; }
+  .flip-card-inner {
+    display: grid;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+  .flip-card-front, .flip-card-back {
+    grid-column: 1; grid-row: 1;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .flip-card-back { transform: rotateY(180deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .flip-card-inner { transition: none; }
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

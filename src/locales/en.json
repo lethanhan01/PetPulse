@@ -226,29 +226,36 @@
     "features": {
       "sectionTitle": "Everything your pet needs, in one platform",
       "sectionDesc": "From digital records to AI consults, PetPulse accompanies your pet's healthy journey.",
+      "flipHint": "Hover to learn more",
       "timeline": {
         "title": "Health Timeline",
-        "desc": "Track weight, nutrition & health status over time."
+        "desc": "Track weight, nutrition & health status over time.",
+        "detail": "Track weight, nutrition, vaccination schedule, and health metrics in real-time. The auto-generated Health Score gives you a comprehensive view of your pet's well-being at a glance."
       },
       "ai": {
         "title": "AI Symptom Checker",
-        "desc": "Enter symptoms, AI analyzes alert levels and provides first aid guidance."
+        "desc": "Enter symptoms, AI analyzes alert levels and provides first aid guidance.",
+        "detail": "Enter unusual symptoms and our AI analyzes severity levels with first-aid guidance. Make timely decisions and know when to visit the vet."
       },
       "calendar": {
         "title": "Care Schedule",
-        "desc": "Reminders for check-ups, medication, and vaccines via in-app notifications."
+        "desc": "Reminders for check-ups, medication, and vaccines via in-app notifications.",
+        "detail": "Smart reminders for checkups, medication, vaccinations, and grooming. Get push notifications and emails so you never miss an important date."
       },
       "passport": {
         "title": "Pet Passport",
-        "desc": "Comprehensive digital records: breed, microchip, vaccines, health score."
+        "desc": "Comprehensive digital records: breed, microchip, vaccines, health score.",
+        "detail": "Comprehensive digital health records: breed info, microchip, vaccination history, lab results, and health score. Export PDF for vet visits."
       },
       "community": {
         "title": "Pet Community",
-        "desc": "Share moments, learn care tips from a community of pet lovers."
+        "desc": "Share moments, learn care tips from a community of pet lovers.",
+        "detail": "Connect with pet lovers, share adorable moments, and learn care tips from experienced owners. Build a healthy pet community together."
       },
       "score": {
         "title": "Health Score",
-        "desc": "Standardized health score with personalized care recommendations."
+        "desc": "Standardized health score with personalized care recommendations.",
+        "detail": "Standardized health score based on comprehensive health metrics. Get personalized care recommendations tailored to your pet's life stage."
       }
     },
     "community": {
@@ -298,12 +305,15 @@
           "missing": {}
         },
         "Premium Năm": {
-          "tagline": "",
+          "tagline": "Save over 20% vs monthly",
           "price": "$49.99",
           "features": {
             "0": "Everything in Premium",
             "1": "2 months free",
-            "2": "Yearly report"
+            "2": "Yearly report",
+            "3": "Priority 24/7 support",
+            "4": "Export PDF records",
+            "5": "Advanced Health Score"
           },
           "missing": {}
         }
@@ -313,6 +323,12 @@
       "badge": "About Us",
       "title": "PetPulse's Mission",
       "desc": "PetPulse was born with the belief that every pet deserves comprehensive and scientific health care. We digitize health records and integrate AI technology to make tracking and caring for pets easier than ever.",
+      "detail": "Our vision is a world where no pet is left behind. We are building an open ecosystem connecting pet owners, veterinarians, and pet service providers — ensuring every pet gets timely care, real-time health monitoring, and a loving community supporting their journey.",
+      "values": {
+        "0": { "title": "Technology & Care", "desc": "Combine AI and veterinary expertise to deliver accurate, real-time health insights for every pet." },
+        "1": { "title": "Transparency & Trust", "desc": "Your pet's data is encrypted and secured to international standards. No sharing without your consent." },
+        "2": { "title": "Community & Support", "desc": "A compassionate network of pet lovers, vets, and experts — always ready to help you and your pet." }
+      },
       "stats": {
         "founded": "Founded",
         "pets": "Pets",

@@ -226,29 +226,36 @@
     "features": {
       "sectionTitle": "Mọi thứ thú cưng cần, trong một nền tảng",
       "sectionDesc": "Từ hồ sơ điện tử đến tư vấn AI, PetPulse đồng hành cùng hành trình khỏe mạnh của bé.",
+      "flipHint": "Di chuột để xem chi tiết",
       "timeline": {
         "title": "Health Timeline",
-        "desc": "Theo dõi cân nặng, dinh dưỡng & tình trạng sức khỏe theo trục thời gian."
+        "desc": "Theo dõi cân nặng, dinh dưỡng & tình trạng sức khỏe theo trục thời gian.",
+        "detail": "Theo dõi chi tiết cân nặng, dinh dưỡng, lịch tiêm phòng và các chỉ số sức khỏe theo thời gian thực. Health Score tổng hợp tự động giúp bạn nắm bắt tình trạng sức khỏe tổng quát của thú cưng chỉ trong một cái nhìn."
       },
       "ai": {
         "title": "AI Symptom Checker",
-        "desc": "Nhập triệu chứng, AI phân tích mức độ cảnh báo và hướng dẫn sơ cứu."
+        "desc": "Nhập triệu chứng, AI phân tích mức độ cảnh báo và hướng dẫn sơ cứu.",
+        "detail": "Nhập các triệu chứng bất thường, AI phân tích và đưa ra mức độ cảnh báo kèm hướng dẫn sơ cứu ban đầu. Hỗ trợ bạn đưa ra quyết định kịp thời trước khi đưa thú cưng đến phòng khám."
       },
       "calendar": {
         "title": "Lịch chăm sóc",
-        "desc": "Nhắc lịch khám, uống thuốc, tiêm phòng qua in-app notification."
+        "desc": "Nhắc lịch khám, uống thuốc, tiêm phòng qua in-app notification.",
+        "detail": "Lên lịch nhắc nhở thông minh cho khám định kỳ, uống thuốc, tiêm phòng và tắm lông. Nhận thông báo trực tiếp qua ứng dụng và email để không bao giờ bỏ lỡ."
       },
       "passport": {
         "title": "Pet Passport",
-        "desc": "Hồ sơ điện tử đầy đủ: giống, microchip, tiêm phòng, health score."
+        "desc": "Hồ sơ điện tử đầy đủ: giống, microchip, tiêm phòng, health score.",
+        "detail": "Hồ sơ sức khỏe điện tử toàn diện: thông tin giống, microchip, lịch sử tiêm phòng, xét nghiệm và health score. Xuất PDF dễ dàng để mang theo khi đi khám."
       },
       "community": {
         "title": "Cộng đồng thú cưng",
-        "desc": "Chia sẻ khoảnh khắc, học hỏi mẹo chăm sóc từ cộng đồng yêu pet."
+        "desc": "Chia sẻ khoảnh khắc, học hỏi mẹo chăm sóc từ cộng đồng yêu pet.",
+        "detail": "Kết nối với cộng đồng yêu thú cưng, chia sẻ khoảnh khắc đáng yêu, học hỏi mẹo chăm sóc từ những người nuôi có kinh nghiệm. Cùng nhau xây dựng một cộng đồng pet khỏe mạnh."
       },
       "score": {
         "title": "Health Score",
-        "desc": "Điểm sức khỏe chuẩn hóa cùng khuyến nghị chăm sóc cá nhân hóa."
+        "desc": "Điểm sức khỏe chuẩn hóa cùng khuyến nghị chăm sóc cá nhân hóa.",
+        "detail": "Điểm sức khỏe chuẩn hóa dựa trên các chỉ số tổng hợp. Nhận khuyến nghị chăm sóc cá nhân hóa theo từng giai đoạn phát triển, giúp bé yêu luôn khỏe mạnh và hạnh phúc."
       }
     },
     "community": {
@@ -298,12 +305,15 @@
           "missing": {}
         },
         "Premium Năm": {
-          "tagline": "",
+          "tagline": "Tiết kiệm hơn 20% so với gói tháng",
           "price": "990.000đ",
           "features": {
             "0": "Toàn bộ Premium",
             "1": "Ưu đãi 2 tháng",
-            "2": "Báo cáo năm"
+            "2": "Báo cáo năm",
+            "3": "Ưu tiên hỗ trợ 24/7",
+            "4": "Xuất hồ sơ PDF",
+            "5": "Health Score nâng cao"
           },
           "missing": {}
         }
@@ -313,6 +323,12 @@
       "badge": "Về chúng tôi",
       "title": "Sứ mệnh của PetPulse",
       "desc": "PetPulse ra đời với niềm tin rằng mỗi thú cưng đều xứng đáng được chăm sóc sức khỏe một cách khoa học và trọn vẹn. Chúng tôi số hóa toàn bộ hồ sơ sức khỏe, kết hợp công nghệ AI để giúp người nuôi trẻ theo dõi và chăm sóc bé yêu dễ dàng hơn bao giờ hết.",
+      "detail": "Tầm nhìn của chúng tôi là một thế giới nơi không thú cưng nào bị bỏ lại phía sau. Chúng tôi xây dựng một hệ sinh thái mở kết nối người nuôi thú cưng, bác sĩ thú y và các dịch vụ chăm sóc — đảm bảo mỗi thú cưng đều được chăm sóc kịp thời, theo dõi sức khỏe thời gian thực và có một cộng đồng yêu thương đồng hành.",
+      "values": {
+        "0": { "title": "Công nghệ & Chăm sóc", "desc": "Kết hợp AI và chuyên môn thú y để cung cấp thông tin sức khỏe chính xác, theo thời gian thực cho mỗi thú cưng." },
+        "1": { "title": "Minh bạch & Tin cậy", "desc": "Dữ liệu thú cưng của bạn được mã hóa và bảo vệ theo chuẩn quốc tế. Không chia sẻ khi chưa có sự đồng ý." },
+        "2": { "title": "Cộng đồng & Hỗ trợ", "desc": "Một mạng lưới yêu thương gồm những người yêu thú cưng, bác sĩ thú y và chuyên gia — luôn sẵn sàng giúp đỡ bạn." }
+      },
       "stats": {
         "founded": "Thành lập",
         "pets": "Thú cưng",

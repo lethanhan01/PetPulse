@@ -3,12 +3,14 @@ import { PUBLIC_SUBSCRIPTIONS } from "@/mocks";
 import { useNavigate } from "react-router";
 import { Btn, Logo, Card } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
-import { Sun, Moon, Activity, Sparkles, Calendar, Users, ShieldCheck, Heart, ArrowRight, Stethoscope, Bell, PawPrint, CheckCircle2, Crown, X } from "lucide-react";
+import { Sun, Moon, Activity, Sparkles, Calendar, Users, ShieldCheck, Heart, ArrowRight, Stethoscope, Bell, PawPrint, CheckCircle2, Crown, X, Star } from "lucide-react";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { useEffect, useState } from "react";
 import { LanguageSwitcher } from "@/components/Navbar/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 import { SplashScreen } from "@/components/common/SplashScreen";
+import { AnimateIn } from "@/components/common/AnimateIn";
+import { FlipCard } from "@/components/common/FlipCard";
 
 const FEATURES = [
   { icon: <Activity size={20} />, id: "timeline" },
@@ -43,10 +45,12 @@ export function Landing() {
   const isDark = theme === "dark";
   const [activeSection, setActiveSection] = useState("");
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("splashSeen"));
+  const [startAnimations, setStartAnimations] = useState(!showSplash);
 
   const handleSplashComplete = () => {
     sessionStorage.setItem("splashSeen", "true");
     setShowSplash(false);
+    setStartAnimations(true);
   };
 
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -69,7 +73,7 @@ export function Landing() {
         <Logo size={36} />
         <nav className="hidden md:flex items-center gap-1 ml-8">
           {NAV_LINKS.map(i => (
-            <button key={i.id} onClick={() => scrollTo(i.id)} className={`px-3 py-1.5 rounded-xl text-sm transition-colors border border-border ${activeSection === i.id ? "bg-secondary text-foreground font-semibold" : "text-foreground/70 hover:text-foreground hover:bg-secondary"}`}>{t(`home.nav.${i.id}`)}</button>
+            <button key={i.id} onClick={() => scrollTo(i.id)} className={`px-3.5 py-1.5 rounded-xl text-sm font-medium transition-colors border border-border ${activeSection === i.id ? "bg-secondary text-foreground font-semibold" : "text-foreground/85 hover:text-foreground hover:bg-secondary"}`}>{t(`home.nav.${i.id}`)}</button>
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
@@ -87,40 +91,51 @@ export function Landing() {
         style={{ background: "var(--gradient-page)" }}>
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-5">
-              <Sparkles size={12} /> {t('home.hero.badge')}
-            </span>
-            <h1 className="font-extrabold text-4xl sm:text-6xl text-foreground leading-tight mb-5">
-              {t('home.hero.title1')} <span className="text-primary">{t('home.hero.titleHighlight')}</span> {t('home.hero.title2')}
-            </h1>
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed max-w-xl">
-              {t('home.hero.desc')}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Btn size="lg" icon={<ArrowRight size={18} />} iconRight onClick={() => navigate("/login")}>{t('home.hero.loginBtn')}</Btn>
-            </div>
-            <div className="flex items-center gap-6 mt-8">
-              {[{ v: "10K+", l: t('home.hero.stats.pets') }, { v: "8K+", l: t('home.hero.stats.users') }, { v: "98%", l: t('home.hero.stats.satisfaction') }].map(s => (
-                <div key={s.l}>
-                  <div className="font-extrabold text-2xl text-primary">{s.v}</div>
-                  <div className="text-xs text-muted-foreground">{s.l}</div>
-                </div>
-              ))}
-            </div>
+            <AnimateIn start={startAnimations} delay={0}>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-5">
+                <Sparkles size={12} /> {t('home.hero.badge')}
+              </span>
+            </AnimateIn>
+            <AnimateIn start={startAnimations} delay={150}>
+              <h1 className="font-extrabold text-4xl sm:text-6xl text-foreground leading-tight mb-5">
+                {t('home.hero.title1')} <span className="text-primary">{t('home.hero.titleHighlight')}</span> {t('home.hero.title2')}
+              </h1>
+            </AnimateIn>
+            <AnimateIn start={startAnimations} delay={300}>
+              <p className="text-lg text-muted-foreground mb-8 leading-relaxed max-w-xl">
+                {t('home.hero.desc')}
+              </p>
+            </AnimateIn>
+            <AnimateIn start={startAnimations} delay={450}>
+              <div className="flex flex-wrap gap-3">
+                <Btn size="lg" icon={<ArrowRight size={18} />} iconRight onClick={() => navigate("/login")}>{t('home.hero.loginBtn')}</Btn>
+              </div>
+            </AnimateIn>
+            <AnimateIn start={startAnimations} delay={600}>
+              <div className="flex items-center gap-6 mt-8">
+                {[{ v: "10K+", l: t('home.hero.stats.pets') }, { v: "8K+", l: t('home.hero.stats.users') }, { v: "98%", l: t('home.hero.stats.satisfaction') }].map(s => (
+                  <div key={s.l}>
+                    <div className="font-extrabold text-2xl text-primary">{s.v}</div>
+                    <div className="text-xs text-muted-foreground">{s.l}</div>
+                  </div>
+                ))}
+              </div>
+            </AnimateIn>
           </div>
           <div className="relative">
-            <Card className="overflow-hidden" hover={false}>
-              <div className="h-52 relative">
-                <ImageWithFallback src="https://images.unsplash.com/photo-1598875706250-21faaf804361?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Thú cưng khỏe mạnh" className="w-full h-full object-cover" />
-              </div>
-              <div className="p-5 space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><ShieldCheck size={18} /></div>
-                  <div>
-                    <p className="font-bold text-foreground">{t('home.hero.card.title')}</p>
-                    <p className="text-xs text-muted-foreground">{t('home.hero.card.subtitle')}</p>
-                  </div>
+            <AnimateIn start={startAnimations} delay={250}>
+              <Card className="overflow-hidden" hover={false}>
+                <div className="h-52 relative">
+                  <ImageWithFallback src="https://images.unsplash.com/photo-1598875706250-21faaf804361?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Thú cưng khỏe mạnh" className="w-full h-full object-cover" />
                 </div>
+                <div className="p-5 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><ShieldCheck size={18} /></div>
+                    <div>
+                      <p className="font-bold text-foreground">{t('home.hero.card.title')}</p>
+                      <p className="text-xs text-muted-foreground">{t('home.hero.card.subtitle')}</p>
+                    </div>
+                  </div>
                 <div className="grid grid-cols-3 gap-2">
                   {[
                     { icon: <Activity size={15} />, l: t('home.hero.card.score') },
@@ -134,14 +149,22 @@ export function Landing() {
                   ))}
                 </div>
               </div>
-            </Card>
-            <div className="absolute -bottom-4 -left-4 bg-card border border-border rounded-2xl shadow-lg p-3 flex items-center gap-2 hidden sm:flex">
-              <div className="w-9 h-9 rounded-xl bg-success-surface bg-success-surface text-success flex items-center justify-center"><Heart size={17} /></div>
-              <div><p className="text-sm font-semibold text-foreground">{t('home.hero.floating.vaccine')}</p><p className="text-xs text-muted-foreground">{t('home.hero.floating.vaccineSub')}</p></div>
+            </Card></AnimateIn>
+            <div className="absolute -bottom-4 -left-4 hidden sm:block">
+              <AnimateIn start={startAnimations} delay={400}>
+                <div className="bg-card border border-border rounded-2xl shadow-lg p-3 flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-success-surface bg-success-surface text-success flex items-center justify-center"><Heart size={17} /></div>
+                  <div><p className="text-sm font-semibold text-foreground">{t('home.hero.floating.vaccine')}</p><p className="text-xs text-muted-foreground">{t('home.hero.floating.vaccineSub')}</p></div>
+                </div>
+              </AnimateIn>
             </div>
-            <div className="absolute -top-4 -right-4 bg-card border border-border rounded-2xl shadow-lg p-3 flex items-center gap-2 hidden sm:flex">
-              <div className="w-9 h-9 rounded-xl bg-accent/20 text-primary flex items-center justify-center"><Bell size={17} /></div>
-              <div><p className="text-sm font-semibold text-foreground">{t('home.hero.floating.notification')}</p><p className="text-xs text-muted-foreground">{t('home.hero.floating.notificationSub')}</p></div>
+            <div className="absolute -top-4 -right-4 hidden sm:block">
+              <AnimateIn start={startAnimations} delay={550}>
+                <div className="bg-card border border-border rounded-2xl shadow-lg p-3 flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-accent/20 text-primary flex items-center justify-center"><Bell size={17} /></div>
+                  <div><p className="text-sm font-semibold text-foreground">{t('home.hero.floating.notification')}</p><p className="text-xs text-muted-foreground">{t('home.hero.floating.notificationSub')}</p></div>
+                </div>
+              </AnimateIn>
             </div>
           </div>
         </div>
@@ -149,62 +172,84 @@ export function Landing() {
 
       {/* Features */}
       <section id="features" className="px-4 sm:px-8 py-20 max-w-6xl mx-auto scroll-mt-20">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="font-extrabold text-3xl sm:text-4xl text-foreground mb-3">{t('home.features.sectionTitle')}</h2>
-          <p className="text-muted-foreground">{t('home.features.sectionDesc')}</p>
-        </div>
+        <AnimateIn>
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="font-extrabold text-3xl sm:text-4xl text-foreground mb-3">{t('home.features.sectionTitle')}</h2>
+            <p className="text-muted-foreground">{t('home.features.sectionDesc')}</p>
+          </div>
+        </AnimateIn>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {FEATURES.map(f => (
-            <Card key={f.id} className="p-6">
-              <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">{f.icon}</div>
-              <h3 className="font-bold text-lg text-foreground mb-1.5">{t(`home.features.${f.id}.title`)}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{t(`home.features.${f.id}.desc`)}</p>
-            </Card>
+          {FEATURES.map((f, i) => (
+            <AnimateIn start={startAnimations} key={f.id} delay={i * 80} className="h-full">
+              <FlipCard
+                front={
+                  <div className="p-6 h-full rounded-2xl border border-primary/20 bg-primary/[8%] shadow-sm flex flex-col">
+                    <div className="w-11 h-11 rounded-xl bg-primary text-primary-foreground flex items-center justify-center mb-4">{f.icon}</div>
+                    <h3 className="font-bold text-lg text-foreground mb-1.5">{t(`home.features.${f.id}.title`)}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed flex-1">{t(`home.features.${f.id}.desc`)}</p>
+                    <span className="text-xs text-primary/60 mt-2 items-center gap-1 hidden sm:flex">{t('home.features.flipHint')} <ArrowRight size={12} /></span>
+                  </div>
+                }
+                back={
+                  <div className="p-6 h-full rounded-2xl border border-primary/20 bg-primary/[8%] shadow-sm flex flex-col items-center justify-center text-center">
+                    <div className="w-11 h-11 rounded-xl bg-primary text-primary-foreground flex items-center justify-center mb-4">{f.icon}</div>
+                    <p className="text-sm text-foreground leading-relaxed">{t(`home.features.${f.id}.detail`)}</p>
+                  </div>
+                }
+              />
+            </AnimateIn>
           ))}
         </div>
       </section>
 
       {/* Community preview */}
       <section id="community-preview" className="px-4 sm:px-8 pb-20 max-w-6xl mx-auto scroll-mt-20">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <h2 className="font-extrabold text-3xl sm:text-4xl text-foreground mb-3">{t('home.community.sectionTitle')}</h2>
-          <p className="text-muted-foreground">{t('home.community.sectionDesc')}</p>
-        </div>
+        <AnimateIn>
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <h2 className="font-extrabold text-3xl sm:text-4xl text-foreground mb-3">{t('home.community.sectionTitle')}</h2>
+            <p className="text-muted-foreground">{t('home.community.sectionDesc')}</p>
+          </div>
+        </AnimateIn>
         <div className="grid sm:grid-cols-3 gap-5">
           {[
             { img: "https://images.unsplash.com/photo-1537204696486-967f1b7198c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080", quoteId: "review1", name: "Thu Hà" },
             { img: "https://images.unsplash.com/photo-1615497001839-b0a0eac3274c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080", quoteId: "review2", name: "Minh Quân" },
             { img: "https://images.unsplash.com/photo-1624956578877-4948166c5dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080", quoteId: "review3", name: "Ngọc Linh" },
-          ].map(c => (
-            <Card key={c.name} className="overflow-hidden">
-              <div className="h-40"><ImageWithFallback src={c.img} alt={c.name} className="w-full h-full object-cover" /></div>
-              <div className="p-5">
-                <p className="text-sm text-foreground leading-relaxed mb-3">“{t(`home.community.${c.quoteId}`)}”</p>
-                <p className="text-xs font-semibold text-primary">— {c.name}</p>
-              </div>
-            </Card>
+          ].map((c, i) => (
+            <AnimateIn start={startAnimations} key={c.name} delay={i * 100} className="h-full">
+              <Card className="overflow-hidden h-full">
+                <div className="h-40"><ImageWithFallback src={c.img} alt={c.name} className="w-full h-full object-cover" /></div>
+                <div className="p-5">
+                  <p className="text-sm text-foreground leading-relaxed mb-3">“{t(`home.community.${c.quoteId}`)}”</p>
+                  <p className="text-xs font-semibold text-primary">— {c.name}</p>
+                </div>
+              </Card>
+            </AnimateIn>
           ))}
         </div>
       </section>
 
       {/* About */}
       <section id="cta" className="px-4 sm:px-8 pb-20 max-w-5xl mx-auto scroll-mt-20">
-        <div className="text-center mb-10">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
-            <Crown size={12} /> {t('home.pricing.badge')}
-          </span>
-          <h2 className="font-extrabold text-3xl sm:text-4xl text-foreground mb-3">{t('home.pricing.sectionTitle')}</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">{t('home.pricing.sectionDesc')}</p>
-        </div>
+        <AnimateIn>
+          <div className="text-center mb-10">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
+              <Crown size={12} /> {t('home.pricing.badge')}
+            </span>
+            <h2 className="font-extrabold text-3xl sm:text-4xl text-foreground mb-3">{t('home.pricing.sectionTitle')}</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">{t('home.pricing.sectionDesc')}</p>
+          </div>
+        </AnimateIn>
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {PUBLIC_SUBSCRIPTIONS.map(p => (
-            <Card key={p.name} className={`p-6 relative flex flex-col ${p.accent ? "ring-2 ring-primary" : ""}`} hover={false}>
+          {PUBLIC_SUBSCRIPTIONS.map((p, i) => (
+            <AnimateIn start={startAnimations} key={p.name} delay={i * 100} className="h-full">
+              <Card className={`p-6 relative flex flex-col h-full ${p.accent ? "ring-2 ring-primary" : ""}`} hover={false}>
               {p.accent && <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold whitespace-nowrap">{t('home.pricing.popular')}</span>}
               <div className="flex items-center gap-2 mb-1">
                 {p.accent ? <Crown size={20} className="text-primary" /> : <ShieldCheck size={20} className="text-muted-foreground" />}
                 <h3 className="font-bold text-xl text-foreground">{p.name}</h3>
               </div>
-              <p className="text-xs text-muted-foreground mb-4">{t(`home.pricing.plans.${p.name}.tagline`)}</p>
+              {t(`home.pricing.plans.${p.name}.tagline`) && <p className="text-xs text-muted-foreground mb-4">{t(`home.pricing.plans.${p.name}.tagline`)}</p>}
               <div className="mb-5"><span className="font-extrabold text-3xl text-foreground">{t(`home.pricing.plans.${p.name}.price`)}</span> <span className="text-sm text-muted-foreground">/ {p.period === 'mỗi tháng' ? t('home.pricing.perMonth') : p.period === 'năm' ? t('home.pricing.perYear') : t('home.pricing.forever')}</span></div>
               <ul className="space-y-2.5 flex-1 mb-6">
                 {p.features.map((f, i) => <li key={f} className="flex items-start gap-2 text-sm text-foreground"><CheckCircle2 size={16} className="text-success mt-0.5 flex-shrink-0" /> {t(`home.pricing.plans.${p.name}.features.${i}`)}</li>)}
@@ -213,55 +258,95 @@ export function Landing() {
               {p.name === "Free"
                 ? <Btn block variant="primary" onClick={() => navigate("/register")}>{t('home.pricing.startFree')}</Btn>
                 : <Btn block size="lg" icon={<Crown size={16} />} onClick={() => navigate("/register")}>{t('home.pricing.tryPlan', { planName: p.name })}</Btn>}
-            </Card>
+            </Card></AnimateIn>
           ))}
         </div>
       </section>
 
       <section id="about" className="px-4 sm:px-8 pb-20 max-w-6xl mx-auto scroll-mt-20">
-        <div className="rounded-3xl border border-border bg-card overflow-hidden grid md:grid-cols-2">
+        <AnimateIn>
+          <div className="rounded-3xl border border-border bg-card grid md:grid-cols-2 overflow-hidden">
           <div className="h-64 md:h-auto relative">
             <ImageWithFallback src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Về PetPulse" className="w-full h-full object-cover" />
           </div>
-          <div className="p-8 sm:p-10">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
-              <PawPrint size={12} /> {t('home.about.badge')}
-            </span>
-            <h2 className="font-extrabold text-3xl text-foreground mb-4">{t('home.about.title')}</h2>
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              {t('home.about.desc')}
-            </p>
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              {[{ v: "2024", l: t('home.about.stats.founded') }, { v: "10K+", l: t('home.about.stats.pets') }, { v: "50+", l: t('home.about.stats.partners') }].map(s => (
-                <div key={s.l}>
-                  <div className="font-extrabold text-2xl text-primary">{s.v}</div>
-                  <div className="text-xs text-muted-foreground">{s.l}</div>
+          <FlipCard
+            front={
+              <div className="p-8 sm:p-10 h-full">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
+                  <PawPrint size={12} /> {t('home.about.badge')}
+                </span>
+                <h2 className="font-extrabold text-3xl text-foreground mb-4">{t('home.about.title')}</h2>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  {t('home.about.desc')}
+                </p>
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  {[{ v: "2024", l: t('home.about.stats.founded') }, { v: "10K+", l: t('home.about.stats.pets') }, { v: "50+", l: t('home.about.stats.partners') }].map(s => (
+                    <div key={s.l}>
+                      <div className="font-extrabold text-2xl text-primary">{s.v}</div>
+                      <div className="text-xs text-muted-foreground">{s.l}</div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="space-y-2">
-              {[0, 1, 2].map(i => (
-                <div key={i} className="flex items-center gap-2 text-sm text-foreground"><CheckCircle2 size={16} className="text-success flex-shrink-0" /> {t(`home.about.points.${i}`)}</div>
-              ))}
-            </div>
-          </div>
-        </div>
+                <div className="space-y-2">
+                  {[0, 1, 2].map(i => (
+                    <div key={i} className="flex items-center gap-2 text-sm text-foreground"><CheckCircle2 size={16} className="text-success flex-shrink-0" /> {t(`home.about.points.${i}`)}</div>
+                  ))}
+                </div>
+              </div>
+            }
+            back={
+              <div className="p-8 sm:p-10 h-full flex flex-col">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                    <PawPrint size={12} /> {t('home.about.badge')}
+                  </span>
+                  <div className="h-px flex-1 bg-border/60" />
+                </div>
+                <h2 className="font-extrabold text-3xl text-foreground mb-4">{t('home.about.title')}</h2>
+                <div className="flex items-start gap-3 mb-6">
+                  <Star size={18} className="text-primary mt-1 shrink-0" />
+                  <p className="text-muted-foreground leading-relaxed text-sm">{t('home.about.detail')}</p>
+                </div>
+                <div className="border-t border-border/50 pt-5 mt-auto">
+                  <div className="grid sm:grid-cols-3 gap-4">
+                    {[
+                      { icon: <Sparkles size={18} />, id: "0" },
+                      { icon: <ShieldCheck size={18} />, id: "1" },
+                      { icon: <Heart size={18} />, id: "2" },
+                    ].map(v => (
+                      <div key={v.id} className="text-center">
+                        <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center mx-auto mb-2">{v.icon}</div>
+                        <h4 className="font-semibold text-sm text-foreground mb-1">{t(`home.about.values.${v.id}.title`)}</h4>
+                        <p className="text-xs text-muted-foreground leading-relaxed">{t(`home.about.values.${v.id}.desc`)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            }
+          />
+        </div></AnimateIn>
       </section>
 
       {/* FAQ */}
       <section id="faq" className="px-4 sm:px-8 pb-20 max-w-4xl mx-auto scroll-mt-20">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="font-extrabold text-3xl sm:text-4xl text-foreground mb-3">{t('home.faq.sectionTitle')}</h2>
-          <p className="text-muted-foreground">{t('home.faq.sectionDesc')}</p>
-        </div>
+        <AnimateIn>
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="font-extrabold text-3xl sm:text-4xl text-foreground mb-3">{t('home.faq.sectionTitle')}</h2>
+            <p className="text-muted-foreground">{t('home.faq.sectionDesc')}</p>
+          </div>
+        </AnimateIn>
         <Accordion type="single" collapsible className="w-full space-y-3">
           {FAQS.map((faq, i) => (
             <AccordionItem key={i} value={`faq-${i}`}
-              className="border border-border rounded-2xl bg-card px-6 has-[button[data-state=open]]:ring-1 has-[button[data-state=open]]:ring-primary/30">
-              <AccordionTrigger className="text-base font-medium text-foreground py-4 hover:no-underline">
-                {t(`home.faq.items.${faq.id}.q`)}
+              className="border border-border rounded-2xl bg-card px-6 transition-all duration-200 has-[button[data-state=open]]:bg-primary/[4%] has-[button[data-state=open]]:border-primary/20 has-[button[data-state=open]]:shadow-sm">
+              <AccordionTrigger className="text-base font-medium text-foreground py-4 hover:no-underline gap-3">
+                <span className="flex items-center gap-3">
+                  <span className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 text-sm font-bold">?</span>
+                  {t(`home.faq.items.${faq.id}.q`)}
+                </span>
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground leading-relaxed pb-4">
+              <AccordionContent className="text-muted-foreground leading-relaxed pb-5 pt-1 border-t border-border/50 mt-1">
                 {t(`home.faq.items.${faq.id}.a`)}
               </AccordionContent>
             </AccordionItem>
@@ -271,11 +356,13 @@ export function Landing() {
 
       {/* CTA banner */}
       <section className="px-4 sm:px-8 pb-20 max-w-6xl mx-auto">
-        <div className="rounded-3xl p-10 sm:p-16 text-center relative overflow-hidden" style={{ background: "linear-gradient(135deg,var(--primary) 0%,var(--accent) 55%,var(--chart-3) 100%)" }}>
-          <h2 className="font-extrabold text-3xl sm:text-4xl text-white mb-4">{t('home.cta.title')}</h2>
-          <p className="text-white/90 mb-8 max-w-xl mx-auto">{t('home.cta.desc')}</p>
-          <Btn size="lg" className="!bg-white !text-black hover:!bg-white/90 shadow-lg shadow-black/10" onClick={() => navigate("/register")}>{t('home.cta.btn')}</Btn>
-        </div>
+        <AnimateIn>
+          <div className="rounded-3xl p-10 sm:p-16 text-center relative overflow-hidden" style={{ background: "linear-gradient(135deg,var(--primary) 0%,var(--accent) 55%,var(--chart-3) 100%)" }}>
+            <h2 className="font-extrabold text-3xl sm:text-4xl text-white mb-4">{t('home.cta.title')}</h2>
+            <p className="text-white/90 mb-8 max-w-xl mx-auto">{t('home.cta.desc')}</p>
+            <Btn size="lg" className="!bg-white !text-black hover:!bg-white/90 shadow-lg shadow-black/10" onClick={() => navigate("/register")}>{t('home.cta.btn')}</Btn>
+          </div>
+        </AnimateIn>
       </section>
 
       <footer id="footer" className="border-t border-border px-4 sm:px-8 py-8 text-center text-sm text-muted-foreground scroll-mt-20">
