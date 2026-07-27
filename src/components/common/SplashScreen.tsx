@@ -67,7 +67,7 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
         loop
         muted
         playsInline
-        className="absolute top-1/2 left-1/2 min-w-[100vh] min-h-[100vw] -translate-x-1/2 -translate-y-1/2 rotate-90 scale-[1.15] object-cover pointer-events-none"
+        className="absolute top-1/2 left-1/2 min-w-[100vh] min-h-[100vw] -translate-x-1/2 -translate-y-1/2 rotate-90 scale-[1.15] md:scale-100 object-cover pointer-events-none"
       />
 
       {/* Gradient overlay to blend with landing page */}
