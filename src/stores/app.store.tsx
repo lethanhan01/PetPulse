@@ -8,17 +8,18 @@ type AppContextValue = {
   authed: boolean; activeAccount: MockAccount | null; login: (account: MockAccount) => void; logout: () => void;
   updateAccount: (patch: Partial<MockAccount>) => void;
   pets: Pet[]; addPet: (pet: Pet) => void; updatePet: (id: string, patch: Partial<Pet>) => void; removePet: (id: string) => void;
+  cursorEffectEnabled: boolean; toggleCursorEffect: (enabled: boolean) => void;
 };
 
 const STORAGE_KEY = "petpulse:app-state";
-type StoredState = Pick<AppContextValue, "theme" | "role" | "plan" | "authed"> & { activeAccountId?: string };
+type StoredState = Pick<AppContextValue, "theme" | "role" | "plan" | "authed" | "cursorEffectEnabled"> & { activeAccountId?: string };
 
 function readStoredState(): Partial<StoredState> {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return {};
     const value = JSON.parse(stored) as Partial<StoredState>;
-    return { theme: value.theme === "dark" ? "dark" : "light", role: value.role === "admin" ? "admin" : "user", plan: value.plan === "Premium" || value.plan === "Premium Năm" ? "Premium" : "Free", authed: Boolean(value.authed), activeAccountId: value.activeAccountId };
+    return { theme: value.theme === "dark" ? "dark" : "light", role: value.role === "admin" ? "admin" : "user", plan: value.plan === "Premium" || value.plan === "Premium Năm" ? "Premium" : "Free", authed: Boolean(value.authed), activeAccountId: value.activeAccountId, cursorEffectEnabled: value.cursorEffectEnabled ?? true };
   } catch { return {}; }
 }
 
@@ -35,17 +36,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useState<Role>(initial.role ?? "user");
   const [plan, setPlan] = useState<Plan>(initial.plan ?? "Free");
   const [authed, setAuthed] = useState(initial.authed ?? false);
+  const [cursorEffectEnabled, setCursorEffectEnabled] = useState(initial.cursorEffectEnabled ?? true);
   const [activeAccount, setActiveAccount] = useState<MockAccount | null>(() => {
     if (!initial.activeAccountId) return null;
     return MOCK_ACCOUNTS.find(account => account.id === initial.activeAccountId) ?? null;
   });
   const [pets, setPets] = useState<Pet[]>(() => getPetsForAccount(initial.activeAccountId ?? ""));
-  useEffect(() => { localStorage.setItem(STORAGE_KEY, JSON.stringify({ theme, role, plan, authed, activeAccountId: activeAccount?.id } satisfies StoredState)); }, [theme, role, plan, authed, activeAccount]);
+  useEffect(() => { localStorage.setItem(STORAGE_KEY, JSON.stringify({ theme, role, plan, authed, activeAccountId: activeAccount?.id, cursorEffectEnabled } satisfies StoredState)); }, [theme, role, plan, authed, activeAccount, cursorEffectEnabled]);
   const value: AppContextValue = {
     theme, toggleTheme: () => setTheme(value => value === "light" ? "dark" : "light"), role, plan, setPlan, authed, activeAccount,
     login: account => { setRole(account.role); setPlan(account.plan === "Premium Năm" ? "Premium" : account.plan); setActiveAccount(account); setPets(getPetsForAccount(account.id)); setAuthed(true); }, logout: () => { setAuthed(false); setPlan("Free"); setActiveAccount(null); setPets([]); localStorage.removeItem(STORAGE_KEY); }, pets,
     updateAccount: patch => setActiveAccount(prev => prev ? { ...prev, ...patch } : null),
     addPet: pet => setPets(previous => [...previous, pet]), updatePet: (id, patch) => setPets(previous => previous.map(pet => pet.id === id ? { ...pet, ...patch } : pet)), removePet: id => setPets(previous => previous.filter(pet => pet.id !== id)),
+    cursorEffectEnabled, toggleCursorEffect: setCursorEffectEnabled,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
