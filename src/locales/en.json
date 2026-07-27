@@ -24,6 +24,16 @@
     "ageMonths_other": "{{count}} months"
   },
   "auth": {
+    "layout": {
+      "backHome": "Back to home",
+      "welcome": "Welcome to PetPulse",
+      "desc": "Digital health passport & smart pet care for young pet lovers.",
+      "features": {
+        "timeline": "Health timeline & Health Score",
+        "ai": "AI Symptom Checker",
+        "community": "Pet community"
+      }
+    },
     "login": {
       "title": "Log In",
       "subtitle": "Enter your email & password to continue.",
@@ -59,6 +69,75 @@
       "otpSentTitle": "OTP Sent",
       "otpSentDesc": "Check your inbox and enter the 6-digit code to reset your password.",
       "confirmBtn": "Confirm & Log In"
+    }
+  },
+  "dashboard": {
+    "stats": {
+      "pets": "Pets",
+      "petsSub": "Managing",
+      "vaccines": "Vaccinations",
+      "vaccinesSub": "Completed",
+      "upcoming": "Upcoming",
+      "upcomingSub": "Pending",
+      "alerts": "Alerts",
+      "alertsSub": "Needs attention"
+    },
+    "welcome": {
+      "greeting": "Good morning",
+      "defaultName": "Nguyễn Văn An",
+      "message": "Your pets are healthy today. Don't forget {{petName}}'s medication schedule!",
+      "defaultPet": "your pet",
+      "askAi": "Ask AI about health",
+      "viewPets": "View pets"
+    },
+    "petsList": {
+      "title": "Your pets",
+      "viewAll": "View all"
+    },
+    "widgets": {
+      "trendTitle": "Trend",
+      "trendDesc": "Health score of {{petName}} in the last 4 months",
+      "scheduleTitle": "Upcoming schedule",
+      "noSchedule": "No upcoming schedule"
+    }
+  },
+  "layout": {
+    "notifications": "Notifications",
+    "sidebar": {
+      "expand": "Expand sidebar",
+      "collapse": "Collapse sidebar",
+      "adjustWidth": "Adjust sidebar width",
+      "plan": "Plan {{plan}}",
+      "premiumUnlocked": "Unlocked all features 🎉",
+      "freeUpgrade": "Upgrade to unlock unlimited AI",
+      "upgradeBtn": "Upgrade"
+    }
+  },
+  "ai": {
+    "page": {
+      "title": "AI Symptom Checker",
+      "subtitle": "Enter symptoms, AI analyzes your pet's condition."
+    },
+    "form": {
+      "title": "Describe symptoms",
+      "selectPet": "Select pet",
+      "symptomsLabel": "Symptoms",
+      "symptomsPlaceholder": "e.g., Pet stopped eating for 2 days, occasional dry cough and seems tired...",
+      "commonSymptoms": "Common symptoms:",
+      "btnAnalyzing": "Analyzing...",
+      "btnAnalyze": "Analyze with AI",
+      "warning": "⚠️ AI results are for reference only and do not replace a vet's diagnosis."
+    },
+    "result": {
+      "loading": "AI is analyzing symptoms...",
+      "empty": "AI analysis results will appear here after you enter symptoms.",
+      "title": "Analysis result",
+      "alert": "Alert: {{severity}}",
+      "conditions": "Possible conditions",
+      "firstAid": "First aid instructions",
+      "vetAdvice": "Vet recommendation",
+      "saveBtn": "Save to pet profile",
+      "toastSaved": "Saved consultation for {{name}}"
     }
   },
   "home": {

@@ -24,6 +24,16 @@
     "ageMonths_other": "{{count}} tháng"
   },
   "auth": {
+    "layout": {
+      "backHome": "Về trang chủ",
+      "welcome": "Chào mừng đến PetPulse",
+      "desc": "Hộ chiếu sức khỏe điện tử & chăm sóc thú cưng thông minh cho người trẻ yêu pet.",
+      "features": {
+        "timeline": "Health timeline & Health Score",
+        "ai": "AI Symptom Checker",
+        "community": "Cộng đồng thú cưng"
+      }
+    },
     "login": {
       "title": "Đăng nhập",
       "subtitle": "Nhập email & mật khẩu để tiếp tục.",
@@ -59,6 +69,75 @@
       "otpSentTitle": "Đã gửi mã OTP",
       "otpSentDesc": "Kiểm tra hộp thư của bạn và nhập mã 6 số để đặt lại mật khẩu.",
       "confirmBtn": "Xác nhận & Đăng nhập"
+    }
+  },
+  "dashboard": {
+    "stats": {
+      "pets": "Thú cưng",
+      "petsSub": "Đang quản lý",
+      "vaccines": "Tiêm phòng",
+      "vaccinesSub": "Đã hoàn thành",
+      "upcoming": "Lịch sắp tới",
+      "upcomingSub": "Chưa hoàn thành",
+      "alerts": "Cảnh báo",
+      "alertsSub": "Cần chú ý"
+    },
+    "welcome": {
+      "greeting": "Chào buổi sáng",
+      "defaultName": "Nguyễn Văn An",
+      "message": "Các bé của bạn hôm nay đều khỏe mạnh. Đừng quên lịch uống thuốc của {{petName}} nhé!",
+      "defaultPet": "bé cưng",
+      "askAi": "Hỏi AI về sức khỏe",
+      "viewPets": "Xem thú cưng"
+    },
+    "petsList": {
+      "title": "Thú cưng của bạn",
+      "viewAll": "Xem tất cả"
+    },
+    "widgets": {
+      "trendTitle": "Xu hướng",
+      "trendDesc": "Điểm sức khỏe của {{petName}} 4 tháng qua",
+      "scheduleTitle": "Lịch sắp tới",
+      "noSchedule": "Không có lịch nào sắp tới"
+    }
+  },
+  "layout": {
+    "notifications": "Thông báo",
+    "sidebar": {
+      "expand": "Mở rộng sidebar",
+      "collapse": "Thu gọn sidebar",
+      "adjustWidth": "Điều chỉnh độ rộng sidebar",
+      "plan": "Gói {{plan}}",
+      "premiumUnlocked": "Đã mở khóa mọi tính năng 🎉",
+      "freeUpgrade": "Nâng cấp để mở khóa AI không giới hạn",
+      "upgradeBtn": "Nâng cấp"
+    }
+  },
+  "ai": {
+    "page": {
+      "title": "AI Symptom Checker",
+      "subtitle": "Nhập triệu chứng, AI phân tích tình trạng bệnh của thú cưng."
+    },
+    "form": {
+      "title": "Mô tả triệu chứng",
+      "selectPet": "Chọn thú cưng",
+      "symptomsLabel": "Triệu chứng bệnh",
+      "symptomsPlaceholder": "VD: Bé bỏ ăn 2 ngày, thỉnh thoảng ho khan và có vẻ mệt mỏi...",
+      "commonSymptoms": "Triệu chứng phổ biến:",
+      "btnAnalyzing": "Đang phân tích...",
+      "btnAnalyze": "Phân tích với AI",
+      "warning": "⚠️ Kết quả AI chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ thú y."
+    },
+    "result": {
+      "loading": "AI đang phân tích triệu chứng...",
+      "empty": "Kết quả phân tích của AI sẽ hiển thị tại đây sau khi bạn nhập triệu chứng.",
+      "title": "Kết quả phân tích",
+      "alert": "Cảnh báo: {{severity}}",
+      "conditions": "Các bệnh có khả năng gặp",
+      "firstAid": "Hướng dẫn sơ cứu ban đầu",
+      "vetAdvice": "Khuyến nghị thú y",
+      "saveBtn": "Lưu vào hồ sơ thú cưng",
+      "toastSaved": "Đã lưu kết quả tư vấn cho {{name}}"
     }
   },
   "home": {
