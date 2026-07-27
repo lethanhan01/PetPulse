@@ -17,7 +17,11 @@ import { Subscription } from "@/pages/user/SubscriptionPage";
 import { Checkout } from "@/pages/user/CheckoutPage";
 import { Profile } from "@/pages/user/ProfilePage";
 import { UserProfile } from "@/pages/user/UserProfilePage";
-import { AdminDashboard, AdminModeration, AdminPets, AdminSubs, AdminUsers } from "@/pages/admin/AdminPages";
+import { AdminDashboard } from "@/pages/admin/AdminDashboard";
+import { AdminUsers } from "@/pages/admin/AdminUsers";
+import { AdminPets } from "@/pages/admin/AdminPets";
+import { AdminSubs } from "@/pages/admin/AdminSubs";
+import { AdminModeration } from "@/pages/admin/AdminModeration";
 
 function ScrollToTop() {
   const { pathname, search } = useLocation();

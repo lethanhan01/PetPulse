@@ -542,5 +542,114 @@
       "title": "Hệ thống đã sao lưu dữ liệu thành công",
       "subtitle": "3 ngày trước"
     }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Thống kê hệ thống",
+      "subtitle": "Tổng quan chỉ số PetPulse",
+      "exportReport": "Xuất báo cáo",
+      "stats": {
+        "totalUsers": "Tổng User",
+        "usersDesc": "Tài khoản người dùng",
+        "premiumUsers": "Premium User",
+        "conversionRate": "{{rate}}% chuyển đổi",
+        "totalPets": "Tổng Pet",
+        "petsDesc": "Thú cưng trên hệ thống",
+        "aiUsage": "AI Usage",
+        "aiUsageDesc": "Lượt tư vấn {{range}}"
+      },
+      "revenue": {
+        "title": "Doanh thu",
+        "unit": "(triệu đồng)",
+        "week": "Tuần",
+        "month": "Tháng",
+        "quarter": "Quý",
+        "lastWeek": "(tuần trước)",
+        "thisWeek": "(tuần này)"
+      },
+      "aiUsageChart": "AI Usage (lượt/tháng)",
+      "tiers": {
+        "excellent": "Tốt (90+)",
+        "good": "Khá (75-89)",
+        "average": "TB (60-74)",
+        "poor": "Yếu (<60)"
+      }
+    },
+    "users": {
+      "title": "Quản lý User",
+      "subtitle": "{{count}} / {{total}} người dùng",
+      "searchPlaceholder": "Tìm kiếm...",
+      "all": "Tất cả",
+      "empty": "Không có người dùng nào thuộc gói này",
+      "table": {
+        "id": "ID",
+        "name": "Tên",
+        "email": "Email",
+        "plan": "Gói",
+        "petCount": "Pet",
+        "status": "Trạng thái"
+      }
+    },
+    "pets": {
+      "title": "Quản lý Pet",
+      "subtitle": "{{count}} / {{total}} thú cưng",
+      "allHealth": "Tất cả",
+      "allSpecies": "Tất cả loài",
+      "allOwners": "Tất cả chủ",
+      "empty": "Không có thú cưng nào",
+      "table": {
+        "id": "ID",
+        "name": "Tên",
+        "species": "Loài",
+        "breed": "Giống",
+        "owner": "Chủ",
+        "health": "Health"
+      },
+      "healthValues": {
+        "good": "Tốt",
+        "normal": "Bình thường",
+        "attention": "Cần chú ý"
+      }
+    },
+    "subs": {
+      "title": "Quản lý Subscription",
+      "subtitle": "Các gói đăng ký dịch vụ",
+      "addBtn": "Thêm gói",
+      "table": {
+        "plan": "Gói",
+        "price": "Giá",
+        "features": "Tính năng",
+        "subscribers": "Người đăng ký"
+      },
+      "modal": {
+        "title": "Thêm gói đăng ký",
+        "nameLabel": "Tên gói",
+        "namePlaceholder": "VD: Premium Plus",
+        "priceLabel": "Giá",
+        "pricePlaceholder": "VD: 149.000đ/tháng",
+        "featuresLabel": "Tính năng",
+        "featuresPlaceholder": "Mô tả tính năng...",
+        "cancel": "Hủy",
+        "submit": "Thêm gói"
+      }
+    },
+    "moderation": {
+      "title": "Kiểm duyệt Community",
+      "subtitle": "Duyệt các bài đăng trên mạng xã hội thú cưng",
+      "status": {
+        "approved": "Đã duyệt",
+        "rejected": "Từ chối",
+        "pending": "Chờ duyệt"
+      },
+      "deleteTooltip": "Xoá bài viết",
+      "approveBtn": "Duyệt",
+      "rejectBtn": "Từ chối"
+    }
+  },
+  "common": {
+    "pagination": {
+      "prev": "Trước",
+      "next": "Sau"
+    }
   }
 }

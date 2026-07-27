@@ -542,5 +542,114 @@
       "title": "System backup completed successfully",
       "subtitle": "3 days ago"
     }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "System Statistics",
+      "subtitle": "PetPulse metrics overview",
+      "exportReport": "Export Report",
+      "stats": {
+        "totalUsers": "Total Users",
+        "usersDesc": "User accounts",
+        "premiumUsers": "Premium Users",
+        "conversionRate": "{{rate}}% conversion",
+        "totalPets": "Total Pets",
+        "petsDesc": "Pets in system",
+        "aiUsage": "AI Usage",
+        "aiUsageDesc": "Consultations per {{range}}"
+      },
+      "revenue": {
+        "title": "Revenue",
+        "unit": "(million VND)",
+        "week": "Week",
+        "month": "Month",
+        "quarter": "Quarter",
+        "lastWeek": "(last week)",
+        "thisWeek": "(this week)"
+      },
+      "aiUsageChart": "AI Usage (requests/month)",
+      "tiers": {
+        "excellent": "Excellent (90+)",
+        "good": "Good (75-89)",
+        "average": "Average (60-74)",
+        "poor": "Poor (<60)"
+      }
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "{{count}} / {{total}} users",
+      "searchPlaceholder": "Search...",
+      "all": "All",
+      "empty": "No users found for this plan",
+      "table": {
+        "id": "ID",
+        "name": "Name",
+        "email": "Email",
+        "plan": "Plan",
+        "petCount": "Pets",
+        "status": "Status"
+      }
+    },
+    "pets": {
+      "title": "Pet Management",
+      "subtitle": "{{count}} / {{total}} pets",
+      "allHealth": "All",
+      "allSpecies": "All Species",
+      "allOwners": "All Owners",
+      "empty": "No pets found",
+      "table": {
+        "id": "ID",
+        "name": "Name",
+        "species": "Species",
+        "breed": "Breed",
+        "owner": "Owner",
+        "health": "Health"
+      },
+      "healthValues": {
+        "good": "Good",
+        "normal": "Normal",
+        "attention": "Needs Attention"
+      }
+    },
+    "subs": {
+      "title": "Subscription Management",
+      "subtitle": "Service subscription plans",
+      "addBtn": "Add Plan",
+      "table": {
+        "plan": "Plan",
+        "price": "Price",
+        "features": "Features",
+        "subscribers": "Subscribers"
+      },
+      "modal": {
+        "title": "Add Subscription Plan",
+        "nameLabel": "Plan Name",
+        "namePlaceholder": "E.g. Premium Plus",
+        "priceLabel": "Price",
+        "pricePlaceholder": "E.g. 149,000VND/month",
+        "featuresLabel": "Features",
+        "featuresPlaceholder": "Feature description...",
+        "cancel": "Cancel",
+        "submit": "Add Plan"
+      }
+    },
+    "moderation": {
+      "title": "Community Moderation",
+      "subtitle": "Moderate pet social network posts",
+      "status": {
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "pending": "Pending"
+      },
+      "deleteTooltip": "Delete Post",
+      "approveBtn": "Approve",
+      "rejectBtn": "Reject"
+    }
+  },
+  "common": {
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next"
+    }
   }
 }
