@@ -1,4 +1,4 @@
-import { ReactNode, useState, ButtonHTMLAttributes, InputHTMLAttributes } from "react";
+import { ReactNode, useState, useEffect, useRef, ButtonHTMLAttributes, InputHTMLAttributes } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { Loader2 } from "lucide-react";
 
@@ -76,7 +76,22 @@ export function TrendChart({
   data: { label: string; value: number }[];
   min?: number; max?: number; showXLabels?: boolean; showArea?: boolean; height?: number;
 }) {
-  const W = 300;
+  const [W, setW] = useState(300);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        if (entry.contentRect.width > 0) {
+          setW(entry.contentRect.width);
+        }
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const padL = 8, padR = 8, padT = 12;
   const padB = showXLabels ? 22 : 12;
   const chartH = height - padT - padB;
@@ -102,8 +117,8 @@ export function TrendChart({
   const gid = `tc-${Math.round(lo)}-${Math.round(hi)}-${n}`;
   const ttIdx = hv;
   return (
-    <div className="relative w-full h-full">
-      <svg viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" className="w-full h-full" role="img" aria-label="Biểu đồ xu hướng">
+    <div ref={containerRef} className="relative w-full h-full">
+      <svg viewBox={`0 0 ${W} ${height}`} className="w-full h-full" role="img" aria-label="Biểu đồ xu hướng">
         {showArea && (
           <>
             <defs>
@@ -146,7 +161,22 @@ export function TrendChart({
 export function BarChart({ data, height = 224, showXLabels = true }: {
   data: { label: string; value: number }[]; height?: number; showXLabels?: boolean;
 }) {
-  const W = 320;
+  const [W, setW] = useState(320);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        if (entry.contentRect.width > 0) {
+          setW(entry.contentRect.width);
+        }
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const padL = 8, padR = 8, padT = 24;
   const padB = showXLabels ? 22 : 12;
   const chartH = height - padT - padB;
@@ -160,8 +190,8 @@ export function BarChart({ data, height = 224, showXLabels = true }: {
     <div className="h-full flex items-center justify-center text-xs text-muted-foreground">Chưa có dữ liệu</div>
   );
   return (
-    <div className="relative w-full h-full">
-      <svg viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" className="w-full h-full" role="img" aria-label="Biểu đồ cột">
+    <div ref={containerRef} className="relative w-full h-full">
+      <svg viewBox={`0 0 ${W} ${height}`} className="w-full h-full" role="img" aria-label="Biểu đồ cột">
         <defs>
           <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="var(--chart-2)" stopOpacity={0.9} />

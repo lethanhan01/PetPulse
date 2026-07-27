@@ -3,9 +3,11 @@ import { useNavigate, useParams, useSearchParams } from "react-router";
 import { useApp } from "@/stores/app.store";
 import type { CareEvent, HealthEntry } from "@/types/app.types";
 import { createCareEvent, createHealthEntry } from "@/mocks";
-import { Card, Btn, Badge, Field, Select, Modal, TrendChart } from "@/components/common/kit";
+import { Card, Btn, Badge, Field, Textarea, Select, Modal, TrendChart } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { PieChart, Pie, Cell, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { analyzeNutrition } from "@/utils/nutrition-calculator";
 import { cancelEventOccurrence, eventsForDate, isEventCompletedOn, monthCalendarDays, toggleEventCompletion } from "@/utils/care-calendar";
 import { useTranslation } from "react-i18next";
 import {
@@ -61,6 +63,10 @@ export function PetDetail() {
   if (!pet) return <div className="py-16 text-center"><p className="text-5xl font-extrabold text-primary">404</p><h1 className="mt-4 text-2xl font-bold text-foreground">{t("petDetail.notFound")}</h1></div>;
   const latest = pet.health[0];
   const level = scoreLevel(latest.score);
+  
+  const latestNutrition = analyzeNutrition(latest?.nutrition || "");
+  const nutritionLevel = scoreLevel(latestNutrition.score);
+  const pieColors = ["var(--primary)", "var(--success)", "var(--warning)", "var(--destructive)"];
 
   const addHealth = (h: HealthEntry) => updatePet(pet.id, { health: [h, ...pet.health] });
   const addEvent = (ev: CareEvent) => updatePet(pet.id, { events: [ev, ...pet.events] });
@@ -112,10 +118,10 @@ export function PetDetail() {
       {/* OVERVIEW */}
       {tab === "overview" && (
         <div className="grid lg:grid-cols-3 gap-6">
-          <Card className="p-6 lg:col-span-1 text-center" hover={false}>
+          <Card className="p-6 text-center flex flex-col" hover={false}>
             <div className="relative overflow-hidden rounded-xl -m-6 -mt-6 mb-0 p-6" style={{ background: "linear-gradient(135deg,var(--primary),var(--accent))" }}>
               <p className="text-sm text-white/80 mb-2">{t("petDetail.overview.healthScore")}</p>
-              <div className="relative w-28 h-28 mx-auto mb-3">
+              <div className="relative w-40 h-40 mx-auto mb-3">
                 <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
                   <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="8" />
                   <circle cx="50" cy="50" r="42" fill="none" stroke="white" strokeWidth="8" strokeLinecap="round"
@@ -131,7 +137,51 @@ export function PetDetail() {
             <p className="text-xs text-muted-foreground mt-4 leading-relaxed">{t("petDetail.overview.recommendation")}</p>
           </Card>
 
-          <Card className="p-5 lg:col-span-2" hover={false}>
+          <Card className="p-6 text-center flex flex-col" hover={false}>
+            <div className="relative overflow-hidden rounded-xl -m-6 -mt-6 mb-0 p-6" style={{ background: "linear-gradient(135deg,var(--success),var(--accent))" }}>
+              <p className="text-sm text-white/80 mb-2">Cơ cấu dinh dưỡng</p>
+              <div className="relative w-40 h-40 mx-auto mb-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={latestNutrition.composition} innerRadius={32} outerRadius={60} dataKey="value" stroke="none">
+                      {latestNutrition.composition.map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)", zIndex: 100 }} itemStyle={{ fontSize: "12px", fontWeight: "bold", color: "var(--foreground)" }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2">
+              {latestNutrition.composition.map((item, index) => (
+                <div key={item.name} className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: pieColors[index % pieColors.length] }} />
+                  <span className="text-xs text-muted-foreground">{item.name}</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="p-6 text-center flex flex-col" hover={false}>
+            <div className="relative overflow-hidden rounded-xl -m-6 -mt-6 mb-0 p-6" style={{ background: "linear-gradient(135deg,var(--warning),var(--accent))" }}>
+              <p className="text-sm text-white/80 mb-2">Cân bằng dinh dưỡng</p>
+              <div className="relative w-40 h-40 mx-auto mb-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart cx="50%" cy="50%" outerRadius={48} data={latestNutrition.balance}>
+                    <PolarGrid stroke="rgba(255,255,255,0.3)" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: "rgba(255,255,255,0.9)", fontSize: 10 }} />
+                    <Radar name="Balance" dataKey="A" stroke="white" fill="white" fillOpacity={0.5} />
+                    <Tooltip contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)", zIndex: 100 }} itemStyle={{ fontSize: "12px", fontWeight: "bold", color: "var(--foreground)" }} />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            <div className="mt-4"><Badge v={nutritionLevel.v}>{latestNutrition.score}/100 - {nutritionLevel.l}</Badge></div>
+            <p className="text-xs text-muted-foreground mt-4 leading-relaxed">{latestNutrition.recommendation}</p>
+          </Card>
+
+          <Card className="p-5 lg:col-span-3" hover={false}>
             <h3 className="font-bold text-foreground mb-4">{t("petDetail.overview.latestStats")}</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
               {[
@@ -343,15 +393,33 @@ function Toggle({ defaultOn }: { defaultOn?: boolean }) {
   );
 }
 
+const QUICK_FOODS = [
+  { icon: "🥩", label: "Pate", value: "1 hộp Pate" },
+  { icon: "🥣", label: "Hạt", value: "100g Hạt" },
+  { icon: "🍗", label: "Gà xé", value: "50g Gà xé" },
+  { icon: "🍚", label: "Cơm", value: "1 bát Cơm" },
+  { icon: "🥦", label: "Rau", value: "1 ít Rau" },
+];
+
 function HealthFormModal({ open, onClose, onSave }: { open: boolean; onClose: () => void; onSave: (h: HealthEntry) => void }) {
   const { t } = useTranslation();
   const [f, setF] = useState({ weight: "", condition: "Tốt", nutrition: "Cân bằng", illness: "" });
+  
   const save = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(createHealthEntry({ weight: parseFloat(f.weight) || 0, condition: f.condition as HealthEntry["condition"], nutrition: f.nutrition, illness: f.illness || undefined }));
     setF({ weight: "", condition: "Tốt", nutrition: "Cân bằng", illness: "" });
     onClose();
   };
+
+  const appendFood = (foodValue: string) => {
+    setF(p => {
+      const current = p.nutrition.trim();
+      const newNutrition = current && current !== "Cân bằng" ? `${current}, ${foodValue}` : foodValue;
+      return { ...p, nutrition: newNutrition };
+    });
+  };
+
   return (
     <Modal open={open} onClose={onClose} title={t("petDetail.modals.health.title")}>
       <form onSubmit={save} className="space-y-4">
@@ -359,7 +427,22 @@ function HealthFormModal({ open, onClose, onSave }: { open: boolean; onClose: ()
         <Select label={t("petDetail.modals.health.conditionLabel")} value={f.condition} onChange={e => setF(p => ({ ...p, condition: e.target.value }))}>
           <option value="Tốt">{t("petDetail.dynamic.condition.tốt")}</option><option value="Bình thường">{t("petDetail.dynamic.condition.bình thường")}</option><option value="Cần chú ý">{t("petDetail.dynamic.condition.cần chú ý")}</option>
         </Select>
-        <Field label={t("petDetail.modals.health.nutritionLabel")} value={f.nutrition} onChange={e => setF(p => ({ ...p, nutrition: e.target.value }))} placeholder={t("petDetail.modals.health.nutritionPlaceholder")} />
+        <div>
+          <Textarea label="Chi tiết bữa ăn hôm nay (vd: 100g thịt gà, 50g cơm)" value={f.nutrition} onChange={e => setF(p => ({ ...p, nutrition: e.target.value }))} placeholder="Nhập chi tiết các món ăn và định lượng..." rows={3} required />
+          <div className="flex flex-wrap gap-2 mt-2">
+            {QUICK_FOODS.map(food => (
+              <button 
+                key={food.label} 
+                type="button" 
+                onClick={() => appendFood(food.value)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary text-secondary-foreground text-xs font-medium hover:bg-primary/10 hover:text-primary transition-colors border border-transparent hover:border-primary/20"
+              >
+                <span>{food.icon}</span>
+                {food.label}
+              </button>
+            ))}
+          </div>
+        </div>
         <Field label={t("petDetail.modals.health.illnessLabel")} value={f.illness} onChange={e => setF(p => ({ ...p, illness: e.target.value }))} placeholder={t("petDetail.modals.health.illnessPlaceholder")} />
         <div className="flex gap-3 pt-1"><Btn variant="outline" block type="button" onClick={onClose}>{t("petDetail.modals.health.cancelBtn")}</Btn><Btn block type="submit">{t("petDetail.modals.health.saveBtn")}</Btn></div>
       </form>
