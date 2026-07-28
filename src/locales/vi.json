@@ -299,8 +299,7 @@
             "1": "AI Symptom Checker không giới hạn",
             "2": "Health Score nâng cao",
             "3": "Thống kê & báo cáo chi tiết",
-            "4": "Ưu tiên hỗ trợ 24/7",
-            "5": "Xuất hồ sơ PDF"
+            "4": "Ưu tiên hỗ trợ 24/7"
           },
           "missing": {}
         },
@@ -481,19 +480,18 @@
           "2": "Thống kê nâng cao"
         }
       },
-      "Premium": {
-        "price": "99.000đ",
-        "period": "mỗi tháng",
-        "features": {
-          "0": "Không giới hạn thú cưng",
-          "1": "AI Symptom Checker không giới hạn",
-          "2": "Health Score nâng cao",
-          "3": "Thống kê & báo cáo chi tiết",
-          "4": "Ưu tiên hỗ trợ 24/7",
-          "5": "Xuất hồ sơ PDF"
+        "Premium": {
+          "price": "99.000đ",
+          "period": "mỗi tháng",
+          "features": {
+            "0": "Không giới hạn thú cưng",
+            "1": "AI Symptom Checker không giới hạn",
+            "2": "Health Score nâng cao",
+            "3": "Thống kê & báo cáo chi tiết",
+            "4": "Ưu tiên hỗ trợ 24/7"
+          },
+          "missing": {}
         },
-        "missing": {}
-      },
       "Premium Năm": {
         "price": "990.000đ",
         "period": "năm",

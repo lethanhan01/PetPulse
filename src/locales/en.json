@@ -299,8 +299,7 @@
             "1": "Unlimited AI Symptom Checker",
             "2": "Advanced Health Score",
             "3": "Detailed statistics & reports",
-            "4": "Priority 24/7 support",
-            "5": "Export PDF records"
+            "4": "Priority 24/7 support"
           },
           "missing": {}
         },
@@ -481,19 +480,18 @@
           "2": "Advanced statistics"
         }
       },
-      "Premium": {
-        "price": "$4.99",
-        "period": "month",
-        "features": {
-          "0": "Unlimited pets",
-          "1": "Unlimited AI Symptom Checker",
-          "2": "Advanced Health Score",
-          "3": "Detailed statistics & reports",
-          "4": "Priority 24/7 support",
-          "5": "Export PDF records"
+        "Premium": {
+          "price": "$4.99",
+          "period": "month",
+          "features": {
+            "0": "Unlimited pets",
+            "1": "Unlimited AI Symptom Checker",
+            "2": "Advanced Health Score",
+            "3": "Detailed statistics & reports",
+            "4": "Priority 24/7 support"
+          },
+          "missing": {}
         },
-        "missing": {}
-      },
       "Premium Năm": {
         "price": "$49.99",
         "period": "year",
