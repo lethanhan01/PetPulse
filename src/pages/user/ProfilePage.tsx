@@ -60,7 +60,6 @@ export function Profile() {
     const tSpecies = (s: string) => lang === "vi" ? s : ({ "Chó": "Dog", "Mèo": "Cat", "Thỏ": "Rabbit", "Chim": "Bird", "Cá": "Fish" })[s] || s;
     const tCond = (c: string) => lang === "vi" ? c : ({ "Tốt": "Good", "Bình thường": "Normal", "Cần chú ý": "Needs attention" })[c] || c;
     const tAge = (a: string) => lang === "vi" ? a : a.replace(/(\d+)\s?tuổi/, "$1 years old");
-    const tGender = (g: string) => lang === "vi" ? g : ({ "Đực": "Male", "Cái": "Female" })[g] || g;
 
     const petRows = pets.map(p => {
       const lastHealth = p.health[0];
