@@ -4,29 +4,35 @@ import { useTranslation } from "react-i18next";
 export function SplashScreen({ onComplete }: { onComplete: () => void }) {
   const { t } = useTranslation();
   const [isExiting, setIsExiting] = useState(false);
+  const [audioUnavailable, setAudioUnavailable] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const fadeTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
-    // Initialize and play audio
     const audio = new Audio('/water.wav');
+    audio.preload = "auto";
     audio.loop = true;
+    audio.volume = 1;
     audioRef.current = audio;
-    
-    // Play with catch for autoplay policy
+
     const playPromise = audio.play();
     if (playPromise !== undefined) {
       playPromise.catch(error => {
-        console.warn("Autoplay blocked by browser policy:", error);
+        setAudioUnavailable(true);
+        const reason = error instanceof DOMException ? `${error.name}: ${error.message}` : error;
+        console.warn("Splash audio could not autoplay:", reason);
       });
     }
 
     return () => {
       document.body.style.overflow = "auto";
-      // Cleanup audio
+      if (fadeTimerRef.current) clearInterval(fadeTimerRef.current);
       audio.pause();
-      audio.src = '';
+      audio.removeAttribute("src");
+      audio.load();
+      audioRef.current = null;
     };
   }, []);
 
@@ -34,21 +40,21 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
     if (isExiting) return;
     setIsExiting(true);
 
-    // Fade out audio over 800ms
     if (audioRef.current) {
       const audio = audioRef.current;
-      const fadeDuration = 800; // ms
+      const fadeDuration = 800;
       const fadeSteps = 20;
       const fadeInterval = fadeDuration / fadeSteps;
       const volumeStep = audio.volume / fadeSteps;
 
-      const fadeTimer = setInterval(() => {
+      fadeTimerRef.current = setInterval(() => {
         if (audio.volume > volumeStep) {
           audio.volume -= volumeStep;
         } else {
           audio.volume = 0;
           audio.pause();
-          clearInterval(fadeTimer);
+          if (fadeTimerRef.current) clearInterval(fadeTimerRef.current);
+          fadeTimerRef.current = null;
         }
       }, fadeInterval);
     }
@@ -63,6 +69,9 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
       className={`fixed inset-0 z-[100] flex flex-col items-center justify-start pt-[10vh] cursor-pointer overflow-hidden transition-all duration-[800ms] ease-in-out ${isExiting ? 'opacity-0 scale-[1.15]' : 'opacity-100 scale-100'}`}
       style={{ background: "var(--gradient-page)" }}
       onClick={handleClick}
+      data-testid="splash-screen"
+      data-audio-status={audioUnavailable ? "unavailable" : "playing-or-pending"}
+      aria-label={audioUnavailable ? "Màn hình chào, âm thanh không thể tự phát" : "Màn hình chào"}
     >
       <video
         src="/meoboi.mp4"
