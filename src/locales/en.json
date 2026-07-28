@@ -391,6 +391,7 @@
     "badges": {
       "admin": "Admin",
       "premium": "Premium",
+      "premiumYear": "Premium Năm",
       "free": "Free"
     },
     "stats": {
@@ -448,6 +449,11 @@
         "title": "Cursor Effect",
         "desc": "Show dog footprints following the mouse cursor"
       }
+    },
+    "yearlyReport": {
+      "title": "Yearly Report",
+      "desc": "Download a comprehensive yearly report about your pets and health data",
+      "exportBtn": "Export Yearly Report"
     }
   },
   "subscription": {

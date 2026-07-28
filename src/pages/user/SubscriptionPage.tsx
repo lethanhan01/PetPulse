@@ -49,7 +49,7 @@ export function Subscription() {
 
 export function Checkout() {
   const { t, i18n } = useTranslation();
-  const { setPlan } = useApp();
+  const { setPlan, updateAccount } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
   const [done, setDone] = useState(false);
@@ -58,7 +58,7 @@ export function Checkout() {
 
   const planName = (location.state as Record<string, unknown>)?.plan as string | undefined;
   const selected = PUBLIC_SUBSCRIPTIONS.find(s => s.name === planName) ?? PUBLIC_SUBSCRIPTIONS.find(s => s.name === "Premium")!;
-  const pay = (e: React.FormEvent) => { e.preventDefault(); setDone(true); setPlan(selected.name as "Premium" | "Premium Năm"); };
+  const pay = (e: React.FormEvent) => { e.preventDefault(); setDone(true); const newPlan = selected.name as "Premium" | "Premium Năm"; setPlan(newPlan); updateAccount({ plan: newPlan }); };
 
   function handleExportInvoice() {
     const d = new Date();

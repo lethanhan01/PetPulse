@@ -3,11 +3,12 @@ import { useApp } from "@/stores/app.store";
 import { useNavigate } from "react-router";
 import { Card, Btn, Field, Select, Badge, PageTitle } from "@/components/common/kit";
 import { Switch } from "@/components/ui/switch";
-import { PawPrint, Calendar, Heart, ShieldCheck, Crown, Lock, Pencil, Plus, ChevronRight, X, Check, Users, CreditCard, Sparkles, Camera, MousePointer2 } from "lucide-react";
+import { PawPrint, Calendar, Heart, ShieldCheck, Crown, Lock, Pencil, Plus, ChevronRight, X, Check, Users, CreditCard, Sparkles, Camera, MousePointer2, FileText, Download } from "lucide-react";
 import type { MockAccount } from "@/mocks/types";
 import { MyPostsContent } from "./MyPostsPage";
 import { useTranslation } from "react-i18next";
-import { isImageUrl } from "@/services/user.service";
+import { isImageUrl, getUserDashboardStats } from "@/services/user.service";
+import reportPrintCss from "@/styles/report-print.css?raw";
 
 function StatChip({ icon, value, label }: { icon: ReactNode; value: string; label: string }) {
   return (
@@ -20,7 +21,7 @@ function StatChip({ icon, value, label }: { icon: ReactNode; value: string; labe
 }
 
 export function Profile() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { pets, plan, role, activeAccount, updateAccount, cursorEffectEnabled, toggleCursorEffect } = useApp();
   const navigate = useNavigate();
   const isAdmin = role === "admin";
@@ -47,6 +48,87 @@ export function Profile() {
   const tabs = isAdmin
     ? [{ k: "info" as const, l: t("profile.tabs.info") }, { k: "security" as const, l: t("profile.tabs.security") }]
     : [{ k: "info" as const, l: t("profile.tabs.info") }, { k: "security" as const, l: t("profile.tabs.security") }, { k: "pets" as const, l: t("profile.tabs.pets") }, { k: "posts" as const, l: t("profile.tabs.posts") }];
+
+  const handleExportReport = () => {
+    const d = new Date();
+    const lang = i18n.resolvedLanguage || i18n.language || "vi";
+    const locale = lang === "vi" ? "vi-VN" : "en-US";
+    const now = d.toLocaleDateString(locale);
+    const stats = getUserDashboardStats(pets);
+    const fileNamePrefix = lang === "vi" ? "bao-cao-ca-nhan" : "personal-report";
+
+    const petRows = pets.map(p => {
+      const lastHealth = p.health[0];
+      const vaccines = p.events.filter(e => e.type === "Tiêm phòng").length;
+      const consults = p.consults.length;
+      return `
+<tr>
+  <td style="font-weight:500">${p.name}</td>
+  <td>${p.species} · ${p.breed}</td>
+  <td>${p.age}</td>
+  <td>${vaccines}</td>
+  <td>${consults}</td>
+  <td>${lastHealth ? lastHealth.score : "N/A"}</td>
+</tr>`;
+    }).join("");
+
+    const healthTimelineRows = pets.flatMap(p =>
+      p.health.slice(0, 5).map(h => `
+<tr>
+  <td style="font-weight:500">${p.name}</td>
+  <td>${h.date}</td>
+  <td>${h.weight} kg</td>
+  <td>${h.condition}</td>
+  <td>${h.score}</td>
+</tr>`)
+    ).join("");
+
+    const html = `<!DOCTYPE html><html lang="${lang}"><head><meta charset="UTF-8"><title>${t("profile.yearlyReport.title")}</title>
+<style>${reportPrintCss}</style></head><body>
+<div class="no-print" style="text-align:right;margin-bottom:16px"><button class="btn-print" onclick="window.print()">🖨 ${lang === "vi" ? "In / Lưu PDF" : "Print / Save PDF"}</button></div>
+<div class="header"><h1>PetPulse</h1><p>${t("profile.yearlyReport.title")} • ${now}</p></div>
+
+<div class="card" style="margin-bottom:24px">
+  <h2>👤 ${lang === "vi" ? "Thông tin người dùng" : "User Information"}</h2>
+  <div class="stat-row"><span class="lbl">${lang === "vi" ? "Tên" : "Name"}</span><span class="val">${activeAccount?.name || ""}</span></div>
+  <div class="stat-row"><span class="lbl">Email</span><span class="val">${activeAccount?.email || ""}</span></div>
+  <div class="stat-row"><span class="lbl">${lang === "vi" ? "SĐT" : "Phone"}</span><span class="val">${activeAccount?.phone || ""}</span></div>
+  <div class="stat-row"><span class="lbl">${lang === "vi" ? "Thành phố" : "City"}</span><span class="val">${activeAccount?.city || ""}</span></div>
+  <div class="stat-row"><span class="lbl">${lang === "vi" ? "Gói" : "Plan"}</span><span class="val">${activeAccount?.plan || ""}</span></div>
+  <div class="stat-row"><span class="lbl">${lang === "vi" ? "Ngày tham gia" : "Joined"}</span><span class="val">${activeAccount?.joined || ""}</span></div>
+</div>
+
+<div class="grid2">
+  <div class="card"><div class="label">🐾 ${lang === "vi" ? "Thú cưng" : "Pets"}</div><div class="value">${stats.petCount}</div></div>
+  <div class="card"><div class="label">💉 ${lang === "vi" ? "Tiêm phòng" : "Vaccinations"}</div><div class="value">${stats.completedVaccinations}</div></div>
+  <div class="card"><div class="label">📅 ${lang === "vi" ? "Sự kiện sắp tới" : "Upcoming"}</div><div class="value">${stats.upcomingEvents}</div></div>
+  <div class="card"><div class="label">⚠️ ${lang === "vi" ? "Cảnh báo" : "Alerts"}</div><div class="value">${stats.alerts}</div></div>
+</div>
+
+<section>
+  <h2>🐾 ${lang === "vi" ? "Danh sách thú cưng" : "Pets List"}</h2>
+  <table><thead><tr>
+    <th>${lang === "vi" ? "Tên" : "Name"}</th><th>${lang === "vi" ? "Loại" : "Species"}</th><th>${lang === "vi" ? "Tuổi" : "Age"}</th><th>💉 ${lang === "vi" ? "Tiêm" : "Vaccines"}</th><th>🤖 AI</th><th>🏥 ${lang === "vi" ? "Sức khỏe" : "Health"}</th>
+  </tr></thead><tbody>${petRows}</tbody></table>
+</section>
+
+<section>
+  <h2>📊 ${lang === "vi" ? "Lịch sử sức khỏe" : "Health Timeline"}</h2>
+  <table><thead><tr>
+    <th>${lang === "vi" ? "Thú cưng" : "Pet"}</th><th>${lang === "vi" ? "Ngày" : "Date"}</th><th>${lang === "vi" ? "Cân nặng" : "Weight"}</th><th>${lang === "vi" ? "Tình trạng" : "Condition"}</th><th>${lang === "vi" ? "Điểm" : "Score"}</th>
+  </tr></thead><tbody>${healthTimelineRows || `<tr><td colspan="5" style="text-align:center;color:#94a3b8">${lang === "vi" ? "Chưa có dữ liệu" : "No data available"}</td></tr>`}</tbody></table>
+</section>
+
+<div class="footer">PetPulse &bull; ${lang === "vi" ? "Được tạo lúc" : "Generated on"} ${d.toLocaleDateString(locale)} ${d.toLocaleTimeString(locale)}</div>
+</body></html>`;
+
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
+    const dateStr = now.replace(/[\\/]/g, "-");
+    a.download = `${fileNamePrefix}-${dateStr}.html`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -105,7 +187,9 @@ export function Profile() {
             <div className="flex items-center gap-2 flex-shrink-0">
               {isAdmin ? (
                 <Badge v="primary"><ShieldCheck size={11} /> {t("profile.badges.admin")}</Badge>
-              ) : plan === "Premium" ? (
+              ) : activeAccount?.plan === "Premium Năm" ? (
+                <Badge v="primary"><Crown size={11} /> {t("profile.badges.premiumYear")}</Badge>
+              ) : activeAccount?.plan === "Premium" ? (
                 <Badge v="primary"><Crown size={11} /> {t("profile.badges.premium")}</Badge>
               ) : (
                 <Badge v="neutral">{t("profile.badges.free")}</Badge>
@@ -176,7 +260,7 @@ export function Profile() {
                   { l: t("profile.info.birthDateLabel"), v: activeAccount?.birthDate },
                   { l: t("profile.info.cityLabel"), v: activeAccount?.city },
                   { l: t("profile.info.genderLabel"), v: activeAccount?.gender ? t(`profile.info.genderOptions.${activeAccount.gender}`) : undefined },
-                  ...(!isAdmin ? [{ l: t("profile.info.currentPlan"), v: plan }] : []),
+                  ...(!isAdmin ? [{ l: t("profile.info.currentPlan"), v: activeAccount?.plan || plan }] : []),
                 ].map(fieldItem => (
                   <div key={fieldItem.l} className="bg-muted/50 rounded-xl px-4 py-3">
                     <p className="text-xs text-muted-foreground mb-0.5">{fieldItem.l}</p>
@@ -203,6 +287,25 @@ export function Profile() {
               <Switch checked={cursorEffectEnabled} onCheckedChange={toggleCursorEffect} />
             </div>
           </Card>
+
+          {/* Yearly Report — Premium Năm only */}
+          {(activeAccount?.plan === "Premium Năm" || plan === "Premium Năm") && (
+            <Card className="p-6 mt-4" hover={false}>
+              <h3 className="font-bold text-foreground mb-4">{t("profile.yearlyReport.title")}</h3>
+              <div className="flex items-center justify-between p-4 rounded-xl bg-secondary/50 border border-border">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <FileText size={18} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{t("profile.yearlyReport.title")}</p>
+                    <p className="text-xs text-muted-foreground">{t("profile.yearlyReport.desc")}</p>
+                  </div>
+                </div>
+                <Btn size="sm" icon={<Download size={14} />} onClick={handleExportReport}>{t("profile.yearlyReport.exportBtn")}</Btn>
+              </div>
+            </Card>
+          )}
         </>
       )}
 
