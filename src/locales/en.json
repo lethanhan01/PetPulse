@@ -94,8 +94,8 @@
       "forgotPassword": "Forgot password?",
       "submitBtn": "Log In",
       "quickAccess": "Quick Access",
-      "demoUser": "Demo User",
-      "demoAdmin": "Demo Admin",
+      "demoUser": "User",
+      "demoAdmin": "Admin",
       "noAccount": "Don't have an account?",
       "registerLink": "Sign Up"
     },
