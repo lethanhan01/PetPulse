@@ -49,8 +49,8 @@ export function Login() {
         </form>
         <div className="relative my-5"><div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div><div className="relative flex justify-center"><span className="bg-card px-3 text-xs text-muted-foreground">{t("auth.login.quickAccess")}</span></div></div>
         <div className="grid grid-cols-2 gap-3">
-          <Btn variant="outline" size="sm" icon={<UserIcon size={15} />} className="border-primary/30 text-primary hover:bg-primary/5 hover:border-primary" onClick={() => { login(MOCK_ACCOUNTS.find(account => account.id === DEMO_USER_ACCOUNT_ID)!); navigate("/dashboard"); }}>{t("auth.login.demoUser")}</Btn>
-          <Btn variant="outline" size="sm" icon={<Shield size={15} />} className="border-chart-2/30 text-chart-2 hover:bg-chart-2/5 hover:border-chart-2" onClick={() => { login(MOCK_ACCOUNTS.find(account => account.id === DEMO_ADMIN_ACCOUNT_ID)!); navigate("/admin"); }}>{t("auth.login.demoAdmin")}</Btn>
+          <Btn variant="outline" size="sm" icon={<UserIcon size={15} />} onClick={() => { login(MOCK_ACCOUNTS.find(account => account.id === DEMO_USER_ACCOUNT_ID)!); navigate("/dashboard"); }}>{t("auth.login.demoUser")}</Btn>
+          <Btn variant="outline" size="sm" icon={<Shield size={15} />} onClick={() => { login(MOCK_ACCOUNTS.find(account => account.id === DEMO_ADMIN_ACCOUNT_ID)!); navigate("/admin"); }}>{t("auth.login.demoAdmin")}</Btn>
         </div>
       </div>
       <p className="text-sm text-muted-foreground text-center mt-6">{t("auth.login.noAccount")} <button onClick={() => navigate("/register")} className="text-primary font-medium hover:underline">{t("auth.login.registerLink")}</button></p>
