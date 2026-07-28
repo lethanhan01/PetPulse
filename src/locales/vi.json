@@ -309,10 +309,7 @@
           "features": {
             "0": "Toàn bộ Premium",
             "1": "Ưu đãi 2 tháng",
-            "2": "Báo cáo năm",
-            "3": "Ưu tiên hỗ trợ 24/7",
-            "4": "Xuất hồ sơ PDF",
-            "5": "Health Score nâng cao"
+            "2": "Báo cáo năm"
           },
           "missing": {}
         }
@@ -452,7 +449,24 @@
     "yearlyReport": {
       "title": "Báo cáo năm",
       "desc": "Tải báo cáo tổng quan về thú cưng và dữ liệu sức khỏe của bạn",
-      "exportBtn": "Xuất báo cáo năm"
+      "exportBtn": "Xuất báo cáo năm",
+      "printBtn": "In / Lưu PDF",
+      "userInfo": "Thông tin người dùng",
+      "petsStat": "Thú cưng",
+      "vaccinationsStat": "Tiêm phòng",
+      "upcomingStat": "Sự kiện sắp tới",
+      "alertsStat": "Cảnh báo",
+      "petList": "Danh sách thú cưng",
+      "healthTimeline": "Lịch sử sức khỏe",
+      "noData": "Chưa có dữ liệu",
+      "joined": "Ngày tham gia",
+      "age": "Tuổi",
+      "date": "Ngày",
+      "weight": "Cân nặng",
+      "condition": "Tình trạng",
+      "score": "Điểm",
+      "health": "Sức khỏe",
+      "generatedOn": "Được tạo lúc"
     }
   },
   "subscription": {

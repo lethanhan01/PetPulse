@@ -57,6 +57,11 @@ export function Profile() {
     const stats = getUserDashboardStats(pets);
     const fileNamePrefix = lang === "vi" ? "bao-cao-ca-nhan" : "personal-report";
 
+    const tSpecies = (s: string) => lang === "vi" ? s : ({ "Chó": "Dog", "Mèo": "Cat", "Thỏ": "Rabbit", "Chim": "Bird", "Cá": "Fish" })[s] || s;
+    const tCond = (c: string) => lang === "vi" ? c : ({ "Tốt": "Good", "Bình thường": "Normal", "Cần chú ý": "Needs attention" })[c] || c;
+    const tAge = (a: string) => lang === "vi" ? a : a.replace(/(\d+)\s?tuổi/, "$1 years old");
+    const tGender = (g: string) => lang === "vi" ? g : ({ "Đực": "Male", "Cái": "Female" })[g] || g;
+
     const petRows = pets.map(p => {
       const lastHealth = p.health[0];
       const vaccines = p.events.filter(e => e.type === "Tiêm phòng").length;
@@ -64,8 +69,8 @@ export function Profile() {
       return `
 <tr>
   <td style="font-weight:500">${p.name}</td>
-  <td>${p.species} · ${p.breed}</td>
-  <td>${p.age}</td>
+  <td>${tSpecies(p.species)} · ${p.breed}</td>
+  <td>${tAge(p.age)}</td>
   <td>${vaccines}</td>
   <td>${consults}</td>
   <td>${lastHealth ? lastHealth.score : "N/A"}</td>
@@ -78,48 +83,50 @@ export function Profile() {
   <td style="font-weight:500">${p.name}</td>
   <td>${h.date}</td>
   <td>${h.weight} kg</td>
-  <td>${h.condition}</td>
+  <td>${tCond(h.condition)}</td>
   <td>${h.score}</td>
 </tr>`)
     ).join("");
 
-    const html = `<!DOCTYPE html><html lang="${lang}"><head><meta charset="UTF-8"><title>${t("profile.yearlyReport.title")}</title>
+    const yR = (key: string) => t(`profile.yearlyReport.${key}`);
+
+    const html = `<!DOCTYPE html><html lang="${lang}"><head><meta charset="UTF-8"><title>${yR("title")}</title>
 <style>${reportPrintCss}</style></head><body>
-<div class="no-print" style="text-align:right;margin-bottom:16px"><button class="btn-print" onclick="window.print()">🖨 ${lang === "vi" ? "In / Lưu PDF" : "Print / Save PDF"}</button></div>
-<div class="header"><h1>PetPulse</h1><p>${t("profile.yearlyReport.title")} • ${now}</p></div>
+<div class="no-print" style="text-align:right;margin-bottom:16px"><button class="btn-print" onclick="window.print()">🖨 ${yR("printBtn")}</button></div>
+<div class="header"><h1>PetPulse</h1><p>${yR("title")} • ${now}</p></div>
 
 <div class="card" style="margin-bottom:24px">
-  <h2>👤 ${lang === "vi" ? "Thông tin người dùng" : "User Information"}</h2>
-  <div class="stat-row"><span class="lbl">${lang === "vi" ? "Tên" : "Name"}</span><span class="val">${activeAccount?.name || ""}</span></div>
+  <h2>👤 ${yR("userInfo")}</h2>
+  <div class="stat-row"><span class="lbl">${t("profile.info.nameLabel")}</span><span class="val">${activeAccount?.name || ""}</span></div>
   <div class="stat-row"><span class="lbl">Email</span><span class="val">${activeAccount?.email || ""}</span></div>
-  <div class="stat-row"><span class="lbl">${lang === "vi" ? "SĐT" : "Phone"}</span><span class="val">${activeAccount?.phone || ""}</span></div>
-  <div class="stat-row"><span class="lbl">${lang === "vi" ? "Thành phố" : "City"}</span><span class="val">${activeAccount?.city || ""}</span></div>
-  <div class="stat-row"><span class="lbl">${lang === "vi" ? "Gói" : "Plan"}</span><span class="val">${activeAccount?.plan || ""}</span></div>
-  <div class="stat-row"><span class="lbl">${lang === "vi" ? "Ngày tham gia" : "Joined"}</span><span class="val">${activeAccount?.joined || ""}</span></div>
+  <div class="stat-row"><span class="lbl">${t("profile.info.phoneLabel")}</span><span class="val">${activeAccount?.phone || ""}</span></div>
+  <div class="stat-row"><span class="lbl">${t("profile.info.cityLabel")}</span><span class="val">${activeAccount?.city || ""}</span></div>
+  <div class="stat-row"><span class="lbl">${t("profile.info.currentPlan")}</span><span class="val">${activeAccount?.plan || ""}</span></div>
+  <div class="stat-row"><span class="lbl">${yR("joined")}</span><span class="val">${activeAccount?.joined || ""}</span></div>
 </div>
 
 <div class="grid2">
-  <div class="card"><div class="label">🐾 ${lang === "vi" ? "Thú cưng" : "Pets"}</div><div class="value">${stats.petCount}</div></div>
-  <div class="card"><div class="label">💉 ${lang === "vi" ? "Tiêm phòng" : "Vaccinations"}</div><div class="value">${stats.completedVaccinations}</div></div>
-  <div class="card"><div class="label">📅 ${lang === "vi" ? "Sự kiện sắp tới" : "Upcoming"}</div><div class="value">${stats.upcomingEvents}</div></div>
-  <div class="card"><div class="label">⚠️ ${lang === "vi" ? "Cảnh báo" : "Alerts"}</div><div class="value">${stats.alerts}</div></div>
+  <div class="card"><div class="label">🐾 ${yR("petsStat")}</div><div class="value">${stats.petCount}</div></div>
+  <div class="card"><div class="label">💉 ${yR("vaccinationsStat")}</div><div class="value">${stats.completedVaccinations}</div></div>
+  <div class="card"><div class="label">📅 ${yR("upcomingStat")}</div><div class="value">${stats.upcomingEvents}</div></div>
+  <div class="card"><div class="label">⚠️ ${yR("alertsStat")}</div><div class="value">${stats.alerts}</div></div>
 </div>
 
 <section>
-  <h2>🐾 ${lang === "vi" ? "Danh sách thú cưng" : "Pets List"}</h2>
+  <h2>🐾 ${yR("petList")}</h2>
   <table><thead><tr>
-    <th>${lang === "vi" ? "Tên" : "Name"}</th><th>${lang === "vi" ? "Loại" : "Species"}</th><th>${lang === "vi" ? "Tuổi" : "Age"}</th><th>💉 ${lang === "vi" ? "Tiêm" : "Vaccines"}</th><th>🤖 AI</th><th>🏥 ${lang === "vi" ? "Sức khỏe" : "Health"}</th>
+    <th>${t("profile.info.nameLabel")}</th><th>${t("pet.detail.breed")}</th><th>${yR("age")}</th><th>💉 ${yR("vaccinationsStat")}</th><th>🤖 AI</th><th>🏥 ${yR("health")}</th>
   </tr></thead><tbody>${petRows}</tbody></table>
 </section>
 
 <section>
-  <h2>📊 ${lang === "vi" ? "Lịch sử sức khỏe" : "Health Timeline"}</h2>
+  <h2>📊 ${yR("healthTimeline")}</h2>
   <table><thead><tr>
-    <th>${lang === "vi" ? "Thú cưng" : "Pet"}</th><th>${lang === "vi" ? "Ngày" : "Date"}</th><th>${lang === "vi" ? "Cân nặng" : "Weight"}</th><th>${lang === "vi" ? "Tình trạng" : "Condition"}</th><th>${lang === "vi" ? "Điểm" : "Score"}</th>
-  </tr></thead><tbody>${healthTimelineRows || `<tr><td colspan="5" style="text-align:center;color:#94a3b8">${lang === "vi" ? "Chưa có dữ liệu" : "No data available"}</td></tr>`}</tbody></table>
+    <th>${t("profile.info.nameLabel")}</th><th>${yR("date")}</th><th>${yR("weight")}</th><th>${yR("condition")}</th><th>${yR("score")}</th>
+  </tr></thead><tbody>${healthTimelineRows || `<tr><td colspan="5" style="text-align:center;color:#94a3b8">${yR("noData")}</td></tr>`}</tbody></table>
 </section>
 
-<div class="footer">PetPulse &bull; ${lang === "vi" ? "Được tạo lúc" : "Generated on"} ${d.toLocaleDateString(locale)} ${d.toLocaleTimeString(locale)}</div>
+<div class="footer">PetPulse &bull; ${yR("generatedOn")} ${d.toLocaleDateString(locale)} ${d.toLocaleTimeString(locale)}</div>
 </body></html>`;
 
     const a = document.createElement("a");

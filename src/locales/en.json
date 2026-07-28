@@ -309,10 +309,7 @@
           "features": {
             "0": "Everything in Premium",
             "1": "2 months free",
-            "2": "Yearly report",
-            "3": "Priority 24/7 support",
-            "4": "Export PDF records",
-            "5": "Advanced Health Score"
+            "2": "Yearly report"
           },
           "missing": {}
         }
@@ -452,7 +449,24 @@
     "yearlyReport": {
       "title": "Yearly Report",
       "desc": "Download a comprehensive yearly report about your pets and health data",
-      "exportBtn": "Export Yearly Report"
+      "exportBtn": "Export Yearly Report",
+      "printBtn": "Print / Save PDF",
+      "userInfo": "User Information",
+      "petsStat": "Pets",
+      "vaccinationsStat": "Vaccinations",
+      "upcomingStat": "Upcoming",
+      "alertsStat": "Alerts",
+      "petList": "Pets List",
+      "healthTimeline": "Health Timeline",
+      "noData": "No data available",
+      "joined": "Joined",
+      "age": "Age",
+      "date": "Date",
+      "weight": "Weight",
+      "condition": "Condition",
+      "score": "Score",
+      "health": "Health",
+      "generatedOn": "Generated on"
     }
   },
   "subscription": {
