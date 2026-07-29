@@ -3,6 +3,10 @@ import { X, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { isImageUrl } from "@/services/user.service";
 import type { CommunityStory } from "@/mocks";
 import { MOCK_ACCOUNTS } from "@/mocks";
+import { useApp } from "@/stores/app.store";
+import { useStories } from "@/stores/stories.store";
+
+const REACTION_EMOJIS = ["❤️", "👍", "😂", "😮", "😢", "😡"];
 
 export function StoryViewer({ stories, initialIndex, onClose }: {
   stories: CommunityStory[];
@@ -12,8 +16,25 @@ export function StoryViewer({ stories, initialIndex, onClose }: {
   const [index, setIndex] = useState(initialIndex);
   const [progress, setProgress] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [floatingEmojis, setFloatingEmojis] = useState<{ id: number; emoji: string; x: number }[]>([]);
+  const floatIdRef = useRef(0);
+  const { activeAccount } = useApp();
+  const { toggleReaction } = useStories();
   const story = stories[index];
   const author = MOCK_ACCOUNTS.find(a => a.id === story?.authorId);
+  const isOwn = story?.authorId === activeAccount?.id;
+
+  const handleReact = (emoji: string) => {
+    if (!story || !activeAccount) return;
+    const hadReacted = (story.reactions[emoji] ?? []).includes(activeAccount.id);
+    toggleReaction(story.id, emoji, activeAccount.id);
+    if (!hadReacted) {
+      const id = ++floatIdRef.current;
+      const x = (Math.random() - 0.5) * 80;
+      setFloatingEmojis(prev => [...prev, { id, emoji, x }]);
+      setTimeout(() => setFloatingEmojis(prev => prev.filter(f => f.id !== id)), 1500);
+    }
+  };
 
   const authorGroups = useMemo(() => {
     const groups: { authorId: string; stories: CommunityStory[] }[] = [];
@@ -166,6 +187,27 @@ export function StoryViewer({ stories, initialIndex, onClose }: {
         <button onClick={e => { e.stopPropagation(); handleNextRef.current(); }} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/30 z-20 opacity-60 group-hover:opacity-100 transition-opacity">
           <ChevronRight size={22} />
         </button>
+        {!isOwn && story && activeAccount && (
+          <div className="absolute bottom-20 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent pt-10 pb-2 pointer-events-none z-20">
+            <div className="flex justify-center gap-1.5 pointer-events-auto">
+              {REACTION_EMOJIS.map(emoji => {
+                const reacted = (story.reactions[emoji] ?? []).includes(activeAccount.id);
+                const count = (story.reactions[emoji] ?? []).length;
+                return (
+                  <button key={emoji} onClick={e => { e.stopPropagation(); handleReact(emoji); }}
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-full transition-all text-sm ${reacted ? "bg-white/20 scale-110" : "bg-white/10 hover:bg-white/20"}`}>
+                    <span className={reacted ? "scale-110" : ""}>{emoji}</span>
+                    {count > 0 && <span className="text-white/80 text-xs font-medium">{count}</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        <style>{`@keyframes emoji-pop{0%{transform:translateY(0) scale(0.3);opacity:0}20%{transform:translateY(-10px) scale(1.2);opacity:1}60%{transform:translateY(-80px) scale(1);opacity:1}to{transform:translateY(-160px) scale(0.6);opacity:0}}`}</style>
+        {floatingEmojis.map(f => (
+          <span key={f.id} className="absolute bottom-24 text-2xl pointer-events-none z-30" style={{ left: `calc(50% + ${f.x}px)`, animation: "emoji-pop 1.4s ease-out forwards" }}>{f.emoji}</span>
+        ))}
         <div className="absolute bottom-8 left-0 right-0 flex justify-center pointer-events-none"><p className="text-white/40 text-xs">Chạm trái/phải để xem tin trước/sau</p></div>
       </div>
     </div>

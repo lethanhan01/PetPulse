@@ -40,12 +40,12 @@ export const PUBLIC_COMMUNITY_POSTS = MOCK_COMMUNITY_POSTS.filter(post => post.s
 const STORY_IMAGES = [
   "https://images.unsplash.com/photo-1544568100-847a948585b9?w=400",
   "https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=400",
-  "https://images.unsplash.com/photo-1553882809-a4f57e595701?w=400",
+  "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=400",
   "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?w=400",
   "https://images.unsplash.com/photo-1491604612772-6853927639ef?w=400",
   "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=400",
   "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400",
-  "https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400",
+  "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400",
 ];
 const storyAuthors = MOCK_ACCOUNTS.filter(a => a.role === "user" && a.status === "Active").slice(0, 8);
 export const MOCK_COMMUNITY_STORIES: CommunityStory[] = STORY_IMAGES.map((url, i) => ({
@@ -54,4 +54,5 @@ export const MOCK_COMMUNITY_STORIES: CommunityStory[] = STORY_IMAGES.map((url, i
   mediaUrl: url,
   mediaType: "image",
   createdAt: `${i + 1} giờ trước`,
+  reactions: {},
 }));

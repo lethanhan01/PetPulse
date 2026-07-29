@@ -5,7 +5,7 @@ import type { CommunityComment, CommunityPost } from "@/mocks";
 import { useApp } from "@/stores/app.store";
 import { useCommunity } from "@/stores/community.store";
 import { useStories } from "@/stores/stories.store";
-import { Card, Btn, Badge, Textarea } from "@/components/common/kit";
+import { Card, Btn, Badge, Textarea, Select } from "@/components/common/kit";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { StoryViewer } from "@/components/figma/StoryViewer";
 import { ImageOverlayEditor } from "@/components/figma/ImageOverlayEditor";
@@ -124,11 +124,12 @@ function PostItem({ post, onViewStory }: { post: CommunityPost; onViewStory?: (a
 
 export function Community() {
   const { t } = useTranslation();
-  const { activeAccount } = useApp();
+  const { activeAccount, pets } = useApp();
   const { posts, createPost } = useCommunity();
   const { stories, addStory } = useStories();
   const [draft, setDraft] = useState("");
   const [images, setImages] = useState<string[]>([]);
+  const [selectedPet, setSelectedPet] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const storyFileRef = useRef<HTMLInputElement>(null);
   const [storyPreview, setStoryPreview] = useState<string | null>(null);
@@ -198,10 +199,12 @@ export function Community() {
   const items = posts.filter(p => p.status === "approved" || p.authorId === activeAccount?.id).sort((a, b) => a.status === "pending" ? -1 : b.status === "pending" ? 1 : 0);
 
   const handlePost = () => {
-    if (!draft.trim() || !activeAccount) return;
-    createPost(createCommunityPost(activeAccount, draft.trim(), images.length > 0 ? images : undefined));
+    if (!draft.trim() || !activeAccount || !selectedPet) return;
+    const pet = pets.find(p => p.id === selectedPet);
+    createPost(createCommunityPost(activeAccount, draft.trim(), pet ? `${pet.emoji} ${pet.name}` : undefined, images.length > 0 ? images : undefined));
     setDraft("");
     setImages([]);
+    setSelectedPet("");
   };
 
   const handleImagePick = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -437,10 +440,15 @@ export function Community() {
             {images.length > 0 && <div className="flex gap-2 mt-2 flex-wrap">
               {images.map((img, i) => <div key={i} className="relative inline-block"><img src={img} alt="preview" className="h-20 rounded-xl object-cover" /><button onClick={() => setImages(prev => prev.filter((_, j) => j !== i))} className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-destructive text-destructive-foreground text-xs flex items-center justify-center">×</button></div>)}
             </div>}
-            <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center gap-2 mt-2">
               <button onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary px-2 py-1 rounded-lg"><ImagePlus size={16} /> {t("community.composer.photoBtn")}</button>
               <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={handleImagePick} />
-              <Btn size="sm" icon={<PawPrint size={15} />} disabled={!draft.trim()} onClick={handlePost}>{t("community.composer.postBtn")}</Btn>
+              <div className="flex-1" />
+              <Select value={selectedPet} onChange={e => setSelectedPet(e.target.value)} className="w-40">
+                <option value="">{t("community.composer.selectPet")}</option>
+                {pets.map(p => <option key={p.id} value={p.id}>{p.emoji} {p.name} — {p.breed}</option>)}
+              </Select>
+              <Btn size="md" icon={<PawPrint size={16} />} disabled={!draft.trim() || !selectedPet} onClick={handlePost} className="whitespace-nowrap flex-shrink-0">{t("community.composer.postBtn")}</Btn>
             </div>
           </div>
         </div>

@@ -555,6 +555,7 @@
     "pageSubtitle": "Share moments & learn care tips from the community.",
     "composer": {
       "placeholder": "Share about your pet...",
+      "selectPet": "Select your pet...",
       "photoBtn": "Photo",
       "postBtn": "Post",
       "addText": "Add text",

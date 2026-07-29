@@ -7,12 +7,12 @@ import type { CommunityComment, CommunityPost, CommunityStory, MockAccount } fro
 const today = () => new Date().toISOString().slice(0, 10);
 export const uid = (prefix: string) => `${prefix}-${Date.now()}`;
 
-export function createCommunityPost(author: MockAccount, content: string, images?: string[]): CommunityPost {
+export function createCommunityPost(author: MockAccount, content: string, pet?: string, images?: string[]): CommunityPost {
   return {
     id: uid("POST"), authorId: author.id, author: author.name,
     handle: `@${author.email.split("@")[0].replace(/[^a-z0-9]/gi, "").toLowerCase()}`,
     avatar: isImageUrl(author.avatar) ? author.avatar : author.name.split(" ").slice(-2).map(p => p[0]).join(""),
-    time: "Vừa xong", pet: "", content, images, likes: 0, comments: [], status: "pending",
+    time: "Vừa xong", pet: pet ?? "", content, images, likes: 0, comments: [], status: "pending",
   };
 }
 
@@ -30,5 +30,5 @@ export function createCareEvent(input: Omit<CareEvent, "id" | "done">): CareEven
 export function createAIConsult(petName: string, symptoms: string): AIConsult { return { id: uid("CONSULT"), date: today(), petName, ...getMockAnalysis(symptoms) }; }
 export function createCommunityComment(authorId: string, author: string, content: string): CommunityComment { return { id: uid("COMMENT"), authorId, author, content, time: "Vừa xong" }; }
 export function createStory(authorId: string, mediaUrl: string, mediaType: "image" | "video" = "image"): CommunityStory {
-  return { id: uid("STORY"), authorId, mediaUrl, mediaType, createdAt: "Vừa xong" };
+  return { id: uid("STORY"), authorId, mediaUrl, mediaType, createdAt: "Vừa xong", reactions: {} };
 }

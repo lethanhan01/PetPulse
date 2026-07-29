@@ -30,7 +30,7 @@ export type AdminPet = {
   score: number;
 };
 
-export type CommunityStory = { id: string; authorId: string; mediaUrl: string; mediaType: "image" | "video"; createdAt: string };
+export type CommunityStory = { id: string; authorId: string; mediaUrl: string; mediaType: "image" | "video"; createdAt: string; reactions: Record<string, string[]> };
 export type CommunityComment = { id: string; authorId: string; author: string; content: string; time: string };
 export type ModerationStatus = "approved" | "pending" | "rejected";
 export type CommunityPost = {
